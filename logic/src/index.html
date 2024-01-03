@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Game Field GUI</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        height: 100%;
+      }
+
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+
+      .blue {
+        background-color: blue;
+        color: white;
+      }
+
+      .red {
+        background-color: red;
+        color: white;
+      }
+
+      .green {
+        background-color: green;
+        color: white;
+      }
+
+      .neutral {
+        background-color: lightgray;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      ipcRenderer.on('update-game-field', (event, gameField) => {
+        createTable(gameField);
+      });
+
+      function createTable(gameField) {
+        const table = document.createElement('table');
+
+        for (let i = 0; i < gameField.length; i++) {
+          const row = document.createElement('tr');
+
+          for (let j = 0; j < gameField[i].length; j++) {
+            const cell = document.createElement('td');
+
+            if (gameField[i][j]) {
+              const creature = gameField[i][j];
+
+              cell.textContent = creature.constructor.name;
+              cell.classList.add(creature.team === 1 ? 'blue' : 'red');
+            } else {
+              cell.textContent = '-';
+              cell.classList.add('neutral');
+            }
+
+            row.appendChild(cell);
+          }
+
+          table.appendChild(row);
+        }
+
+        document.body.innerHTML = '';
+        document.body.appendChild(table);
+      }
+
+      // Request the initial game field
+      ipcRenderer.send('get-game-field');
+    </script>
+  </body>
+</html>
