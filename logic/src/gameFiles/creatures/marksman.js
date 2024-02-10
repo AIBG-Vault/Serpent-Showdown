@@ -2,7 +2,7 @@ const { Creature } = require('./creatureAbs.js');
 
 class Marksman extends Creature {
     constructor(team) {
-        super(team, 50, 5, 8, 'RANGED');
+        super(team, 'Mar', 75, 5, 5, 'RANGED');
     }
 }
 

@@ -1,0 +1,157 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Game</title>
+    <style>
+        /* Add some basic styling for better presentation */
+        table {
+            border-collapse: collapse;
+            width: 1600px; /* Set a fixed width for the table */
+            height: 800px; /* Set a fixed height for the table */
+            margin: auto; /* Center the table */
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            width: 150px; /* Fixed width for each cell */
+            height: 50px; /* Fixed height for each cell */
+            position: relative;
+        }
+
+        .creature-info {
+            font-size: 12px; /* Adjust font size for creature info */
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .background-text {
+            font-size: 10px;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Field Display</h1>
+    <div id="gameFieldDisplay"></div>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:3000');
+
+        socket.addEventListener('open', () => {
+            console.log('Connected to WebSocket');
+        });
+
+        socket.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+            console.log(data);
+            if (data.type === 'update-game-field') {
+                // Update your frontend UI with the game field data
+                displayGameField(data.data);
+            }
+        });
+
+        function displayGameField(gameField) {
+            // console.log(gameField);
+            const displayDiv = document.getElementById('gameFieldDisplay');
+
+            // Check if the table already exists
+            const existingTable = displayDiv.querySelector('table');
+
+            if (existingTable) {
+                // Update existing table cells with new data
+                for (let rowIndex = 0; rowIndex < gameField.field.length; rowIndex++) {
+                    const row = gameField.field[rowIndex];
+                    const existingRow = existingTable.rows[rowIndex];
+
+                    for (let colIndex = 0; colIndex < row.length; colIndex++) {
+                        const cell = row[colIndex];
+                        const existingCell = existingRow.cells[colIndex];
+
+                        // Check if the cell contains a creature (Pikeman or Marksman)
+                        if (cell) {
+                            const creatureInfo = document.createElement('div');
+                            creatureInfo.className = 'creature-info';
+                            creatureInfo.textContent = `${cell.name}, HP: ${cell.health}, AD: ${cell.attackDamage}, R: ${cell.rangeOfMovement}`;
+
+                            const backgroundText = document.createElement('div');
+                            backgroundText.className = 'background-text';
+                            backgroundText.textContent = `(${colIndex}, ${rowIndex})`;
+
+                            // Update the content of the existing cell
+                            existingCell.innerHTML = '';
+                            existingCell.appendChild(creatureInfo);
+                            existingCell.appendChild(backgroundText);
+                        } else {
+                            // Empty cell, add row and column indexes
+                            const backgroundText = document.createElement('div');
+                            backgroundText.className = 'background-text';
+                            backgroundText.textContent = `(${colIndex}, ${rowIndex})`;
+
+                            // Update the content of the existing cell
+                            existingCell.innerHTML = '';
+                            existingCell.appendChild(backgroundText);
+                        }
+                    }
+                }
+            } else {
+                // Create a new table if it doesn't exist
+                const table = document.createElement('table');
+
+                // Loop through rows
+                for (let rowIndex = 0; rowIndex < gameField.field.length; rowIndex++) {
+                    const row = gameField.field[rowIndex];
+                    const tr = document.createElement('tr');
+
+                    // Loop through columns
+                    for (let colIndex = 0; colIndex < row.length; colIndex++) {
+                        const cell = row[colIndex];
+                        const td = document.createElement('td');
+
+                        // Check if the cell contains a creature (Pikeman or Marksman)
+                        if (cell) {
+                            const creatureInfo = document.createElement('div');
+                            creatureInfo.className = 'creature-info';
+                            creatureInfo.textContent = `${cell.name}, HP: ${cell.health}, AD: ${cell.attackDamage}, R: ${cell.rangeOfMovement}`;
+
+                            const backgroundText = document.createElement('div');
+                            backgroundText.className = 'background-text';
+                            backgroundText.textContent = `(${colIndex}, ${rowIndex})`;
+
+                            td.appendChild(creatureInfo);
+                            td.appendChild(backgroundText);
+                        } else {
+                            // Empty cell, add row and column indexes
+                            const backgroundText = document.createElement('div');
+                            backgroundText.className = 'background-text';
+                            backgroundText.textContent = `(${colIndex}, ${rowIndex})`;
+
+                            td.appendChild(backgroundText);
+                        }
+
+                        tr.appendChild(td);
+                    }
+
+                    table.appendChild(tr);
+                }
+
+                // Append the new table to the displayDiv
+                displayDiv.innerHTML = '';
+                displayDiv.appendChild(table);
+            }
+        }
+    </script>
+</body>
+</html>

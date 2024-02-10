@@ -1,10 +1,11 @@
 class Creature {
-    constructor(team, health, attackDamage, rangeOfMovement, attackType) {
+    constructor(team, name, health, attackDamage, rangeOfMovement, type) {
         this.team = team;
+        this.name = name;
         this.health = health;
         this.attackDamage = attackDamage;
         this.rangeOfMovement = rangeOfMovement;
-        this.attackType = attackType;
+        this.type = type;
     }
 }
 

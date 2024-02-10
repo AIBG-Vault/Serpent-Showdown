@@ -1,0 +1,7 @@
+Pikeman,50,6,6,MELEE
+Marksman,75,5,5,RANGED
+Knight,125,8,8,MELEE
+Archer,100,7,5,RANGED
+Cavalry,175,9,9,MELEE
+ArmoredPeasant,250,4,5,MELEE
+Phoenix,150,11,7,MELEE/RANGED

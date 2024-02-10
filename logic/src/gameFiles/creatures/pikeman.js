@@ -2,8 +2,8 @@ const { Creature } = require('./creatureAbs.js');
 
 class Pikeman extends Creature {
     constructor(team) {
-        super(team, 50, 5, 8, 'MELEE');
+        super(team, 'Pik', 50, 6, 6, 'MELEE');
     }
 }
 
-module.exports = { Pikeman };
+module.exports = { Pikeman }
