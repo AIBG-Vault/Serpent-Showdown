@@ -14,78 +14,77 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
 
 let gamefield = new GameField();
 
-function sendUpdateToClients() {
-    if (!wss) {
-        console.error('WebSocket server not set');
-        return;
-    }
+// function sendUpdateToClients() {
+//     if (!wss) {
+//         console.error('WebSocket server not set');
+//         return;
+//     }
 
-    const updatedGameField = gamefield.getGameField();
-    // console.log('Sending update to clients', updatedGameField)
-    const message = JSON.stringify({ type: 'update-game-field', data: updatedGameField });
+//     const updatedGameField = gamefield.getGameField();
+//     // console.log('Sending update to clients', updatedGameField)
+//     const message = JSON.stringify({ type: 'update-game-field', data: updatedGameField });
 
-    // Broadcast the message to all connected clients
-    wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(message);
-        }
-    });
-}
+//     // Broadcast the message to all connected clients
+//     wss.clients.forEach((client) => {
+//         if (client.readyState === WebSocket.OPEN) {
+//             client.send(message);
+//         }
+//     });
+// }
 
-function addCreatureWithDelay(index, callback) {
-    if (index < creaturesToAdd.length) {
-        const { creature, x, y } = creaturesToAdd[index];
+// function addCreatureWithDelay(index, callback) {
+//     if (index < creaturesToAdd.length) {
+//         const { creature, x, y } = creaturesToAdd[index];
 
-        setTimeout(() => {
-            gamefield.addCreature(creature, x, y);
-            sendUpdateToClients();
+//         setTimeout(() => {
+//             gamefield.addCreature(creature, x, y);
+//             sendUpdateToClients();
 
-            // Add the next creature with a delay
-            addCreatureWithDelay(index + 1, callback);
-        }, 20); 
-    } else {
-        // All creatures are added, invoke the callback
-        callback();
-    }
-}
+//             // Add the next creature with a delay
+//             addCreatureWithDelay(index + 1, callback);
+//         }, 200); 
+//     } else {
+//         // All creatures are added, invoke the callback
+//         callback();
+//     }
+// }
 
-function playMoveWithDelay(index) {
-    if (index < movesToPlay.length) {
-        // console.log('Creature moved', movesToPlay[index]);
+// function playMoveWithDelay(index) {
+//     if (index < movesToPlay.length) {
+//         // console.log('Creature moved', movesToPlay[index]);
 
-        setTimeout(() => {
-            gamefield.playMove(movesToPlay[index]);
-            console.log('sending update to clients')
-            sendUpdateToClients();
+//         setTimeout(() => {
+//             gamefield.playMove(movesToPlay[index]);
+//             console.log('sending update to clients')
+//             sendUpdateToClients();
 
-            // Add the next creature with a delay
-            playMoveWithDelay(index + 1);
-        }, 1); // Delay of 1 second
-    }
-}
+//             // Add the next creature with a delay
+//             playMoveWithDelay(index + 1);
+//         }, 200); // Delay of 1 second
+//     }
+// }
 
 // WebSocket connection handling
-wss.on('connection', (ws) => {
-    console.log('Client connected to WebSocket');
+// wss.on('connection', (ws) => {
+//     console.log('Client connected to WebSocket');
 
-    // Send initial game field to the connected client
-    ws.send(JSON.stringify({ type: 'update-game-field', data: gamefield }));
+//     // Send initial game field to the connected client
+//     ws.send(JSON.stringify({ type: 'update-game-field', data: gamefield }));
 
-    // Handle messages from the client
-    ws.on('message', (message) => {
-        console.log(`Received message: ${message}`);
-        // Handle incoming messages from the client if needed
-    });
+//     // Handle messages from the client
+//     ws.on('message', (message) => {
+//         console.log(`Received message: ${message}`);
+//         // Handle incoming messages from the client if needed
+//     });
 
-    // Handle disconnection
-    ws.on('close', () => {
-        console.log('Client disconnected from WebSocket');
-    });
-});
+//     // Handle disconnection
+//     ws.on('close', () => {
+//         console.log('Client disconnected from WebSocket');
+//     });
+// });
 
 // Serve your frontend app (HTML, CSS, JS, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -126,10 +125,10 @@ const creaturesToAdd = [
     { creature: phoenix2, x: 17, y: 12 },
 ];
 
-addCreatureWithDelay(0, () => {
-    console.log('All creatures added');
-    playMoveWithDelay(0);
-});
+// addCreatureWithDelay(0, () => {
+//     console.log('All creatures added');
+//     playMoveWithDelay(0);
+// });
 
 const movesToPlay = [
     // {
@@ -1175,6 +1174,6 @@ const movesToPlay = [
 // Simulated game flow
 // #######################################################################
 
-server.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
-});
+// server.listen(3000, () => {
+//     console.log('Server is running on http://localhost:3000');
+// });
