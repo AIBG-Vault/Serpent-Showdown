@@ -24,7 +24,6 @@ const connections = new Set();
 wss.on('connection', (ws, req) => {
   const id1 = "1234567890";
   const id2 = "0987654321";
-  let connectedPlayers = 0;
 
   const url = new URL(req.url, 'http://localhost:3000'); // Adjust the origin as needed
   const receivedId = url.searchParams.get('id');
