@@ -35,7 +35,16 @@ wss.on('connection', (ws, req) => {
       connections.add(ws);
 
       // Send the initial game state to the newly connected player
-      ws.send(JSON.stringify({ type: 'initialGameState', gameState: gameObject }));
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          const message = JSON.stringify({ gameObject: gameObject });
+          client.send(message, (error) => {
+            if (error) {
+              console.error('Error sending message:', error);
+            }
+          });
+        }
+      });
     } else {
       ws.send(JSON.stringify({ message: 'Player registered successfully. Waiting for other player.' }))
     }
@@ -63,7 +72,7 @@ app.post('/register', (req, res) => {
     gameLogic.startGame();
     const initialGameState = gameLogic.gameState;
     connections.forEach((ws) => {
-      ws.send(JSON.stringify({ type: 'gameStarted', gameState: initialGameState }));
+      ws.send(JSON.stringify({ type: 'initialGameState', gameState: initialGameState }));
     });
 
     // Reset the count for the next game

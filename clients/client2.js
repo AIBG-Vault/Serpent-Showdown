@@ -7,8 +7,9 @@ ws.on('open', () => {
 });
 
 ws.on('message', (data) => {
-  console.log('Received message:', data);
-});
+    const message = data.toString('utf-8');
+    console.log('Received message:', message);
+  });
 
 ws.on('close', () => {
   console.log('Disconnected from WebSocket server');
