@@ -1,10 +1,38 @@
 const { IllegalMoveException} = require('./util/illegalMoveException');
+const { Pikeman } = require('../gameFiles/creatures/pikeman');
+const { Marksman } = require('../gameFiles/creatures/marksman');
+const { Knight } = require('../gameFiles/creatures/knight');
+const { Archer } = require('../gameFiles/creatures/archer');
+const { Cavalry } = require('../gameFiles/creatures/cavalry');
+const { ArmoredPeasant } = require('../gameFiles/creatures/armoredPeasant');
+const { Phoenix } = require('../gameFiles/creatures/phoenix');
+
 class GameField {
-    constructor() {
+    constructor(players) {
         this.field = Array.from({ length: 13 }, () => Array.from({ length: 18 }, () => null));
         this.creatureNumber = [7, 7];
         this.winner = null;
         this.turn = 0;
+        this.playerIDs = [players[0].id, players[1].id];
+        this.placeCounter = 0;
+        this.player1Creatures = [
+            new Pikeman(0),
+            new Marksman(0),
+            new Knight(0),
+            new Archer(0),
+            new Cavalry(0),
+            new ArmoredPeasant(0),
+            new Phoenix(0)
+        ]
+        this.player2Creatures = [
+            new Pikeman(1),
+            new Marksman(1),
+            new Knight(1),
+            new Archer(1),
+            new Cavalry(1),
+            new ArmoredPeasant(1),
+            new Phoenix(1)
+        ]
     }
 
     getGameField() {
@@ -15,31 +43,57 @@ class GameField {
         };
     }
 
-    addCreature(creature, x, y) {
-        this.field[y][x] = creature;
+    addCreature(moveObject) {
+        if (this.turn === 0){
+            if (moveObject.y > 2) {
+                throw new IllegalMoveException('Illegal placement', moveObject);
+            } else if (this.field[moveObject.y][moveObject.x] !== null) {
+                throw new IllegalMoveException('Square occupied', moveObject);
+            } else if (this.player1Creatures[moveObject.id] === null) {
+                throw new IllegalMoveException('You have already placed this creature', moveObject);
+            } else {
+                this.field[y][x] = creature;
+                this.placeCounter++;
+            }
+        } else {
+            if (moveObject.y < 10) {
+                throw new IllegalMoveException('Illegal placement', moveObject);
+            } else if (this.field[moveObject.y][moveObject.x] !== null) {
+                throw new IllegalMoveException('Square occupied', moveObject);
+            } else if (this.player2Creatures[moveObject.id] === null) {
+                throw new IllegalMoveException('You have already placed this creature', moveObject);
+            } else {
+                this.field[y][x] = creature;
+                this.placeCounter++;
+            }
+        }
     }
 
     playMove(moveObject) {
         console.log('playMove', moveObject);
-        if (this.startSquareEmpty(moveObject.startSquare)) {
-            throw new IllegalMoveException('Start square empty', moveObject);
-        } else if (this.squareOccupiedByEnemyCreature(moveObject.startSquare)) {
-            throw new IllegalMoveException('Start square occupied by enemy creature', moveObject);
-        }
-
-        const creature = this.field[moveObject.startSquare.y][moveObject.startSquare.x];
-        const type = creature.type;
-
-        switch (type) {
-            case 'MELEE':
-                this.playMeleeMove(moveObject, creature);
-                break;
-            case 'RANGED':
-                this.playRangedMove(moveObject, creature);
-                break;
-            case 'MELEE/RANGED':
-                this.playMeleeRangedMove(moveObject, creature);
-                break;
+        if (this.placeCounter < 14) {
+            addCreature(moveObject);
+        } else {
+            if (this.startSquareEmpty(moveObject.startSquare)) {
+                throw new IllegalMoveException('Start square empty', moveObject);
+            } else if (this.squareOccupiedByEnemyCreature(moveObject.startSquare)) {
+                throw new IllegalMoveException('Start square occupied by enemy creature', moveObject);
+            }
+    
+            const creature = this.field[moveObject.startSquare.y][moveObject.startSquare.x];
+            const type = creature.type;
+    
+            switch (type) {
+                case 'MELEE':
+                    this.playMeleeMove(moveObject, creature);
+                    break;
+                case 'RANGED':
+                    this.playRangedMove(moveObject, creature);
+                    break;
+                case 'MELEE/RANGED':
+                    this.playMeleeRangedMove(moveObject, creature);
+                    break;
+            }
         }
 
         this.turn = (this.turn + 1) % 2;

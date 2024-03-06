@@ -1,21 +1,21 @@
-const { GameField } = require('./gameFiles/field');
-const { Pikeman } = require('./gameFiles/creatures/pikeman');
-const { Marksman } = require('./gameFiles/creatures/marksman');
-const { Knight } = require('./gameFiles/creatures/knight');
-const { Archer } = require('./gameFiles/creatures/archer');
-const { Cavalry } = require('./gameFiles/creatures/cavalry');
-const { ArmoredPeasant } = require('./gameFiles/creatures/armoredPeasant');
-const { Phoenix } = require('./gameFiles/creatures/phoenix');
+const { GameField } = require('../logic/src/gameFiles/field');
+const { Pikeman } = require('../logic/src/gameFiles/creatures/pikeman');
+const { Marksman } = require('../logic/src/gameFiles/creatures/marksman');
+const { Knight } = require('../logic/src/gameFiles/creatures/knight');
+const { Archer } = require('../logic/src/gameFiles/creatures/archer');
+const { Cavalry } = require('../logic/src/gameFiles/creatures/cavalry');
+const { ArmoredPeasant } = require('../logic/src/gameFiles/creatures/armoredPeasant');
+const { Phoenix } = require('../logic/src/gameFiles/creatures/phoenix');
 
-const express = require('express');
-const http = require('http');
-const WebSocket = require('ws');
-const path = require('path');
+// const express = require('express');
+// const http = require('http');
+// const WebSocket = require('ws');
+// const path = require('path');
 
-const app = express();
-const server = http.createServer(app);
+// const app = express();
+// const server = http.createServer(app);
 
-let gamefield = new GameField();
+// let gamefield = new GameField();
 
 // function sendUpdateToClients() {
 //     if (!wss) {
@@ -87,7 +87,7 @@ let gamefield = new GameField();
 // });
 
 // Serve your frontend app (HTML, CSS, JS, etc.)
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // #######################################################################
 // Simulated game flow
@@ -125,10 +125,10 @@ const creaturesToAdd = [
     { creature: phoenix2, x: 17, y: 12 },
 ];
 
-// addCreatureWithDelay(0, () => {
-//     console.log('All creatures added');
-//     playMoveWithDelay(0);
-// });
+addCreatureWithDelay(0, () => {
+    console.log('All creatures added');
+    playMoveWithDelay(0);
+});
 
 const movesToPlay = [
     // {
@@ -140,6 +140,77 @@ const movesToPlay = [
     //     targetSquare: { x: 1, y: 2 },
     //     attackSquare: { x: 17, y: 2 },
     // },
+    // PLACING MOVES
+    {
+        id: 1,
+        x: 0,
+        y: 0,
+    },
+    {
+        id: 1,
+        x: 17,
+        y: 0,
+    },
+    {
+        id: 2,
+        x: 0,
+        y: 2,
+    },
+    {
+        id: 2,
+        x: 17,
+        y: 2,
+    },
+    {
+        id: 3,
+        x: 0,
+        y: 4,
+    },
+    {
+        id: 3,
+        x: 17,
+        y: 4,
+    },
+    {
+        id: 4,
+        x: 0,
+        y: 6,
+    },
+    {
+        id: 4,
+        x: 17,
+        y: 6,
+    },
+    {
+        id: 5,
+        x: 0,
+        y: 8,
+    },
+    {
+        id: 5,
+        x: 17,
+        y: 8,
+    },
+    {
+        id: 6,
+        x: 0,
+        y: 10,
+    },
+    {
+        id: 6,
+        x: 17,
+        y: 10,
+    },
+    {
+        id: 7,
+        x: 0,
+        y: 12,
+    },
+    {
+        id: 7,
+        x: 17,
+        y: 12,
+    },
     {
         startSquare: { x: 0, y: 0 }, // Pikemeni se bijedu
         targetSquare: { x: 6, y: 0 },
