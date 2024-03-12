@@ -34,6 +34,7 @@ const wss = new WebSocket.Server({ server });
 const connections = new Set();
 
 wss.on('connection', (ws, req) => {
+
   const id1 = "1234567890";
   const id2 = "0987654321";
 
@@ -41,18 +42,23 @@ wss.on('connection', (ws, req) => {
   const receivedId = url.searchParams.get('id');
 
   if (receivedId === 'frontend') {
+    console.log('Frontend connected');
+
     ws.send(JSON.stringify({
       field: gameObject.field,
       player1: players[0].name,
-      player2: players[1].name
+      player2: players[1].name,
+      winner: gameObject.winner
     }));
-  } else if (receivedId === id1 || receivedId === id2) {
-    connectedPlayers++;
-    if (connectedPlayers === 2) {
-      // Add the new connection to the set
-      connections.add(ws);
 
-      // Send the initial game state to the newly connected player
+  } else if (receivedId === id1 || receivedId === id2) {
+
+    connectedPlayers++;
+    connections.add(ws);
+
+    if (connectedPlayers === 2) {
+
+      // Send the game state to the connected players
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           const message = JSON.stringify({ 
@@ -66,8 +72,11 @@ wss.on('connection', (ws, req) => {
           });
         }
       });
+
     } else {
+
       ws.send(JSON.stringify({ message: 'Player registered successfully. Waiting for other player.' }))
+    
     }
   } else {
     ws.send(JSON.stringify({ 
@@ -79,8 +88,26 @@ wss.on('connection', (ws, req) => {
   }
   
   ws.on('message', (message) => {
-    // Handle messages from clients (if needed)
-    console.log(`Received message: ${message}`);
+    let move = JSON.parse(message);
+    console.log(`Received move: ${move}`);
+
+    gameObject.playMove(move);
+
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        const message = JSON.stringify({ 
+          field: gameObject.field,
+          currentTurn: players[gameObject.turn].id,
+          winner: gameObject.winner
+        });
+        client.send(message, (error) => {
+          if (error) {
+            console.error('Error sending message:', error);
+          }
+        });
+      }
+    });
+
   });
 
   ws.on('close', () => {

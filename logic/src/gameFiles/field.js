@@ -45,34 +45,34 @@ class GameField {
 
     addCreature(moveObject) {
         if (this.turn === 0){
-            if (moveObject.y > 2) {
+            if (moveObject.x > 2) {
                 throw new IllegalMoveException('Illegal placement', moveObject);
             } else if (this.field[moveObject.y][moveObject.x] !== null) {
                 throw new IllegalMoveException('Square occupied', moveObject);
             } else if (this.player1Creatures[moveObject.id] === null) {
                 throw new IllegalMoveException('You have already placed this creature', moveObject);
             } else {
-                this.field[y][x] = creature;
+                this.field[moveObject.y][moveObject.x] = this.player1Creatures[moveObject.id - 1];
                 this.placeCounter++;
             }
         } else {
-            if (moveObject.y < 10) {
+            if (moveObject.x < 10) {
                 throw new IllegalMoveException('Illegal placement', moveObject);
             } else if (this.field[moveObject.y][moveObject.x] !== null) {
                 throw new IllegalMoveException('Square occupied', moveObject);
             } else if (this.player2Creatures[moveObject.id] === null) {
                 throw new IllegalMoveException('You have already placed this creature', moveObject);
             } else {
-                this.field[y][x] = creature;
+                this.field[moveObject.y][moveObject.x] = this.player2Creatures[moveObject.id - 1];
                 this.placeCounter++;
             }
         }
     }
 
     playMove(moveObject) {
-        console.log('playMove', moveObject);
+        // console.log('playMove', moveObject);
         if (this.placeCounter < 14) {
-            addCreature(moveObject);
+            this.addCreature(moveObject);
         } else {
             if (this.startSquareEmpty(moveObject.startSquare)) {
                 throw new IllegalMoveException('Start square empty', moveObject);
@@ -183,16 +183,24 @@ class GameField {
         attackedCreature.health -= creature.attackDamage;
         if (attackedCreature.health <= 0) {
             this.field[attackSquare.y][attackSquare.x] = null;
+            console.log("attackedCreature", attackedCreature)
             this.creatureNumber[attackedCreature.team]--;
         }
 
-        if (this.creatureNumber[attackedCreature.team] === 0) {
-            this.winner = creature.team;
+        this.checkForTheWinner();
+    }
+
+    checkForTheWinner() {
+        if (this.creatureNumber[0] === 0) {
+            this.winner = this.playerIDs[1];
+        }
+        if (this.creatureNumber[1] === 0) {
+            this.winner = this.playerIDs[0];
         }
     }
 
     moveCreature(startSquare, targetSquare, creature) {
-        console.log('creature moved to: ', targetSquare)
+        // console.log('creature moved to: ', targetSquare)
         const xDiff = Math.abs(startSquare.x - targetSquare.x);
         const yDiff = Math.abs(startSquare.y - targetSquare.y);
 
