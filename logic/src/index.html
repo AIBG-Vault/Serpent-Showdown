@@ -88,7 +88,12 @@
                         if (cell) {
                             const creatureInfo = document.createElement('div');
                             creatureInfo.className = 'creature-info';
-                            creatureInfo.textContent = `${cell.name}, HP: ${cell.health}, AD: ${cell.attackDamage}, R: ${cell.rangeOfMovement}`;
+                            creatureInfo.textContent = 
+                            `${cell.name}, 
+                            HP: ${cell.health}, 
+                            AD: ${cell.attackDamage}, 
+                            R: ${cell.rangeOfMovement}, 
+                            T: ${cell.team}`;
 
                             const backgroundText = document.createElement('div');
                             backgroundText.className = 'background-text';
@@ -156,6 +161,11 @@
                 // Append the new table to the displayDiv
                 displayDiv.innerHTML = '';
                 displayDiv.appendChild(table);
+
+                // Displaying the winner
+                let winnerDisplay = document.getElementById('winner');
+                if (gameField.winner !== null)
+                    winnerDisplay.textContent = `Winner: ${gameField.winner}`;
             }
         }
     </script>

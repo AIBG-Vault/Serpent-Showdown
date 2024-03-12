@@ -18,11 +18,12 @@ ws.on('message', (data) => {
     }
 
     // Send a move to the server
-    console.log('currentTurn:', message.currentTurn);
     if (message.currentTurn === myId) {
-        ws.send(JSON.stringify(movesToPlay[moveCounter]));
-        moveCounter+=2;
-        console.log("moveCounter", moveCounter);
+        setTimeout(() => {
+            ws.send(JSON.stringify(movesToPlay[moveCounter]));
+            moveCounter += 2;
+            // console.log("moveCounter", moveCounter);
+        }, 2);
     }
 });
 
