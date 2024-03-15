@@ -55,12 +55,18 @@
             console.log('Connected to WebSocket');
         });
 
+        let counter =1;
+
         socket.addEventListener('message', (message) => {
             console.log('Message from server:', message.data);
             const gameField = JSON.parse(message.data);
-            console.log(gameField);
+            console.log({move: counter, game: gameField});
+            counter++;
                 
             displayGameField(gameField);
+
+            // Refresh the page
+            // location.reload();
         });
 
         function displayGameField(gameField) {

@@ -12,13 +12,13 @@ ws.on('message', (data) => {
     const message = JSON.parse(data.toString('utf-8'));
     console.log('Received message:', message);
 
-    if (message.winner) {
+    if (message.winner !== null && message.winner !== undefined) {
         console.log('Game over. Disconnecting from WebSocket server');
         ws.close();
     }
 
     // Send a move to the server
-    if (message.currentTurn) {
+    if (message.currentTurn && message.winner === null) {
         setTimeout(() => {
             ws.send(JSON.stringify(movesToPlay[moveCounter]));
             moveCounter += 2;

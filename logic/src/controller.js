@@ -43,6 +43,9 @@ wss.on('connection', (ws, req) => {
     if (receivedId === 'frontend') {
         console.log('Frontend connected');
 
+        ws.id = receivedId;
+        connections.add(ws);
+
         ws.send(JSON.stringify({
 
             field: gameObject.field,
@@ -118,11 +121,16 @@ wss.on('connection', (ws, req) => {
 
             gameObject.playMove(move);
 
+            // if (gameObject.winner === 0 || gameObject.winner === 1) {
+            //     wss.close();
+            // }
+
             currentTurn = gameObject.turn;
 
             connections.forEach((client) => {
 
-                if (client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) {
+                if ((client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) ||
+                    (client.readyState === WebSocket.OPEN && (gameObject.winner === 0 || gameObject.winner === 1))) {
 
                     const message = JSON.stringify({
 
@@ -139,6 +147,25 @@ wss.on('connection', (ws, req) => {
                         }
 
                     });
+                } else if (client.readyState === WebSocket.OPEN && client.id === 'frontend') {
+
+                    const message = JSON.stringify({
+
+                        field: gameObject.field,
+                        player1: players[0].name,
+                        player2: players[1].name,
+                        winner: gameObject.winner
+            
+                    });
+
+                    client.send(message, (error) => {
+
+                        if (error) {
+                            console.error('Error sending message:', error);
+                        }
+
+                    });
+
                 }
             });
         }
