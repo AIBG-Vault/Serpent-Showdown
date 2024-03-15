@@ -13,7 +13,6 @@ class GameField {
         this.creatureNumber = [7, 7];
         this.winner = null;
         this.turn = 0;
-        this.playerIDs = [players[0].id, players[1].id];
         this.placeCounter = 0;
         this.player1Creatures = [
             new Pikeman(0),
@@ -192,10 +191,10 @@ class GameField {
 
     checkForTheWinner() {
         if (this.creatureNumber[0] === 0) {
-            this.winner = this.playerIDs[1];
+            this.winner = 1;
         }
         if (this.creatureNumber[1] === 0) {
-            this.winner = this.playerIDs[0];
+            this.winner = 0;
         }
     }
 

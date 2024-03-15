@@ -44,10 +44,12 @@ wss.on('connection', (ws, req) => {
         console.log('Frontend connected');
 
         ws.send(JSON.stringify({
+
             field: gameObject.field,
             player1: players[0].name,
             player2: players[1].name,
             winner: gameObject.winner
+
         }));
 
     } else if (receivedId === players[0].id || receivedId === players[1].id) {
@@ -64,16 +66,23 @@ wss.on('connection', (ws, req) => {
 
             // Send the game state to the connected players
             connections.forEach((client) => {
+
                 if (client.readyState === WebSocket.OPEN && client.id === players[0].id) {
+
                     const message = JSON.stringify({
+
                         field: gameObject.field,
-                        currentTurn: players[gameObject.turn].id,
+                        currentTurn: players[gameObject.turn].name,
                         winner: gameObject.winner
+
                     });
+
                     client.send(message, (error) => {
+
                         if (error) {
                             console.error('Error sending message:', error);
                         }
+                        
                     });
                 }
             });
@@ -102,8 +111,6 @@ wss.on('connection', (ws, req) => {
             ws.send(JSON.stringify({ message: 'Waiting for the other player to connect.' }));
             return;
 
-        } else if (false) {
-
         } else {
 
             let move = JSON.parse(message);
@@ -118,9 +125,11 @@ wss.on('connection', (ws, req) => {
                 if (client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) {
 
                     const message = JSON.stringify({
+
                         field: gameObject.field,
-                        currentTurn: players[gameObject.turn].id,
+                        currentTurn: players[gameObject.turn].name,
                         winner: gameObject.winner
+
                     });
 
                     client.send(message, (error) => {

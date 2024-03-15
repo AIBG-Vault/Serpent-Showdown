@@ -17,7 +17,7 @@ ws.on('message', (data) => {
     }
 
     // Send a move to the server
-    if (message.currentTurn === myId) {
+    if (message.currentTurn) {
         setTimeout(() => {
             ws.send(JSON.stringify(movesToPlay[moveCounter]));
             moveCounter += 2;
