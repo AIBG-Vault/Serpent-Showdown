@@ -3,6 +3,7 @@ const http = require('http');
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
 const { GameField } = require('./gameFiles/field');
+const { IllegalMoveException} = require('./gameFiles/util/illegalMoveException');
 
 const app = express();
 const port = 3000;
@@ -11,6 +12,7 @@ app.use(bodyParser.json());
 
 let connectedPlayers = 0;
 let waitingForOtherPlayer = false;
+let currentTurn = 0;
 
 const players = [
     
@@ -24,7 +26,7 @@ const players = [
     }
 ];
 
-const gameObject = new GameField(players);
+let gameObject;
 
 // Create an HTTP server
 const server = http.createServer(app);
@@ -39,12 +41,11 @@ wss.on('connection', (ws, req) => {
 
     const url = new URL(req.url, 'http://localhost:3000'); // Adjust the origin as needed
     const receivedId = url.searchParams.get('id');
+    ws.id = receivedId;
+    connections.add(ws);
 
     if (receivedId === 'frontend') {
         console.log('Frontend connected');
-
-        ws.id = receivedId;
-        connections.add(ws);
 
         ws.send(JSON.stringify({
 
@@ -58,14 +59,13 @@ wss.on('connection', (ws, req) => {
     } else if (receivedId === players[0].id || receivedId === players[1].id) {
 
         connectedPlayers++;
-        ws.id = receivedId;
-        connections.add(ws);
 
-        console.log('Connections:', wss.clients);
+        console.log('Connections:', connections.size);
 
         if (connectedPlayers === 2) {
 
             waitingForOtherPlayer = false;
+            gameObject = new GameField(players)
 
             // Send the game state to the connected players
             connections.forEach((client) => {
@@ -116,58 +116,99 @@ wss.on('connection', (ws, req) => {
 
         } else {
 
-            let move = JSON.parse(message);
+            let move;
+
+            try {
+                move = JSON.parse(message);
+            } catch (error) {
+                console.error('Cannot parse message:', message);
+                return;
+            }
+
             console.log(`Received move: ${move}`);
 
-            gameObject.playMove(move);
+            //console.log('AAA', move.playerId === players[currentTurn].id)
+            if (move.playerId === players[currentTurn].id) {
 
-            // if (gameObject.winner === 0 || gameObject.winner === 1) {
-            //     wss.close();
-            // }
-
-            currentTurn = gameObject.turn;
-
-            connections.forEach((client) => {
-
-                if ((client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) ||
-                    (client.readyState === WebSocket.OPEN && (gameObject.winner === 0 || gameObject.winner === 1))) {
-
-                    const message = JSON.stringify({
-
-                        field: gameObject.field,
-                        currentTurn: players[gameObject.turn].name,
-                        winner: gameObject.winner
-
-                    });
-
-                    client.send(message, (error) => {
-
-                        if (error) {
-                            console.error('Error sending message:', error);
-                        }
-
-                    });
-                } else if (client.readyState === WebSocket.OPEN && client.id === 'frontend') {
-
-                    const message = JSON.stringify({
-
-                        field: gameObject.field,
-                        player1: players[0].name,
-                        player2: players[1].name,
-                        winner: gameObject.winner
-            
-                    });
-
-                    client.send(message, (error) => {
-
-                        if (error) {
-                            console.error('Error sending message:', error);
-                        }
-
-                    });
-
+                try {
+                    gameObject.playMove(move);
+                } catch (error) {
+                    if (error instanceof IllegalMoveException) {
+                        ws.send(JSON.stringify({ 
+                            message: 'Illegal move. Please try another move or restart the game by disconnecting both agents and connecting them again.',
+                            code: 100,
+                            move: move
+                        }));
+                        return;
+                    } else {
+                        throw error;
+                    }
                 }
-            });
+
+                // if (gameObject.winner === 0 || gameObject.winner === 1) {
+                //     wss.close();
+                // }
+
+                currentTurn = gameObject.turn;
+
+                connections.forEach((client) => {
+
+                    if ((client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) ||
+                        (client.readyState === WebSocket.OPEN && (gameObject.winner === 0 || gameObject.winner === 1))) {
+
+                        const message = JSON.stringify({
+
+                            field: gameObject.field,
+                            currentTurn: players[gameObject.turn].name,
+                            winner: gameObject.winner
+
+                        });
+
+                        client.send(message, (error) => {
+
+                            if (error) {
+                                console.error('Error sending message:', error);
+                            }
+
+                        });
+                    } else if (client.readyState === WebSocket.OPEN && client.id === 'frontend') {
+
+                        const message = JSON.stringify({
+
+                            field: gameObject.field,
+                            player1: players[0].name,
+                            player2: players[1].name,
+                            winner: gameObject.winner
+
+                        });
+
+                        client.send(message, (error) => {
+
+                            if (error) {
+                                console.error('Error sending message:', error);
+                            }
+
+                        });
+
+                    }
+                });
+            } else {
+                connections.forEach((client) => {
+                    const message = JSON.stringify({
+
+                        message: 'It is not your turn. Please wait for the other player to make a move.'
+
+                    });
+
+                    client.send(message, (error) => {
+
+                        if (error) {
+                            console.error('Error sending message:', error);
+                        }
+
+                    });
+                });
+            }
         }
 
     });
@@ -175,6 +216,10 @@ wss.on('connection', (ws, req) => {
     ws.on('close', () => {
         // Remove the closed connection from the set
         connections.delete(ws);
+        //console.log('Connections:', connections.size);
+        connectedPlayers--;
+
+        gameObject = new GameField(players);
     });
 
 });

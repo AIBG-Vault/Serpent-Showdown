@@ -43,15 +43,18 @@ class GameField {
     }
 
     addCreature(moveObject) {
+        if (!('x' in moveObject && 'y' in moveObject && 'creatureId' in moveObject)) {
+            throw new IllegalMoveException('Invalid move object', moveObject);
+        }
         if (this.turn === 0){
             if (moveObject.x > 2) {
                 throw new IllegalMoveException('Illegal placement', moveObject);
             } else if (this.field[moveObject.y][moveObject.x] !== null) {
                 throw new IllegalMoveException('Square occupied', moveObject);
-            } else if (this.player1Creatures[moveObject.id] === null) {
+            } else if (this.player1Creatures[moveObject.creatureId] === null) {
                 throw new IllegalMoveException('You have already placed this creature', moveObject);
             } else {
-                this.field[moveObject.y][moveObject.x] = this.player1Creatures[moveObject.id - 1];
+                this.field[moveObject.y][moveObject.x] = this.player1Creatures[moveObject.creatureId - 1];
                 this.placeCounter++;
             }
         } else {
@@ -59,10 +62,10 @@ class GameField {
                 throw new IllegalMoveException('Illegal placement', moveObject);
             } else if (this.field[moveObject.y][moveObject.x] !== null) {
                 throw new IllegalMoveException('Square occupied', moveObject);
-            } else if (this.player2Creatures[moveObject.id] === null) {
+            } else if (this.player2Creatures[moveObject.creatureId] === null) {
                 throw new IllegalMoveException('You have already placed this creature', moveObject);
             } else {
-                this.field[moveObject.y][moveObject.x] = this.player2Creatures[moveObject.id - 1];
+                this.field[moveObject.y][moveObject.x] = this.player2Creatures[moveObject.creatureId - 1];
                 this.placeCounter++;
             }
         }
@@ -182,7 +185,7 @@ class GameField {
         attackedCreature.health -= creature.attackDamage;
         if (attackedCreature.health <= 0) {
             this.field[attackSquare.y][attackSquare.x] = null;
-            console.log("attackedCreature", attackedCreature)
+            //console.log("attackedCreature", attackedCreature)
             this.creatureNumber[attackedCreature.team]--;
         }
 
@@ -239,6 +242,7 @@ class GameField {
 
     squareOccupiedByEnemyCreature(startSquare) {
         const creature = this.field[startSquare.y][startSquare.x];
+        //console.log('creature', creature);
         return creature.team !== this.turn;
     }
 
