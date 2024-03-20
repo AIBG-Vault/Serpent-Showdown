@@ -18,6 +18,7 @@ ws.on('message', (data) => {
 
     // Send a move to the server
     if (message.currentTurn && message.winner === null) {
+        console.log('Sending move:', movesToPlay[moveCounter])
         setTimeout(() => {
             ws.send(JSON.stringify(movesToPlay[moveCounter]));
             moveCounter += 2;
@@ -48,6 +49,10 @@ const movesToPlay = [
     //     attackSquare: { x: 17, y: 2 },
     // },
     // PLACING MOVES
+    // {
+    //     restart: {}
+    // },
+    // {},
     {
         creatureId: 1,
         x: 0,

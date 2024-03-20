@@ -26,7 +26,7 @@ const players = [
     }
 ];
 
-let gameObject;
+let gameObject = new GameField(players);
 
 // Create an HTTP server
 const server = http.createServer(app);
@@ -59,13 +59,12 @@ wss.on('connection', (ws, req) => {
     } else if (receivedId === players[0].id || receivedId === players[1].id) {
 
         connectedPlayers++;
-
-        console.log('Connections:', connections.size);
+        // console.log('connectedPlayers:', connectedPlayers);
+        // console.log('Connections:', connections.size);
 
         if (connectedPlayers === 2) {
 
             waitingForOtherPlayer = false;
-            gameObject = new GameField(players)
 
             // Send the game state to the connected players
             connections.forEach((client) => {
@@ -125,10 +124,26 @@ wss.on('connection', (ws, req) => {
                 return;
             }
 
-            console.log(`Received move: ${move}`);
-
-            //console.log('AAA', move.playerId === players[currentTurn].id)
-            if (move.playerId === players[currentTurn].id) {
+            // console.log(`Received move: ${move}`);
+            if (move.restart) {
+                gameObject = new GameField(players);
+                currentTurn = 0;
+                connections.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN && client.id === players[0].id) {
+                        const message = JSON.stringify({
+                            field: gameObject.field,
+                            currentTurn: players[gameObject.turn].name,
+                            winner: gameObject.winner
+                        });
+                        client.send(message, (error) => {
+                            if (error) {
+                                console.error('Error sending message:', error);
+                            }
+                        });
+                    }
+                });
+            
+            } else if (move.playerId === players[currentTurn].id) {
 
                 try {
                     gameObject.playMove(move);
@@ -136,6 +151,7 @@ wss.on('connection', (ws, req) => {
                     if (error instanceof IllegalMoveException) {
                         ws.send(JSON.stringify({ 
                             message: 'Illegal move. Please try another move or restart the game by disconnecting both agents and connecting them again.',
+                            error: error.message,
                             code: 100,
                             move: move
                         }));
@@ -178,6 +194,7 @@ wss.on('connection', (ws, req) => {
                             field: gameObject.field,
                             player1: players[0].name,
                             player2: players[1].name,
+                            winnerHealth: gameObject.winnerHealth,
                             winner: gameObject.winner
 
                         });
@@ -194,19 +211,21 @@ wss.on('connection', (ws, req) => {
                 });
             } else {
                 connections.forEach((client) => {
-                    const message = JSON.stringify({
+                    if (client.id === move.playerId && client.readyState === WebSocket.OPEN) {
+                        const message = JSON.stringify({
 
-                        message: 'It is not your turn. Please wait for the other player to make a move.'
+                            message: 'It is not your turn. Please wait for the other player to make a move.'
 
-                    });
+                        });
 
-                    client.send(message, (error) => {
+                        client.send(message, (error) => {
 
-                        if (error) {
-                            console.error('Error sending message:', error);
-                        }
+                            if (error) {
+                                console.error('Error sending message:', error);
+                            }
 
-                    });
+                        });
+                    }
                 });
             }
         }
@@ -217,63 +236,12 @@ wss.on('connection', (ws, req) => {
         // Remove the closed connection from the set
         connections.delete(ws);
         //console.log('Connections:', connections.size);
-        connectedPlayers--;
+        if (ws.id === players[0].id || ws.id === players[1].id) connectedPlayers--;
 
         gameObject = new GameField(players);
     });
 
 });
-
-// Endpoint for user registration and starting the game
-// app.post('/register', (req, res) => {
-//     // Implement user registration logic here
-//     const id1 = "1234567890";
-//     const id2 = "0987654321";
-
-//     if (connections.size === 2) {
-//         // Start the game and send the initial game state to both players
-//         gameLogic.startGame();
-//         const initialGameState = gameLogic.gameState;
-//         connections.forEach((ws) => {
-//             ws.send(JSON.stringify({ type: 'initialGameState', gameState: initialGameState }));
-//         });
-
-//         // Reset the count for the next game
-//         connections.clear();
-//     } else {
-//         // Player is registered, but the game hasn't started yet
-//         ws.send(JSON.stringify({ message: 'Player registered successfully. Waiting for the other player.' }));
-//     }
-// });
-
-// // Endpoint for making a move
-// app.post('/make_move', (req, res) => {
-//     const { player, move } = req.body;
-
-//     // Validate player and move data
-//     if (!player || !move) {
-//         return res.status(400).json({ error: 'Player and move are required' });
-//     }
-
-//     // Ensure it's the correct player's turn
-//     if (player !== gameLogic.currentPlayer) {
-//         return res.status(400).json({ error: 'It is not your turn' });
-//     }
-
-//     // Make the move and update the game state
-//     gameLogic.makeMove(player, move);
-
-//     // Switch to the next player's turn
-//     gameLogic.currentPlayer = 3 - player; // Alternates between 1 and 2
-
-//     // Send the updated game state to all connected players
-//     const updatedGameState = gameLogic.gameState;
-//     connections.forEach((ws) => {
-//         ws.send(JSON.stringify({ type: 'moveMade', gameState: updatedGameState, currentPlayer: gameLogic.currentPlayer }));
-//     });
-
-//     res.status(200).json({ message: 'Move made successfully', gameState: updatedGameState });
-// });
 
 // Start the server
 server.listen(port, () => {

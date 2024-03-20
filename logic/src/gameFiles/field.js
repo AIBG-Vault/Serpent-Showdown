@@ -12,6 +12,7 @@ class GameField {
         this.field = Array.from({ length: 13 }, () => Array.from({ length: 18 }, () => null));
         this.creatureNumber = [7, 7];
         this.winner = null;
+        this.winnerHealth = 0;
         this.turn = 0;
         this.placeCounter = 0;
         this.player1Creatures = [
@@ -51,10 +52,11 @@ class GameField {
                 throw new IllegalMoveException('Illegal placement', moveObject);
             } else if (this.field[moveObject.y][moveObject.x] !== null) {
                 throw new IllegalMoveException('Square occupied', moveObject);
-            } else if (this.player1Creatures[moveObject.creatureId] === null) {
+            } else if (this.player1Creatures[moveObject.creatureId - 1] === null) {
                 throw new IllegalMoveException('You have already placed this creature', moveObject);
             } else {
                 this.field[moveObject.y][moveObject.x] = this.player1Creatures[moveObject.creatureId - 1];
+                this.player1Creatures[moveObject.creatureId - 1] = null;
                 this.placeCounter++;
             }
         } else {
@@ -62,10 +64,11 @@ class GameField {
                 throw new IllegalMoveException('Illegal placement', moveObject);
             } else if (this.field[moveObject.y][moveObject.x] !== null) {
                 throw new IllegalMoveException('Square occupied', moveObject);
-            } else if (this.player2Creatures[moveObject.creatureId] === null) {
+            } else if (this.player2Creatures[moveObject.creatureId - 1] === null) {
                 throw new IllegalMoveException('You have already placed this creature', moveObject);
             } else {
                 this.field[moveObject.y][moveObject.x] = this.player2Creatures[moveObject.creatureId - 1];
+                this.player2Creatures[moveObject.creatureId - 1] = null;
                 this.placeCounter++;
             }
         }
@@ -195,9 +198,23 @@ class GameField {
     checkForTheWinner() {
         if (this.creatureNumber[0] === 0) {
             this.winner = 1;
+            for (let i = 0; i < 13; i++) {
+                for (let j = 0; j < 18; j++) {
+                    if (this.field[i][j] !== null) {
+                        this.winnerHealth += this.field[i][j].health;
+                    }
+                }
+            }
         }
         if (this.creatureNumber[1] === 0) {
             this.winner = 0;
+            for (let i = 0; i < 13; i++) {
+                for (let j = 0; j < 18; j++) {
+                    if (this.field[i][j] !== null) {
+                        this.winnerHealth += this.field[i][j].health;
+                    }
+                }
+            }
         }
     }
 

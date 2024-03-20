@@ -1,5 +1,4 @@
 const WebSocket = require('ws');
-
 const myId = '0987654321';
 
 const ws = new WebSocket(`ws://localhost:3000?id=${myId}`);
@@ -19,6 +18,7 @@ ws.on('message', (data) => {
 
     // Send a move to the server
     if (message.currentTurn && message.winner === null) {
+        console.log('Sending move:', movesToPlay[moveCounter])
         setTimeout(() => {
             ws.send(JSON.stringify(movesToPlay[moveCounter]));
             moveCounter += 2;
