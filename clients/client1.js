@@ -49,10 +49,6 @@ const movesToPlay = [
     //     attackSquare: { x: 17, y: 2 },
     // },
     // PLACING MOVES
-    // {
-    //     restart: {}
-    // },
-    // {},
     {
         creatureId: 1,
         x: 0,
@@ -65,6 +61,10 @@ const movesToPlay = [
         y: 0,
         playerId: myId,
     },
+    // {
+    //     restart: {}
+    // },
+    // {},
     {
         creatureId: 2,
         x: 0,
@@ -1388,271 +1388,16 @@ const movesToPlay = [
         attackSquare: { x: 12, y: 5 },
         playerId: myId,
     },
-    // {
-    //     startSquare: { x: 12, y: 5 },
-    //     targetSquare: { x: 12, y: 6 },
-    //     attackSquare: { x: 13, y: 6 },
-    //     playerId: myId,
-    // },
-    // {
-    //     startSquare: { x: 13, y: 6 },   
-    //     targetSquare: { x: 12, y: 6 },
-    //     attackSquare: { x: 12, y: 5 },
-    //     playerId: myId,
-    // },
     {
-        startSquare: { x: 12, y: 5 },   
+        startSquare: { x: 12, y: 5 },
         targetSquare: { x: 12, y: 6 },
+        attackSquare: { x: 13, y: 6 },
         playerId: myId,
     },
     {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 6 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 7 },
-        targetSquare: { x: 13, y: 6 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 4 },   
-        targetSquare: { x: 12, y: 5 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 13, y: 6 },
-        targetSquare: { x: 13, y: 7 },
-        playerId: myId,
-    },
-    {
-        startSquare: { x: 12, y: 5 },   
-        targetSquare: { x: 12, y: 4 },
+        startSquare: { x: 13, y: 6 },   
+        targetSquare: { x: 12, y: 6 },
+        attackSquare: { x: 12, y: 5 },
         playerId: myId,
     },
   ]
