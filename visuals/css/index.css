@@ -139,7 +139,15 @@ body {
 }
 
 .creature > img {
-  width: min(6vw, 10rem);
+  height: min(5vw, 10rem);
+}
+
+.left_container .creature > img {
+  transform: scaleX(-1);
+}
+
+.right_container .creature > img {
+  transform: scaleX(1);
 }
 
 .creature > .stats {
@@ -167,6 +175,14 @@ body {
 
 .creature .stat > img {
   width: min(1.5vw, 3rem);
+}
+
+.left_container .creature .stat > img {
+  transform: scaleX(1);
+}
+
+.right_container .creature .stat > img {
+  transform: scaleX(-1);
 }
 
 .creature .stat > p {
