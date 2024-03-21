@@ -29,20 +29,33 @@ body {
   position: absolute;
   inset: 0;
 
+  text-align: center;
+
   background-color: rgba(0, 0, 0, 0.8);
 
   z-index: 1000;
 
-  display: none;
-  opacity: 0;
+  display: grid;
+  opacity: 1;
 
   place-items: center;
 }
 
-.winner_container > h2 {
+.winner_container > div {
+  margin: min(6vw, 10rem);
+}
+
+.winner_container h1 {
   text-align: center;
 
   font-size: min(6vw, 10rem);
+  font-family: inherit;
+}
+
+.winner_container h2 {
+  text-align: center;
+
+  font-size: min(3vw, 6rem);
   font-family: inherit;
 }
 
@@ -72,13 +85,13 @@ body {
   margin-bottom: 4rem;
 }
 
-/* .left_container {
+.left_container {
   text-align: left;
 }
 
 .right_container {
   text-align: right;
-} */
+}
 
 .team_name {
   font-size: min(2.5vw, 6rem);
@@ -103,13 +116,18 @@ body {
 
 .creature {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   gap: min(1vw, 2rem);
 
   background-color: rgba(255, 255, 255, 0.25);
   padding-inline: 1rem;
+  padding-block: 0.5rem;
   border-radius: 1rem;
+}
+
+.creature.dead {
+  filter: grayscale(100%);
 }
 
 .left_container .creature {
@@ -148,11 +166,11 @@ body {
 }
 
 .creature .stat > img {
-  width: min(1.5vw, 4rem);
+  width: min(1.5vw, 3rem);
 }
 
 .creature .stat > p {
-  font-size: min(2vw, 2rem);
+  font-size: min(1vw, 2rem);
 
   font-weight: bold;
 }

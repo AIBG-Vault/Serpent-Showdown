@@ -13,6 +13,7 @@ class GameField {
         this.creatureNumber = [7, 7];
         this.winner = null;
         this.winnerHealth = 0;
+        this.movesWithoutAttackCounter = 0;
         this.turn = 0;
         this.placeCounter = 0;
         this.player1Creatures = [
@@ -81,6 +82,7 @@ class GameField {
         if (this.placeCounter < 14) {
             this.addCreature(moveObject);
         } else {
+            this.movesWithoutAttackCounter++;
             if (this.startSquareEmpty(moveObject.startSquare)) {
                 throw new IllegalMoveException('Start square empty', moveObject);
             } else if (this.squareOccupiedByEnemyCreature(moveObject.startSquare)) {
@@ -100,6 +102,31 @@ class GameField {
                 case 'MELEE/RANGED':
                     this.playMeleeRangedMove(moveObject, creature);
                     break;
+            }
+
+            if (this.movesWithoutAttackCounter >= 50) {
+                let player1remainingHealth = 0;
+                let player2remainingHealth = 0;
+                for (let i = 0; i < 13; i++) {
+                    for (let j = 0; j < 18; j++) {
+                        if (this.field[i][j] !== null) {
+                            if (this.field[i][j].team === 0) {
+                                player1remainingHealth += this.field[i][j].health;
+                            } else {
+                                player2remainingHealth += this.field[i][j].health;
+                            }
+                        }
+                    }
+                }
+                if (player1remainingHealth > player2remainingHealth) {
+                    this.winner = 0;
+                    this.winnerHealth = player1remainingHealth;
+                } else if (player1remainingHealth < player2remainingHealth) {
+                    this.winner = 1;
+                    this.winnerHealth = player2remainingHealth;
+                } else {
+                    this.winner = 2;
+                }
             }
         }
 
@@ -187,6 +214,7 @@ class GameField {
     }
 
     attackCreature(creature, attackedCreature, attackSquare) {
+        this.movesWithoutAttackCounter = 0;
         attackedCreature.health -= creature.attackDamage;
         if (attackedCreature.health <= 0) {
             this.field[attackSquare.y][attackSquare.x] = null;

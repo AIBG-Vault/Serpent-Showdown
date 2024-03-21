@@ -1,16 +1,71 @@
-const gameId = 1;
+let socket; // Hold the WebSocket instance
+let socketConnectingInterval; // For managing the reconnection attempts
 
-// Create a new WebSocket instance
-const socket = new WebSocket(
-  `ws://localhost:8081/streaming?gameId=${gameId}&password=sifra`
-);
+function connectWebSocket() {
+  // Initialize or reinitialize the WebSocket connection
+  socket = new WebSocket("ws://localhost:3000?id=frontend");
 
-// When the connection is established
-socket.addEventListener("open", function (event) {
-  console.log("WebSocket connection established");
-});
+  socket.addEventListener("open", (event) => {
+    console.log("WebSocket connection established");
+    if (socketConnectingInterval) {
+      updateMoveCount(null);
+      clearInterval(socketConnectingInterval);
+      socketConnectingInterval = null;
+    }
+  });
 
+  socket.addEventListener("message", (message) => {
+    // console.log("Message from server:", message.data);
+    // Assuming dataList is defined elsewhere and you want to keep adding data to it
+    dataList.push(JSON.parse(message.data));
+  });
+
+  socket.addEventListener("close", (message) => {
+    console.log("WebSocket connection closed:", message);
+    // Check if a reconnection attempt isn't already scheduled before setting a new interval
+    if (!socketConnectingInterval) {
+      socketConnectingInterval = setInterval(connectWebSocket, 1000);
+    }
+  });
+
+  socket.addEventListener("error", (error) => {
+    console.error("WebSocket error:", error);
+    // Close the socket if an error occurs to trigger the 'close' event listener
+    // and thereby attempt reconnection
+    socket.close();
+  });
+}
+
+// Initial connection attempt
+connectWebSocket();
+
+let moveCounter = -1;
 let dataList = [];
+let lastFrameTime = Date.now();
+gameTicksPerSecond = 50;
+
+let hasReceivedCreatureUpdates = false;
+
+function gameLoop() {
+  let now = Date.now();
+  let elapsed = now - lastFrameTime;
+
+  // Check if it's time for the next tick
+  if (elapsed > 1000 / gameTicksPerSecond) {
+    lastFrameTime = now - (elapsed % (1000 / gameTicksPerSecond));
+
+    if (dataList.length > 0) {
+      parseData(dataList.shift());
+    }
+
+    // Additional game logic can be processed here
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+// Start the game loop
+requestAnimationFrame(gameLoop);
 
 // dataList.push({ board: "string" });
 
@@ -21,29 +76,6 @@ let dataList = [];
 //     dataList.push({ board: "string3" });
 //   }, 2000);
 // }, 2000);
-
-// When a message is received from the server
-socket.addEventListener("message", function (event) {
-  console.log("Message from server:", event.data);
-
-  dataList.push(JSON.parse(event.data));
-});
-
-setInterval(() => {
-  if (dataList.length > 0) {
-    parseData(dataList.shift());
-  }
-}, 300);
-
-// When the connection is closed
-socket.addEventListener("close", function (event) {
-  console.log("WebSocket connection closed:", event);
-});
-
-// When there is an error with the connection
-socket.addEventListener("error", function (event) {
-  console.error("WebSocket error:", event);
-});
 
 // fetch("../data/AIBG fetch 3.json")
 //   .then((res) => res.json())
@@ -69,40 +101,34 @@ socket.addEventListener("error", function (event) {
 // winner msg logic
 // ========================================
 
-function toggleWinner(status, team1Name, team2Name) {
-  const winnerContainer = $("body").find(".winner_container");
-  const winnerMessage = document.querySelector(".winner_container > h2");
+function toggleWinner(data) {
+  const winnerId = data.winner;
+  const teamOneName = data.player1;
+  const teamTwoName = data.player2;
 
-  if ($(winnerContainer).is(":visible")) {
-    $(winnerContainer).animate(
-      {
-        opacity: 0,
-      },
-      500,
-      () => {
-        // Toggle the display property of the element once the opacity toggle is complete
-        $(winnerContainer).css("display", "none");
-        winnerMessage.textContent = "";
-      }
-    );
+  const winnerContainer = $(".winner_container");
+  const winnerMessage = $(".winner_container h1");
+
+  if (winnerContainer.is(":visible")) {
+    winnerContainer.animate({ opacity: 0 }, 500, function () {
+      winnerContainer.css("display", "none");
+      winnerMessage.text(""); // Use jQuery for consistency
+    });
   } else {
-    let message = "";
-    if (status.includes("Game draw")) {
+    let message; // Ensure the variable is declared
+    if (winnerId == -1) {
       message = "Game draw";
     } else {
-      let winningTeam = status.includes("0") ? team1Name : team2Name;
-      message = "Winner: " + winningTeam;
+      let winningTeam = winnerId == 0 ? teamOneName : teamTwoName;
+      message = winningTeam;
     }
-    winnerMessage.textContent = message;
-    $(winnerContainer).css("display", "grid");
-    $(winnerContainer).animate(
-      {
-        opacity: 1,
-      },
-      1500
-    );
+
+    winnerMessage.text(message); // Moved inside else block
+    winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
   }
 }
+
+toggleWinner({});
 
 // ========================================
 // game logic
@@ -111,85 +137,153 @@ function toggleWinner(status, team1Name, team2Name) {
 const abeceda = "abcdefghijkl";
 
 const board = Chessboard("board", {
-  showNotation: true,
+  position: {
+    d6: "bK",
+    d4: "wP",
+    e4: "wK",
+    h8: "wK",
+    l9: "wK",
+    i10: "wK",
+    j10: "wK",
+    k11: "wK",
+    l12: "wK",
+  },
+  showNotation: false,
   orientation: "black",
 });
 $(window).resize(board.resize);
 
+function updateCreatureStats(creatures, containerSelector) {
+  const creatureMapping = {
+    Arc: "Archer",
+    ArP: "ArmoredPeasant",
+    Cav: "Cavalry",
+    Kni: "Knight",
+    Mar: "Marksman",
+    Phx: "Phoenix",
+    Pik: "Pikeman",
+  };
+
+  // Update the flag if we have at least one creature in the array
+  if (creatures.length > 0 && creatures.some((creature) => creature !== null)) {
+    hasReceivedCreatureUpdates = true;
+  }
+
+  // Only apply dead if we have received creature updates
+  if (hasReceivedCreatureUpdates) {
+    document
+      .querySelectorAll(containerSelector + " .creature")
+      .forEach((creatureElement) => {
+        creatureElement.classList.add("dead");
+
+        // Update HP
+        const hpElement = creatureElement.querySelector(".HP p");
+        hpElement.textContent = "0";
+      });
+  }
+
+  creatures.forEach((creature) => {
+    if (creature) {
+      // Ensure creature is not null
+      const creatureName = creatureMapping[creature.name];
+      if (creatureName) {
+        const creatureElement = Array.from(
+          document.querySelectorAll(containerSelector + " .creature img[alt]")
+        ).find((img) => img.alt === creatureName)?.parentNode;
+
+        if (creatureElement) {
+          // Alive creature found, remove dead
+          creatureElement.classList.remove("dead");
+
+          // Update HP
+          const hpElement = creatureElement.querySelector(".HP p");
+          hpElement.textContent = creature.health;
+
+          // Update Attack
+          const attackElement = creatureElement.querySelector(".Attack p");
+          attackElement.textContent = creature.attackDamage;
+
+          // Update ROM
+          const romElement = creatureElement.querySelector(".ROM p");
+          romElement.textContent = creature.rangeOfMovement;
+        }
+      }
+    }
+  });
+
+  // For creatures not in the current update, keep or apply dead based on the flag
+  if (hasReceivedCreatureUpdates) {
+    document
+      .querySelectorAll(containerSelector + " .creature img[alt]")
+      .forEach((img) => {
+        const creatureName = Object.keys(creatureMapping).find(
+          (key) => creatureMapping[key] === img.alt
+        );
+        const isDead = !creatures.some(
+          (creature) => creature && creature.name === creatureName
+        );
+        if (isDead) {
+          img.parentNode.classList.add("dead");
+        }
+      });
+  }
+}
+
+function updateMoveCount(moveCounter) {
+  document.querySelector(".move_number").textContent =
+    "Move: " + (moveCounter || "####");
+}
+
 function parseData(data) {
   // console.log(data);
+  moveCounter++;
+  updateMoveCount(moveCounter);
 
   // ========================================
   // set players
 
   const teamNameElems = document.querySelectorAll(".team_name");
-  teamNameElems[0].textContent = data.player1 || "Naziv tima 1";
-  teamNameElems[1].textContent = data.player2 || "Naziv tima 2";
+  teamNameElems[0].textContent = data.player1 || "Tema name 1";
+  teamNameElems[1].textContent = data.player2 || "Team name 2";
 
   // ========================================
-  // set boards
-  let gameState = data.gameField;
+  // set board
+  let field = data.field;
   // console.log(gameState);
 
-  const b1 = {};
-  const b2 = {};
+  let teamOneCreatures = [];
+  let teamTwoCreatures = [];
 
-  for (let redak = 0; redak < gameState.length; redak++) {
-    let row1 = gameState[redak];
-
-    for (let stupac = 0; stupac < row1.length; stupac++) {
-      const square1 = row1[stupac];
-
-      if (square1) {
-        // console.log(square1);
-
-        let piece = "";
-
-        if (square1.black) {
-          piece += "b";
+  for (let row = 0; row < field.length; row++) {
+    for (let column = 0; column < field[row].length; column++) {
+      let creature = field[row][column];
+      if (creature !== null) {
+        if (creature.team === 0) {
+          teamOneCreatures.push(creature);
+        } else if (creature.team === 1) {
+          teamTwoCreatures.push(creature);
         } else {
-          piece += "w";
+          console.error("Unknown creature team: ", creature);
         }
-
-        piece += square1.oznaka;
-        const pozicija = abeceda.charAt(stupac) + (redak + 1);
-        // console.log(pozicija + ":" + piece);
-
-        b1[pozicija] = piece;
-        // console.log(obj);
       }
 
-      const square2 = row2[stupac];
-
-      if (square2) {
-        // console.log(square2);
-
-        let piece = "";
-
-        if (square2.black) {
-          piece += "b";
-        } else {
-          piece += "w";
-        }
-
-        piece += square2.oznaka;
-        const pozicija = abeceda.charAt(stupac) + (redak + 1);
-        // console.log(pozicija + ":" + piece);
-
-        b2[pozicija] = piece;
-        // console.log(obj);
-      }
+      // TODO: display creatures on board
     }
   }
 
-  // console.log(b1);
-  // console.log(b2);
+  // TODO: set creature's stats from teamOneCreatures and teamTwoCreatures
 
-  board.position(b1);
+  // After you've filled teamOneCreatures and teamTwoCreatures arrays
+  updateCreatureStats(teamOneCreatures, ".left_container .creatures");
+  updateCreatureStats(teamTwoCreatures, ".right_container .creatures");
+
+  if (data.winner !== null) {
+    toggleWinner(data);
+  }
 
   // for testing
 
-  // var board1 = Chessboard("board1", {
+  // var board1 = Chessboard("board", {
   //   position: {
   //     d6: "bK",
   //     d4: "wP",
@@ -263,164 +357,5 @@ function parseData(data) {
   // }, 3000);
 
   // ========================================
-  // set extra pieces
-  let teamOneCreaturesList = gameState;
-  let teamTwoCreaturesList = gameState;
-
-  // console.log(extraWhitePieces1json);
-
-  const teamOneCreaturesElem = document.querySelectorAll(
-    ".creatures_container"
-  )[0];
-  const teamTwoCreaturesElem = document.querySelectorAll(
-    ".creatures_container"
-  )[1];
-
-  teamOneCreaturesList.forEach((creature) => {
-    if (creature) {
-      // increase number on extra piece
-      if (creature.oznaka === "D") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wD"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "C") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wC"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "J") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wJ"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "N") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wN"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "L") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wL"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "T") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wT"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "S") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wS"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      }
-      // else if (piece.oznaka === "V") {
-      //   let numOnPiece = board1extraPiecesW.querySelector(
-      //     ".extra_piece_num_wV"
-      //   );
-      //   let num = numOnPiece.textContent;
-      //   num++;
-      //   numOnPiece.textContent = num;
-      // }
-    }
-  });
-
-  teamTwoCreaturesList.forEach((creature) => {
-    if (creature) {
-      // increase number on extra piece
-      if (creature.oznaka === "D") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wD"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "C") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wC"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "J") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wJ"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "N") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wN"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "L") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wL"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "T") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wT"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      } else if (creature.oznaka === "S") {
-        let numOnPiece = teamTwoCreaturesList.querySelector(
-          ".extra_piece_num_wS"
-        );
-        let num = numOnPiece.textContent;
-        num++;
-        numOnPiece.textContent = num;
-      }
-      // else if (piece.oznaka === "V") {
-      //   let numOnPiece = board1extraPiecesW.querySelector(
-      //     ".extra_piece_num_wV"
-      //   );
-      //   let num = numOnPiece.textContent;
-      //   num++;
-      //   numOnPiece.textContent = num;
-      // }
-    }
-  });
-
-  // ========================================
   // set winner if game is over
-
-  let winnerId = gameState.winner;
-  // console.log(status);
-
-  const winnerMessage = document.querySelector(".winner_container > h2");
-  if (
-    winnerId &&
-    (winnerId.includes("winner") || winnerId.includes("Game draw")) &&
-    winnerMessage.textContent === ""
-  ) {
-    toggleWinner(winnerId, data.player1, data.player2);
-  } else if (
-    (!winnerId || !winnerId.includes("winner")) &&
-    winnerMessage.textContent !== ""
-  ) {
-    toggleWinner("");
-  }
 }
