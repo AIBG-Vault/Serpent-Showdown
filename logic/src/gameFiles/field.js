@@ -24,6 +24,7 @@ class GameField {
             new ArmoredPeasant(0),
             new Phoenix(0)
         ]
+        this.player1Placed = [0,0,0,0,0,0,0]
         this.player2Creatures = [
             new Pikeman(1),
             new Marksman(1),
@@ -33,6 +34,7 @@ class GameField {
             new ArmoredPeasant(1),
             new Phoenix(1)
         ]
+        this.player2Placed = [0,0,0,0,0,0,0]
     }
 
     getGameField() {
@@ -52,11 +54,11 @@ class GameField {
                 throw new IllegalMoveException('Illegal placement', moveObject);
             } else if (this.field[moveObject.y][moveObject.x] !== null) {
                 throw new IllegalMoveException('Square occupied', moveObject);
-            } else if (this.player1Creatures[moveObject.creatureId - 1] === null) {
+            } else if (this.player1Placed[moveObject.creatureId - 1] === 1) {
                 throw new IllegalMoveException('You have already placed this creature', moveObject);
             } else {
                 this.field[moveObject.y][moveObject.x] = this.player1Creatures[moveObject.creatureId - 1];
-                this.player1Creatures[moveObject.creatureId - 1] = null;
+                this.player1Placed[moveObject.creatureId - 1] = 1;
                 this.placeCounter++;
             }
         } else {
@@ -64,11 +66,11 @@ class GameField {
                 throw new IllegalMoveException('Illegal placement', moveObject);
             } else if (this.field[moveObject.y][moveObject.x] !== null) {
                 throw new IllegalMoveException('Square occupied', moveObject);
-            } else if (this.player2Creatures[moveObject.creatureId - 1] === null) {
+            } else if (this.player2Placed[moveObject.creatureId - 1] === 1) {
                 throw new IllegalMoveException('You have already placed this creature', moveObject);
             } else {
                 this.field[moveObject.y][moveObject.x] = this.player2Creatures[moveObject.creatureId - 1];
-                this.player2Creatures[moveObject.creatureId - 1] = null;
+                this.player2Placed[moveObject.creatureId - 1] = 1;
                 this.placeCounter++;
             }
         }

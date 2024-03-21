@@ -50,8 +50,9 @@ wss.on("connection", (ws, req) => {
             field: gameObject.field,
             player1: players[0].name,
             player2: players[1].name,
-            winner: gameObject.winner
-
+            winner: gameObject.winner,
+            player1Creatures: gameObject.player1Creatures,
+            player2Creatures: gameObject.player2Creatures
         }));
 
     } else if (receivedId === players[0].id || receivedId === players[1].id) {
