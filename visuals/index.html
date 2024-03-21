@@ -1,179 +1,310 @@
-<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Game</title>
-    <style>
-        /* Add some basic styling for better presentation */
-        table {
-            border-collapse: collapse;
-            width: 1600px; /* Set a fixed width for the table */
-            height: 800px; /* Set a fixed height for the table */
-            margin: auto; /* Center the table */
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            width: 150px; /* Fixed width for each cell */
-            height: 50px; /* Fixed height for each cell */
-            position: relative;
-        }
+    <link rel="icon" href="./favicon.ico" />
 
-        .creature-info {
-            font-size: 12px; /* Adjust font size for creature info */
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    <title>AIBG 8.0</title>
 
-        .background-text {
-            font-size: 10px;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            color: gray;
-        }
-    </style>
-</head>
-<body>
-    <h1>Game Field Display</h1>
-    <div id="gameFieldDisplay"></div>
-    <h1 id="winner">Winner: </h1>
+    <link href="./css/index.css" rel="stylesheet" />
+    <link href="./css/libraries/chessboard-1.0.0.css" rel="stylesheet" />
 
-    <script>
-        const socket = new WebSocket('ws://localhost:3000?id=frontend');
+    <script src="./js/libraries/jquery.js"></script>
+    <script src="./js/libraries/chessboard-1.0.0.js" defer></script>
+    <script src="./js/index.js" defer></script>
+  </head>
+  <body>
+    <div class="winner_container"><h2></h2></div>
 
-        socket.addEventListener('open', () => {
-            console.log('Connected to WebSocket');
-        });
+    <div class="content">
+      <div class="left_container team_info">
+        <h2 class="team_name">Team one name</h2>
 
-        let counter =1;
+        <div class="creatures">
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-        socket.addEventListener('message', (message) => {
-            console.log('Message from server:', message.data);
-            const gameField = JSON.parse(message.data);
-            console.log({move: counter, game: gameField});
-            counter++;
-                
-            displayGameField(gameField);
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
-            // Refresh the page
-            // location.reload();
-        });
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-        function displayGameField(gameField) {
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-            // console.log(gameField);
-            const displayDiv = document.getElementById('gameFieldDisplay');
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
-            // Check if the table already exists
-            const existingTable = displayDiv.querySelector('table');
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-            if (existingTable) {
-                console.log("if statement is true")
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
-                // Update existing table cells with new data
-                for (let rowIndex = 0; rowIndex < gameField.field.length; rowIndex++) {
-                    const row = gameField.field[rowIndex];
-                    const existingRow = existingTable.rows[rowIndex];
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-                    for (let colIndex = 0; colIndex < row.length; colIndex++) {
-                        const cell = row[colIndex];
-                        const existingCell = existingRow.cells[colIndex];
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
-                        // Check if the cell contains a creature (Pikeman or Marksman)
-                        if (cell) {
-                            const creatureInfo = document.createElement('div');
-                            creatureInfo.className = 'creature-info';
-                            creatureInfo.textContent = 
-                            `${cell.name}, 
-                            HP: ${cell.health}, 
-                            AD: ${cell.attackDamage}, 
-                            R: ${cell.rangeOfMovement}, 
-                            T: ${cell.team}`;
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-                            const backgroundText = document.createElement('div');
-                            backgroundText.className = 'background-text';
-                            backgroundText.textContent = `(${colIndex}, ${rowIndex})`;
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
-                            // Update the content of the existing cell
-                            existingCell.innerHTML = '';
-                            existingCell.appendChild(creatureInfo);
-                            existingCell.appendChild(backgroundText);
-                        } else {
-                            // Empty cell, add row and column indexes
-                            const backgroundText = document.createElement('div');
-                            backgroundText.className = 'background-text';
-                            backgroundText.textContent = `(${colIndex}, ${rowIndex})`;
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-                            // Update the content of the existing cell
-                            existingCell.innerHTML = '';
-                            existingCell.appendChild(backgroundText);
-                        }
-                    }
-                }
-            } else {
-                console.log("else statement is false")
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                // Create a new table if it doesn't exist
-                const table = document.createElement('table');
+      <div class="middle_container">
+        <h1>AIBG 8.0</h1>
 
-                // Loop through rows
-                for (let rowIndex = 0; rowIndex < gameField.field.length; rowIndex++) {
-                    const row = gameField.field[rowIndex];
-                    const tr = document.createElement('tr');
+        <h3>Move:&nbsp;</h3>
 
-                    // Loop through columns
-                    for (let colIndex = 0; colIndex < row.length; colIndex++) {
-                        const cell = row[colIndex];
-                        const td = document.createElement('td');
+        <div id="board" class="board"></div>
+      </div>
 
-                        // Check if the cell contains a creature (Pikeman or Marksman)
-                        if (cell) {
-                            const creatureInfo = document.createElement('div');
-                            creatureInfo.className = 'creature-info';
-                            creatureInfo.textContent = `${cell.name}, HP: ${cell.health}, AD: ${cell.attackDamage}, R: ${cell.rangeOfMovement}`;
+      <div class="right_container team_info">
+        <h2 class="team_name">Team two name</h2>
 
-                            const backgroundText = document.createElement('div');
-                            backgroundText.className = 'background-text';
-                            backgroundText.textContent = `(${colIndex}, ${rowIndex})`;
+        <div class="creatures">
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-                            td.appendChild(creatureInfo);
-                            td.appendChild(backgroundText);
-                        } else {
-                            // Empty cell, add row and column indexes
-                            const backgroundText = document.createElement('div');
-                            backgroundText.className = 'background-text';
-                            backgroundText.textContent = `(${colIndex}, ${rowIndex})`;
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
-                            td.appendChild(backgroundText);
-                        }
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-                        tr.appendChild(td);
-                    }
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
-                    table.appendChild(tr);
-                }
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
 
-                // Append the new table to the displayDiv
-                displayDiv.innerHTML = '';
-                displayDiv.appendChild(table);
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
 
-                // Displaying the winner
-                let winnerDisplay = document.getElementById('winner');
-                if (gameField.winner !== null)
-                    winnerDisplay.textContent = `Winner: ${gameField.winner}`;
-            }
-        }
-    </script>
-</body>
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
+
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
+
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
+
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="creature">
+            <img src="/img/pieces/wP.png" alt="Knight" />
+
+            <div class="stats">
+              <div class="stat">
+                <img src="/img/HP.png" alt="HP" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/Attack.png" alt="Attack" />
+                <p>###</p>
+              </div>
+              <div class="stat">
+                <img src="/img/ROM.png" alt="ROM" />
+                <p>###</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
