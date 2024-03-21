@@ -66,6 +66,10 @@ const movesToPlay = [
         playerId: myId,
     },
     {
+        restart: {}
+    },
+    {},
+    {
         creatureId: 2,
         x: 0,
         y: 2,
