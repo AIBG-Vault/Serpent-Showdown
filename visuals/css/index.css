@@ -1,0 +1,158 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+
+  background: url(../img/neural-network-bg.webp);
+  background-size: cover;
+  background-position: center;
+
+  height: 100dvh;
+
+  font-family: Roboto, sans-serif;
+  color: white;
+}
+
+.winner_container {
+  position: absolute;
+  inset: 0;
+
+  background-color: rgba(0, 0, 0, 0.8);
+
+  z-index: 1000;
+
+  display: none;
+  opacity: 0;
+
+  place-items: center;
+}
+
+.winner_container > h2 {
+  text-align: center;
+
+  font-size: min(6vw, 10rem);
+  font-family: inherit;
+}
+
+.content {
+  margin: 2rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.middle_container {
+  flex-basis: 30%;
+}
+
+.middle_container > h1 {
+  font-size: min(4vw, 6rem);
+  font-family: inherit;
+  text-align: center;
+}
+
+.middle_container > h3 {
+  font-size: min(2vw, 3rem);
+  font-family: inherit;
+  text-align: center;
+
+  margin-bottom: 4rem;
+}
+
+/* .left_container {
+  text-align: left;
+}
+
+.right_container {
+  text-align: right;
+} */
+
+.team_name {
+  font-size: min(2.5vw, 6rem);
+
+  margin-bottom: 1.5rem;
+}
+
+.creatures {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: min(0.25vw, 1rem);
+}
+
+.left_container .creatures {
+  align-items: start;
+}
+
+.right_container .creatures {
+  align-items: end;
+}
+
+.creature {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: min(1vw, 2rem);
+
+  background-color: rgba(255, 255, 255, 0.25);
+  padding-inline: 1rem;
+  border-radius: 1rem;
+}
+
+.left_container .creature {
+  flex-direction: row;
+}
+
+.right_container .creature {
+  flex-direction: row-reverse;
+}
+
+.creature > img {
+  width: min(6vw, 10rem);
+}
+
+.creature > .stats {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: end;
+  gap: 0.5rem;
+}
+
+.creature .stat {
+  display: flex;
+  justify-content: baseline;
+  align-items: center;
+  gap: min(1vw, 0.75rem);
+}
+
+.left_container .creature .stat {
+  flex-direction: row;
+}
+
+.right_container .creature .stat {
+  flex-direction: row-reverse;
+}
+
+.creature .stat > img {
+  width: min(1.5vw, 4rem);
+}
+
+.creature .stat > p {
+  font-size: min(2vw, 2rem);
+
+  font-weight: bold;
+}
