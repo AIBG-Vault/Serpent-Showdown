@@ -143,12 +143,9 @@ wss.on("connection", (ws, req) => {
                 currentTurn = gameObject.turn;
 
                 connections.forEach((client) => {
-                    if (
-                        (client.readyState === WebSocket.OPEN &&
-                            client.id === players[currentTurn].id) ||
-                        (client.readyState === WebSocket.OPEN &&
-                            (gameObject.winner === 0 || gameObject.winner === 1))
-                    ) {
+                    if ((client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) ||
+                        (client.readyState === WebSocket.OPEN && (gameObject.winner === 0 || gameObject.winner === 1 || gameObject.winner === 2) && client.id !== 'frontend')) {
+                        
                         const message = JSON.stringify({
                             field: gameObject.field,
                             currentTurn: players[gameObject.turn].name,
@@ -162,6 +159,10 @@ wss.on("connection", (ws, req) => {
                             }
 
                         });
+
+                        if (gameObject.winner === 0 || gameObject.winner === 1 || gameObject.winner === 2) {
+                            console.log('WINNER!!!:', players[gameObject.winner].name);
+                        }
                     } else if (client.readyState === WebSocket.OPEN && client.id === 'frontend') {
 
                         const message = JSON.stringify({
@@ -169,6 +170,7 @@ wss.on("connection", (ws, req) => {
                             field: gameObject.field,
                             player1: players[0].name,
                             player2: players[1].name,
+                            winnerHealth: gameObject.winnerHealth,
                             winner: gameObject.winner
 
                         });
@@ -208,7 +210,7 @@ wss.on("connection", (ws, req) => {
         // Remove the closed connection from the set
         connections.delete(ws);
         //console.log('Connections:', connections.size);
-        connectedPlayers--;
+        if (ws.id === players[0].id || ws.id === players[1].id) connectedPlayers--;
 
         gameObject = new GameField(players);
     });
