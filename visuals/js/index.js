@@ -1,5 +1,14 @@
-let socket; // Hold the WebSocket instance
-let socketConnectingInterval; // For managing the reconnection attempts
+let socket; // WebSocket instance
+let socketConnectingInterval; // Interval for reconnection attempts
+let moveCounter = -1;
+let dataList = [];
+let gameTicksPerSecond = 50; // Adjust as needed
+let hasReceivedCreatureUpdates = false;
+let lastFrameTime = Date.now();
+
+// ========================================
+// websockets
+// ========================================
 
 function connectWebSocket() {
   // Initialize or reinitialize the WebSocket connection
@@ -7,8 +16,10 @@ function connectWebSocket() {
 
   socket.addEventListener("open", (event) => {
     console.log("WebSocket connection established");
+    hideWinner(); // Hide the winner upon reconnection
+    moveCounter = 0; // Reset move counter
+    updateMoveCount(moveCounter); // Update UI with the reset move counter
     if (socketConnectingInterval) {
-      updateMoveCount(null);
       clearInterval(socketConnectingInterval);
       socketConnectingInterval = null;
     }
@@ -39,119 +50,24 @@ function connectWebSocket() {
 // Initial connection attempt
 connectWebSocket();
 
-let moveCounter = -1;
-let dataList = [];
-let lastFrameTime = Date.now();
-gameTicksPerSecond = 50;
-
-let hasReceivedCreatureUpdates = false;
-
-function gameLoop() {
-  let now = Date.now();
-  let elapsed = now - lastFrameTime;
-
-  // Check if it's time for the next tick
-  if (elapsed > 1000 / gameTicksPerSecond) {
-    lastFrameTime = now - (elapsed % (1000 / gameTicksPerSecond));
-
-    if (dataList.length > 0) {
-      parseData(dataList.shift());
-    }
-
-    // Additional game logic can be processed here
-  }
-
-  requestAnimationFrame(gameLoop);
-}
-
-// Start the game loop
-requestAnimationFrame(gameLoop);
-
-// dataList.push({ board: "string" });
-
-// setTimeout(() => {
-//   dataList.push({ board: "string2" });
-
-//   setTimeout(() => {
-//     dataList.push({ board: "string3" });
-//   }, 2000);
-// }, 2000);
-
-// fetch("../data/AIBG fetch 3.json")
-//   .then((res) => res.json())
-//   .then((data) => {
-//     parseData(data);
-//   });
-
-// fetch("../data/AIBG fetch 2.json")
-//   .then((res) => res.json())
-//   .then((data) => {
-//     parseData(data);
-//   });
-
-// setInterval(() => {
-//   fetch("../data/AIBG fetch.json")
-//     .then((res) => res.json())
-//     .then((data) => {
-//       parseData(data);
-//     });
-// }, 1000);
-
 // ========================================
-// winner msg logic
+// utility
 // ========================================
 
-function toggleWinner(data) {
-  const winnerId = data.winner;
-  const teamOneName = data.player1;
-  const teamTwoName = data.player2;
-
+// Function to hide the winner
+function hideWinner() {
   const winnerContainer = $(".winner_container");
-  const winnerMessage = $(".winner_container h1");
-
   if (winnerContainer.is(":visible")) {
     winnerContainer.animate({ opacity: 0 }, 500, function () {
       winnerContainer.css("display", "none");
-      winnerMessage.text(""); // Use jQuery for consistency
     });
-  } else {
-    let message; // Ensure the variable is declared
-    if (winnerId == -1) {
-      message = "Game draw";
-    } else {
-      let winningTeam = winnerId == 0 ? teamOneName : teamTwoName;
-      message = winningTeam;
-    }
-
-    winnerMessage.text(message); // Moved inside else block
-    winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
   }
 }
 
-toggleWinner({});
-
-// ========================================
-// game logic
-// ========================================
-
-const abeceda = "abcdefghijkl";
-
-const board = Chessboard("board", {
-  position: {
-    d6: "bK",
-    d4: "wP",
-    e4: "wK",
-    h8: "wK",
-    l9: "wK",
-    i10: "wK",
-    j10: "wK",
-    k11: "wK",
-    l12: "wK",
-  },
-  showNotation: false,
-  orientation: "black",
-});
-$(window).resize(board.resize);
+function updateMoveCount(moveCounter) {
+  document.querySelector(".move_number").textContent =
+    "Move: " + (moveCounter || "####");
+}
 
 function updateCreatureStats(creatures, containerSelector) {
   const creatureMapping = {
@@ -229,10 +145,61 @@ function updateCreatureStats(creatures, containerSelector) {
   }
 }
 
-function updateMoveCount(moveCounter) {
-  document.querySelector(".move_number").textContent =
-    "Move: " + (moveCounter || "####");
+// ========================================
+// game logic
+// ========================================
+
+function gameLoop() {
+  let now = Date.now();
+  let elapsed = now - lastFrameTime;
+
+  // Check if it's time for the next tick
+  if (elapsed > 1000 / gameTicksPerSecond) {
+    lastFrameTime = now - (elapsed % (1000 / gameTicksPerSecond));
+
+    if (dataList.length > 0) {
+      parseData(dataList.shift());
+    }
+
+    // Additional game logic can be processed here
+  }
+
+  requestAnimationFrame(gameLoop);
 }
+
+// Start the game loop
+requestAnimationFrame(gameLoop);
+
+function toggleWinner(data) {
+  const winnerId = data.winner;
+  const teamOneName = data.player1;
+  const teamTwoName = data.player2;
+
+  const winnerContainer = $(".winner_container");
+  const winnerMessage = $(".winner_container h1");
+
+  if (winnerContainer.is(":visible")) {
+    winnerContainer.animate({ opacity: 0 }, 500, function () {
+      winnerContainer.css("display", "none");
+      winnerMessage.text(""); // Use jQuery for consistency
+    });
+  } else {
+    let message; // Ensure the variable is declared
+    if (winnerId == -1) {
+      message = "Game draw";
+    } else {
+      let winningTeam = winnerId == 0 ? teamOneName : teamTwoName;
+      message = winningTeam;
+    }
+
+    winnerMessage.text(message); // Moved inside else block
+    winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
+  }
+}
+
+toggleWinner({});
+
+const abeceda = "abcdefghijkl";
 
 function parseData(data) {
   // console.log(data);
@@ -271,9 +238,6 @@ function parseData(data) {
     }
   }
 
-  // TODO: set creature's stats from teamOneCreatures and teamTwoCreatures
-
-  // After you've filled teamOneCreatures and teamTwoCreatures arrays
   updateCreatureStats(teamOneCreatures, ".left_container .creatures");
   updateCreatureStats(teamTwoCreatures, ".right_container .creatures");
 
@@ -359,3 +323,24 @@ function parseData(data) {
   // ========================================
   // set winner if game is over
 }
+
+// ========================================
+// dynamic content loading
+// ========================================
+
+const board = Chessboard("board", {
+  position: {
+    d6: "bK",
+    d4: "wP",
+    e4: "wK",
+    h8: "wK",
+    l9: "wK",
+    i10: "wK",
+    j10: "wK",
+    k11: "wK",
+    l12: "wK",
+  },
+  showNotation: false,
+  orientation: "black",
+});
+$(window).resize(board.resize);
