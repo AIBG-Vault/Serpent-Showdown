@@ -117,6 +117,7 @@ wss.on("connection", (ws, req) => {
                 return;
             }
 
+            // if statement for restart option
             if (move.restart) {
 
                 gameObject = new GameField(players);
