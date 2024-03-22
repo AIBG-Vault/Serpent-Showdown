@@ -50,6 +50,11 @@ class GameField {
         if (!('x' in moveObject && 'y' in moveObject && 'creatureId' in moveObject)) {
             throw new IllegalMoveException('Invalid move object', moveObject);
         }
+
+        if (moveObject.creatureId < 1 || moveObject.creatureId > 7) {
+            throw new IllegalMoveException('Invalid creature id. Id can only be between 1 and 7.', moveObject);
+        }
+        
         if (this.turn === 0){
             if (moveObject.x > 2) {
                 throw new IllegalMoveException('Illegal placement', moveObject);

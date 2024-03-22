@@ -1,3 +1,4 @@
+Name,Health,AttackDamage,RangeOfMovement,Type
 Pikeman,50,6,6,MELEE
 Marksman,75,5,5,RANGED
 Knight,125,8,8,MELEE
