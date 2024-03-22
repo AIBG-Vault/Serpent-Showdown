@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 let connectedPlayers = 0;
 let waitingForOtherPlayer = false;
 let currentTurn = 0;
+let serverStopped = false;
 
 const players = [
     {
@@ -51,6 +52,7 @@ wss.on("connection", (ws, req) => {
             player1: players[0].name,
             player2: players[1].name,
             winner: gameObject.winner,
+            winnerHealth: gameObject.winnerHealth,
             player1Creatures: gameObject.player1Creatures,
             player2Creatures: gameObject.player2Creatures
         }));
@@ -81,6 +83,14 @@ wss.on("connection", (ws, req) => {
 
                     timeoutId = setTimeout(() => {
                         console.log('Player timed out:', players[currentTurn].name);
+
+                        if (serverStopped) return;
+                        wss.clients.forEach((client) => {
+                            if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                client.terminate(); // Forcefully close the WebSocket connection
+                            }
+                        });
+
                         server.close(function(err) {
                             if (err) {
                                 console.log('Error while closing server:', err);
@@ -88,6 +98,8 @@ wss.on("connection", (ws, req) => {
                                 console.log('WebSocket server closed successfully.');
                             }
                         });
+                        serverStopped = true;
+
                     }, 10000);
                 }
             });
@@ -146,6 +158,7 @@ wss.on("connection", (ws, req) => {
                             player1: players[0].name,
                             player2: players[1].name,
                             winner: gameObject.winner,
+                            winnerHealth: gameObject.winnerHealth,
                             player1Creatures: gameObject.player1Creatures,
                             player2Creatures: gameObject.player2Creatures
 
@@ -172,6 +185,14 @@ wss.on("connection", (ws, req) => {
 
                         timeoutId = setTimeout(() => {
                             console.log('Player timed out:', players[currentTurn].name);
+                            
+                            if (serverStopped) return;
+                            wss.clients.forEach((client) => {
+                                if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                    client.terminate(); // Forcefully close the WebSocket connection
+                                }
+                            });
+
                             server.close(function(err) {
                                 if (err) {
                                     console.log('Error while closing server:', err);
@@ -179,6 +200,8 @@ wss.on("connection", (ws, req) => {
                                     console.log('WebSocket server closed successfully.');
                                 }
                             });
+                            serverStopped = true;
+
                         }, 10000);
                     }
                 });
@@ -226,6 +249,14 @@ wss.on("connection", (ws, req) => {
 
                         timeoutId = setTimeout(() => {
                             console.log('Player timed out:', players[currentTurn].name);
+                            
+                            if (serverStopped) return;
+                            wss.clients.forEach((client) => {
+                                if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                    client.terminate(); // Forcefully close the WebSocket connection
+                                }
+                            });
+
                             server.close(function(err) {
                                 if (err) {
                                     console.log('Error while closing server:', err);
@@ -233,6 +264,8 @@ wss.on("connection", (ws, req) => {
                                     console.log('WebSocket server closed successfully.');
                                 }
                             });
+                            serverStopped = true;
+
                         }, 10000);
 
                         if (gameObject.winner === 0 || gameObject.winner === 1 || gameObject.winner === 2) {
@@ -245,8 +278,10 @@ wss.on("connection", (ws, req) => {
                             field: gameObject.field,
                             player1: players[0].name,
                             player2: players[1].name,
+                            winner: gameObject.winner,
                             winnerHealth: gameObject.winnerHealth,
-                            winner: gameObject.winner
+                            player1Creatures: gameObject.player1Creatures,
+                            player2Creatures: gameObject.player2Creatures
 
                         });
 
