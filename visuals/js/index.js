@@ -2,8 +2,8 @@ let socket; // WebSocket instance
 let socketConnectingInterval; // Interval for reconnection attempts
 let moveCounter = -1;
 let dataList = [];
-let gameTicksPerSecond = 50; // Adjust as needed
-let hasReceivedCreatureUpdates = false;
+let gameTicksPerSecond = 25; // Adjust as needed
+// let hasReceivedCreatureUpdates = false;
 let lastFrameTime = Date.now();
 
 // ========================================
@@ -27,12 +27,11 @@ function connectWebSocket() {
 
   socket.addEventListener("message", (message) => {
     // console.log("Message from server:", message.data);
-    // Assuming dataList is defined elsewhere and you want to keep adding data to it
     dataList.push(JSON.parse(message.data));
   });
 
   socket.addEventListener("close", (message) => {
-    console.log("WebSocket connection closed:", message);
+    // console.log("WebSocket connection closed:", message);
     // Check if a reconnection attempt isn't already scheduled before setting a new interval
     if (!socketConnectingInterval) {
       socketConnectingInterval = setInterval(connectWebSocket, 1000);
@@ -40,7 +39,7 @@ function connectWebSocket() {
   });
 
   socket.addEventListener("error", (error) => {
-    console.error("WebSocket error:", error);
+    // console.error("WebSocket error:", error);
     // Close the socket if an error occurs to trigger the 'close' event listener
     // and thereby attempt reconnection
     socket.close();
@@ -54,13 +53,42 @@ connectWebSocket();
 // utility
 // ========================================
 
-// Function to hide the winner
 function hideWinner() {
   const winnerContainer = $(".winner_container");
+  const winnerMessage = $(".winner_container h1");
+  const winnerHPElem = $(".winner_container h2").last();
+
   if (winnerContainer.is(":visible")) {
     winnerContainer.animate({ opacity: 0 }, 500, function () {
       winnerContainer.css("display", "none");
+      winnerMessage.text("");
+      winnerHPElem.text("Remaining HP: " + "###");
     });
+  }
+}
+
+function showWinner(data) {
+  const winnerId = data.winner;
+  const winnerRemainingHP = data.winnerHealth;
+  const teamOneName = data.player1;
+  const teamTwoName = data.player2;
+
+  const winnerContainer = $(".winner_container");
+  const winnerMessage = $(".winner_container h1");
+  const winnerHPElem = $(".winner_container h2").last();
+
+  if (!winnerContainer.is(":visible")) {
+    let message;
+    if (winnerId == -1 || winnerId == 2) {
+      message = "Game draw";
+    } else {
+      let winningTeam = winnerId == 0 ? teamOneName : teamTwoName;
+      message = winningTeam;
+    }
+
+    winnerMessage.text(message);
+    winnerHPElem.text("Remaining HP: " + winnerRemainingHP);
+    winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
   }
 }
 
@@ -69,35 +97,17 @@ function updateMoveCount(moveCounter) {
     "Move: " + (moveCounter || "####");
 }
 
+const creatureMapping = {
+  Arc: "Archer",
+  ArP: "Peasant",
+  Cav: "Cavalry",
+  Kni: "Knight",
+  Mar: "Marksman",
+  Phx: "Phoenix",
+  Pik: "Pikeman",
+};
+
 function updateCreatureStats(creatures, containerSelector) {
-  const creatureMapping = {
-    Arc: "Archer",
-    ArP: "Peasant",
-    Cav: "Cavalry",
-    Kni: "Knight",
-    Mar: "Marksman",
-    Phx: "Phoenix",
-    Pik: "Pikeman",
-  };
-
-  // Update the flag if we have at least one creature in the array
-  if (creatures.length > 0 && creatures.some((creature) => creature !== null)) {
-    hasReceivedCreatureUpdates = true;
-  }
-
-  // Only apply dead if we have received creature updates
-  if (hasReceivedCreatureUpdates) {
-    document
-      .querySelectorAll(containerSelector + " .creature")
-      .forEach((creatureElement) => {
-        creatureElement.classList.add("dead");
-
-        // Update HP
-        const hpElement = creatureElement.querySelector(".HP p");
-        hpElement.textContent = "0";
-      });
-  }
-
   creatures.forEach((creature) => {
     if (creature) {
       // Ensure creature is not null
@@ -107,42 +117,27 @@ function updateCreatureStats(creatures, containerSelector) {
           document.querySelectorAll(containerSelector + " .creature img[alt]")
         ).find((img) => img.alt === creatureName)?.parentNode;
 
-        if (creatureElement) {
-          // Alive creature found, remove dead
-          creatureElement.classList.remove("dead");
+        // Update HP
+        const hpElement = creatureElement.querySelector(".HP p");
 
-          // Update HP
-          const hpElement = creatureElement.querySelector(".HP p");
+        if (creature.health > 0) {
           hpElement.textContent = creature.health;
-
-          // Update Attack
-          const attackElement = creatureElement.querySelector(".Attack p");
-          attackElement.textContent = creature.attackDamage;
-
-          // Update ROM
-          const romElement = creatureElement.querySelector(".ROM p");
-          romElement.textContent = creature.rangeOfMovement;
+          creatureElement.classList.remove("dead");
+        } else {
+          hpElement.textContent = 0;
+          creatureElement.classList.add("dead");
         }
+
+        // Update Attack
+        const attackElement = creatureElement.querySelector(".Attack p");
+        attackElement.textContent = creature.attackDamage;
+
+        // Update ROM
+        const romElement = creatureElement.querySelector(".ROM p");
+        romElement.textContent = creature.rangeOfMovement;
       }
     }
   });
-
-  // For creatures not in the current update, keep or apply dead based on the flag
-  if (hasReceivedCreatureUpdates) {
-    document
-      .querySelectorAll(containerSelector + " .creature img[alt]")
-      .forEach((img) => {
-        const creatureName = Object.keys(creatureMapping).find(
-          (key) => creatureMapping[key] === img.alt
-        );
-        const isDead = !creatures.some(
-          (creature) => creature && creature.name === creatureName
-        );
-        if (isDead) {
-          img.parentNode.classList.add("dead");
-        }
-      });
-  }
 }
 
 // ========================================
@@ -171,43 +166,34 @@ function gameLoop() {
 // Start the game loop
 requestAnimationFrame(gameLoop);
 
-function toggleWinner(data) {
-  const winnerId = data.winner;
-  const teamOneName = data.player1;
-  const teamTwoName = data.player2;
+function creatureImageURL(creature) {
+  const teamColor = creature.team === 0 ? "blue" : "orange";
 
-  const winnerContainer = $(".winner_container");
-  const winnerMessage = $(".winner_container h1");
+  const creatureName = creatureMapping[creature.name];
+  const imageName = creatureName.toLowerCase();
+  const imgPath = `../img/sprites/gifs-${teamColor}/${imageName}.gif`;
 
-  if (winnerContainer.is(":visible")) {
-    winnerContainer.animate({ opacity: 0 }, 500, function () {
-      winnerContainer.css("display", "none");
-      winnerMessage.text(""); // Use jQuery for consistency
-    });
-  } else {
-    let message; // Ensure the variable is declared
-    if (winnerId == -1) {
-      message = "Game draw";
-    } else {
-      let winningTeam = winnerId == 0 ? teamOneName : teamTwoName;
-      message = winningTeam;
-    }
+  console.log(imgPath);
 
-    winnerMessage.text(message); // Moved inside else block
-    winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
-  }
+  return imgPath;
 }
 
-toggleWinner({});
+function creatureCode(creature) {
+  const teamColor = creature.team === 0 ? "blue" : "orange";
 
-const abeceda = "abcdefghijkl";
+  const creatureName = creatureMapping[creature.name];
+  const imageName = creatureName.toLowerCase();
+  const imgPath = `../img/sprites/gifs-${teamColor}/${imageName}.gif`;
+
+  // console.log(imgPath);
+
+  return imgPath;
+}
 
 function parseData(data) {
   // console.log(data);
   moveCounter++;
   updateMoveCount(moveCounter);
-
-  console.log(data);
 
   // ========================================
   // set players
@@ -221,110 +207,47 @@ function parseData(data) {
   let field = data.field;
   // console.log(gameState);
 
-  let teamOneCreatures = [];
-  let teamTwoCreatures = [];
+  // Assume a mapping function or object is defined
 
-  for (let row = 0; row < field.length; row++) {
-    for (let column = 0; column < field[row].length; column++) {
+  // Calculate board position, considering that the first index is for columns and the second is for rows
+  function positionFromIndices(column, row) {
+    // Adjust the row number for chessboard.js (which starts at the bottom for "white" orientation)
+    const rowNum = row + 1; // Adjust if your board size changes
+    const colLetter = String.fromCharCode("a".charCodeAt(0) + column); // Converts 0 -> "a", 1 -> "b", etc.
+    return colLetter + rowNum;
+  }
+
+  // Main logic to build the position object for chessboard.js
+  let position = {};
+
+  for (let column = 0; column < field[0].length; column++) {
+    for (let row = 0; row < field.length; row++) {
       let creature = field[row][column];
       if (creature !== null) {
-        if (creature.team === 0) {
-          teamOneCreatures.push(creature);
-        } else if (creature.team === 1) {
-          teamTwoCreatures.push(creature);
-        } else {
-          console.error("Unknown creature team: ", creature);
-        }
+        // Calculate the chessboard notation for the current cell
+        const cellName = positionFromIndices(column, row);
+        // Get the chess piece code for this creature
+        position[cellName] = "wP";
+        // console.log(position);
       }
-
-      // TODO: display creatures on board
     }
   }
+
+  // Update the board with the new position
+  board.position(position);
+
+  // ========================================
+  // set creatures
+
+  let teamOneCreatures = data.player1Creatures;
+  let teamTwoCreatures = data.player2Creatures;
 
   updateCreatureStats(teamOneCreatures, ".left_container .creatures");
   updateCreatureStats(teamTwoCreatures, ".right_container .creatures");
 
   if (data.winner !== null) {
-    toggleWinner(data);
+    showWinner(data);
   }
-
-  // for testing
-
-  // var board1 = Chessboard("board", {
-  //   position: {
-  //     d6: "bK",
-  //     d4: "wP",
-  //     e4: "wK",
-  //     h8: "wK",
-  //     l9: "wK",
-  //     i10: "wK",
-  //     j10: "wK",
-  //     k11: "wK",
-  //     l12: "wK",
-  //   },
-  //   showNotation: true,
-  //   orientation: "black",
-  // });
-
-  // setTimeout(() => {
-  //   board1.position({
-  //     e6: "bK",
-  //     e4: "wP",
-  //   });
-  // }, 1000);
-
-  // setTimeout(() => {
-  //   board1.position({
-  //     a1: "wK",
-  //     a2: "bK",
-  //     b2: "wD",
-  //     b3: "bD",
-  //     c3: "wP",
-  //     c4: "bP",
-  //     d4: "wC",
-  //     d5: "bC",
-  //     e5: "wJ",
-  //     e6: "bJ",
-  //     h7: "wN",
-  //     h8: "bN",
-  //     i8: "wL",
-  //     i9: "bL",
-  //     j9: "wT",
-  //     j10: "bT",
-  //     k10: "wV",
-  //     k11: "bV",
-  //     l11: "wS",
-  //     l12: "bS",
-  //   });
-  // }, 2000);
-
-  // setTimeout(() => {
-  //   board1.position({
-  //     a12: "wK",
-  //     a11: "bK",
-  //     b11: "wD",
-  //     b10: "bD",
-  //     c10: "wP",
-  //     c9: "bP",
-  //     d9: "wC",
-  //     d8: "bC",
-  //     e8: "wJ",
-  //     e7: "bJ",
-  //     h6: "wN",
-  //     h5: "bN",
-  //     i5: "wL",
-  //     i4: "bL",
-  //     j4: "wT",
-  //     j3: "bT",
-  //     k3: "wV",
-  //     k2: "bV",
-  //     l2: "wS",
-  //     l1: "bS",
-  //   });
-  // }, 3000);
-
-  // ========================================
-  // set winner if game is over
 }
 
 // ========================================
@@ -332,18 +255,14 @@ function parseData(data) {
 // ========================================
 
 const board = Chessboard("board", {
-  position: {
-    d6: "bK",
-    d4: "wP",
-    e4: "wK",
-    h8: "wK",
-    l9: "wK",
-    i10: "wK",
-    j10: "wK",
-    k11: "wK",
-    l12: "wK",
-  },
-  showNotation: false,
+  // position: {
+  //   d4: "wP",
+  //   l13: "bArcher",
+  //   //   o13: "bArcher",
+  // },
+
+  pieceTheme: "img/pieces/{piece}.png",
+  showNotation: true,
   orientation: "black",
 });
 $(window).resize(board.resize);

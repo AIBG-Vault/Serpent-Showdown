@@ -35,8 +35,11 @@ body {
 
   z-index: 1000;
 
-  display: grid;
-  opacity: 1;
+  /* display: grid;
+  opacity: 1; */
+
+  display: none;
+  opacity: 0;
 
   place-items: center;
 }
@@ -68,7 +71,7 @@ body {
 }
 
 .middle_container {
-  flex-basis: 30%;
+  flex-basis: 50%;
 }
 
 .middle_container > h1 {

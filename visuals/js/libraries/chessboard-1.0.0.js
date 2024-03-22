@@ -15,12 +15,13 @@
   // Constants
   // ---------------------------------------------------------------------------
 
-  var COLUMNS = "abcdefghijkl".split("");
+  var COLUMNS = "abcdefghijklmnopqr".split("");
   var DEFAULT_DRAG_THROTTLE_RATE = 20;
   var ELLIPSIS = "…";
   var MINIMUM_JQUERY_VERSION = "1.8.3";
   var RUN_ASSERTS = false;
-  var START_FEN = "rnbqkbnr/pppppppp/12/12/12/12/PPPPPPPP/RNBQKBNR";
+  var START_FEN =
+    "rnbqkbnr/pppppppp/18/18/18/18/18/18/18/18/18/18/PPPPPPPP/RNBQKBNR";
   var START_POSITION = fenToObj(START_FEN);
   // console.log(START_POSITION);
 
@@ -192,7 +193,8 @@
   }
 
   function validSquare(square) {
-    return isString(square) && square.search(/^[a-l][2-9]|1[0-2]?$/) !== -1;
+    // Check if the square is a string and matches the new board's row and column notation
+    return isString(square) && square.search(/^[a-r](1[0-3]|[1-9])$/) !== -1;
   }
 
   if (RUN_ASSERTS) {
@@ -226,22 +228,22 @@
   function validFen(fen) {
     if (!isString(fen)) return false;
 
-    // cut off any move, castling, etc info from the end
-    // we're only interested in position information
-    fen = fen.replace(/ .+$/, "");
+    // Split the FEN string at spaces to isolate the board layout portion
+    var fields = fen.split(" ");
+    var layout = fields[0];
 
-    // expand the empty square numbers to just 1s
-    fen = expandFenEmptySquares(fen);
+    // Expand any numbers in the layout to ensure we have exactly 18 characters per row
+    layout = expandFenEmptySquares(layout);
 
-    // FEN should be 8 sections separated by slashes
-    var chunks = fen.split("/");
-    if (chunks.length !== 12) return false;
+    // An 18x13 board should have 13 sections separated by slashes
+    var rows = layout.split("/");
+    if (rows.length !== 13) return false;
 
-    // check each section
-    for (var i = 0; i < 12; i++) {
+    // Each row in the layout should have exactly 18 characters now
+    for (var i = 0; i < 13; i++) {
       if (
-        chunks[i].length !== 12 ||
-        chunks[i].search(/[^kqrnbpKQRNBP1]/) !== -1
+        rows[i].length !== 18 ||
+        rows[i].search(/[^prnbqkPRNBQK1-9]/) !== -1
       ) {
         return false;
       }
@@ -349,15 +351,15 @@
     var rows = fen.split("/");
     var position = {};
 
-    var currentRow = 12;
-    for (var i = 0; i < 12; i++) {
+    var currentRow = 18;
+    for (var i = 0; i < 18; i++) {
       var row = rows[i].split("");
       var colIdx = 0;
 
       // loop through each character in the FEN section
       for (var j = 0; j < row.length; j++) {
         // number / empty squares
-        if (row[j].search(/[1-12]/) !== -1) {
+        if (row[j].search(/[1-18]/) !== -1) {
           var numEmptySquares = parseInt(row[j], 10);
           colIdx = colIdx + numEmptySquares;
         } else {
@@ -381,9 +383,9 @@
 
     var fen = "";
 
-    var currentRow = 12;
-    for (var i = 0; i < 12; i++) {
-      for (var j = 0; j < 12; j++) {
+    var currentRow = 18;
+    for (var i = 0; i < 18; i++) {
+      for (var j = 0; j < 18; j++) {
         var square = COLUMNS[j] + currentRow;
 
         // piece exists
@@ -414,9 +416,23 @@
     console.assert(objToFen({ a2: "wP", b2: "bP" }) === "8/8/8/8/8/8/Pp6/8");
   }
 
+  function expandFenEmptySquares(fen) {
+    // Expand numbers to '1' characters to signify empty squares
+    return fen.replace(/[1-9]/g, function (match) {
+      return "1".repeat(match);
+    });
+  }
+
   function squeezeFenEmptySquares(fen) {
+    // Condense consecutive '1' characters into digits
     return fen
-      .replace(/111111111111/g, "12")
+      .replace(/111111111111111111/g, "18")
+      .replace(/11111111111111111/g, "17")
+      .replace(/1111111111111111/g, "16")
+      .replace(/111111111111111/g, "15")
+      .replace(/11111111111111/g, "14")
+      .replace(/1111111111111/g, "13")
+      .replace(/111111111111/g, "18")
       .replace(/11111111111/g, "11")
       .replace(/1111111111/g, "10")
       .replace(/111111111/g, "9")
@@ -427,21 +443,6 @@
       .replace(/1111/g, "4")
       .replace(/111/g, "3")
       .replace(/11/g, "2");
-  }
-
-  function expandFenEmptySquares(fen) {
-    return fen
-      .replace(/12/g, "111111111111")
-      .replace(/11/g, "11111111111")
-      .replace(/10/g, "1111111111")
-      .replace(/9/g, "111111111")
-      .replace(/8/g, "11111111")
-      .replace(/7/g, "1111111")
-      .replace(/6/g, "111111")
-      .replace(/5/g, "11111")
-      .replace(/4/g, "1111")
-      .replace(/3/g, "111")
-      .replace(/2/g, "11");
   }
 
   // returns the distance between two squares
@@ -484,8 +485,8 @@
     var squares = [];
 
     // calculate distance of all squares
-    for (var i = 0; i < 12; i++) {
-      for (var j = 0; j < 12; j++) {
+    for (var i = 0; i < 18; i++) {
+      for (var j = 0; j < 18; j++) {
         var s = COLUMNS[i] + (j + 1);
 
         // skip the square we're starting from
@@ -804,18 +805,18 @@
       // pad one pixel
       var boardWidth = containerWidth - 1;
 
-      while (boardWidth % 12 !== 0 && boardWidth > 0) {
+      while (boardWidth % 18 !== 0 && boardWidth > 0) {
         boardWidth = boardWidth - 1;
       }
 
-      return boardWidth / 12;
+      return boardWidth / 18;
     }
 
     // create random IDs for elements
     function createElIds() {
       // squares on the board
       for (var i = 0; i < COLUMNS.length; i++) {
-        for (var j = 1; j <= 12; j++) {
+        for (var j = 1; j <= 18; j++) {
           var square = COLUMNS[i] + j;
           squareElsIds[square] = square + "-" + uuid();
         }
@@ -834,7 +835,6 @@
     // -------------------------------------------------------------------------
     // Markup Building
     // -------------------------------------------------------------------------
-
     function buildBoardHTML(orientation) {
       if (orientation !== "black") {
         orientation = "white";
@@ -844,17 +844,15 @@
 
       // algebraic notation / orientation
       var alpha = deepCopy(COLUMNS);
-      var row = 12;
-      if (orientation === "black") {
-        alpha.reverse();
-        row = 1;
-      }
+      var numeric = orientation === "white" ? 13 : 1;
 
       var squareColor = "white";
-      for (var i = 0; i < 12; i++) {
+      for (var i = 0; i < 13; i++) {
+        // Adjust for 13 rows
         html += '<div class="{row}">';
-        for (var j = 0; j < 12; j++) {
-          var square = alpha[j] + row;
+        for (var j = 0; j < 18; j++) {
+          // Adjust for 18 columns
+          var square = alpha[j] + numeric;
 
           html +=
             '<div class="{square} ' +
@@ -878,15 +876,15 @@
           if (config.showNotation) {
             // alpha notation
             if (
-              (orientation === "white" && row === 1) ||
-              (orientation === "black" && row === 12)
+              (orientation === "white" && i === 18) ||
+              (orientation === "black" && i === 0)
             ) {
               html += '<div class="{notation} {alpha}">' + alpha[j] + "</div>";
             }
 
             // numeric notation
             if (j === 0) {
-              html += '<div class="{notation} {numeric}">' + row + "</div>";
+              html += '<div class="{notation} {numeric}">' + numeric + "</div>";
             }
           }
 
@@ -899,9 +897,9 @@
         squareColor = squareColor === "white" ? "black" : "white";
 
         if (orientation === "white") {
-          row = row - 1;
+          numeric--;
         } else {
-          row = row + 1;
+          numeric++;
         }
       }
 
@@ -1642,7 +1640,7 @@
       squareSize = calculateSquareSize();
 
       // set board width
-      $board.css("width", squareSize * 12 + "px");
+      $board.css("width", squareSize * 18 + "px");
 
       // set drag piece size
       $draggedPiece.css({
