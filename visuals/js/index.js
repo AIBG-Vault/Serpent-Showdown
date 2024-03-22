@@ -4,7 +4,7 @@ let isConnectingOrConnected = false; // Connection state tracker
 
 let moveCounter = -1;
 let dataList = [];
-let gameTicksPerSecond = 50; // Adjust as needed
+let gameTicksPerSecond = 20; // Adjust as needed
 // let hasReceivedCreatureUpdates = false;
 let lastFrameTime = Date.now();
 
@@ -269,22 +269,22 @@ function parseData(data) {
 // ========================================
 
 const board = Chessboard("board", {
-  position: {
-    d4: "bArcher",
-    e5: "bCavalry",
-    f6: "bPeasant",
-    g7: "bKnight",
-    h8: "bMarksman",
-    i9: "bPhoenix",
-    j10: "bPikeman",
-    d5: "oArcher",
-    e6: "oCavalry",
-    f7: "oPeasant",
-    g8: "oKnight",
-    h9: "oMarksman",
-    i10: "oPhoenix",
-    j11: "oPikeman",
-  },
+  // position: {
+  //   d4: "bArcher",
+  //   e5: "bCavalry",
+  //   f6: "bPeasant",
+  //   g7: "bKnight",
+  //   h8: "bMarksman",
+  //   i9: "bPhoenix",
+  //   j10: "bPikeman",
+  //   d5: "oArcher",
+  //   e6: "oCavalry",
+  //   f7: "oPeasant",
+  //   g8: "oKnight",
+  //   h9: "oMarksman",
+  //   i10: "oPhoenix",
+  //   j11: "oPikeman",
+  // },
 
   pieceTheme: "img/pieces/{piece}.gif",
   showNotation: true,

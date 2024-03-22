@@ -74,6 +74,14 @@ body {
   flex-basis: 55%;
 }
 
+img.blue_piece {
+  transform: scaleX(-1);
+}
+
+img.orange_piece {
+  transform: scaleX(1);
+}
+
 .middle_container > h1 {
   font-size: min(4vw, 6rem);
   font-family: inherit;

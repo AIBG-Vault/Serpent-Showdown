@@ -945,13 +945,18 @@
     }
 
     function buildPieceHTML(piece, hidden, id) {
+      // console.log(piece);
       var html = '<img src="' + buildPieceImgSrc(piece) + '" ';
+
       if (isString(id) && id !== "") {
         html += 'id="' + id + '" ';
       }
+
       html +=
         'alt="" ' +
-        'class="{piece}" ' +
+        'class="{piece} ' +
+        (piece.slice(0, 1) === "b" ? "blue_piece" : "orange_piece") +
+        '" ' +
         'data-piece="' +
         piece +
         '" ' +
