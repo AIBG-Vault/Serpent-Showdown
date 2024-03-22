@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 let connectedPlayers = 0;
 let waitingForOtherPlayer = false;
 let currentTurn = 0;
+let serverStopped = false;
 
 const players = [
     {
@@ -51,6 +52,7 @@ wss.on("connection", (ws, req) => {
             player1: players[0].name,
             player2: players[1].name,
             winner: gameObject.winner,
+            winnerHealth: gameObject.winnerHealth,
             player1Creatures: gameObject.player1Creatures,
             player2Creatures: gameObject.player2Creatures
         }));
@@ -69,6 +71,7 @@ wss.on("connection", (ws, req) => {
                 if ( client.readyState === WebSocket.OPEN && client.id === players[0].id ) {
                     const message = JSON.stringify({
                         field: gameObject.field,
+                        placingIndexes: [0,1,2],
                         currentTurn: players[gameObject.turn].name,
                         winner: gameObject.winner,
                     });
@@ -78,6 +81,27 @@ wss.on("connection", (ws, req) => {
                             console.error("Error sending message:", error);
                         }
                     });
+
+                    timeoutId = setTimeout(() => {
+                        console.log('Player timed out:', players[currentTurn].name);
+
+                        if (serverStopped) return;
+                        wss.clients.forEach((client) => {
+                            if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                client.terminate(); // Forcefully close the WebSocket connection
+                            }
+                        });
+
+                        server.close(function(err) {
+                            if (err) {
+                                console.log('Error while closing server:', err);
+                            } else {
+                                console.log('WebSocket server closed successfully.');
+                            }
+                        });
+                        serverStopped = true;
+
+                    }, 10000);
                 }
             });
         } else {
@@ -117,6 +141,9 @@ wss.on("connection", (ws, req) => {
                 return;
             }
 
+            clearTimeout(timeoutId);
+
+            // if statement for restart option
             if (move.restart) {
 
                 gameObject = new GameField(players);
@@ -127,12 +154,15 @@ wss.on("connection", (ws, req) => {
                     if (client.readyState === WebSocket.OPEN && client.id === 'frontend') {
 
                         const message = JSON.stringify({
-                
+
                             field: gameObject.field,
                             player1: players[0].name,
                             player2: players[1].name,
-                            winner: gameObject.winner
-                
+                            winner: gameObject.winner,
+                            winnerHealth: gameObject.winnerHealth,
+                            player1Creatures: gameObject.player1Creatures,
+                            player2Creatures: gameObject.player2Creatures
+
                         });
 
                         client.send(message, (error) => {
@@ -144,6 +174,7 @@ wss.on("connection", (ws, req) => {
 
                         const message = JSON.stringify({
                             field: gameObject.field,
+                            placingIndexes: [0,1,2],
                             currentTurn: players[gameObject.turn].name,
                             winner: gameObject.winner,
                         });
@@ -153,6 +184,27 @@ wss.on("connection", (ws, req) => {
                                 console.error("Error sending message:", error);
                             }
                         });
+
+                        timeoutId = setTimeout(() => {
+                            console.log('Player timed out:', players[currentTurn].name);
+                            
+                            if (serverStopped) return;
+                            wss.clients.forEach((client) => {
+                                if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                    client.terminate(); // Forcefully close the WebSocket connection
+                                }
+                            });
+
+                            server.close(function(err) {
+                                if (err) {
+                                    console.log('Error while closing server:', err);
+                                } else {
+                                    console.log('WebSocket server closed successfully.');
+                                }
+                            });
+                            serverStopped = true;
+
+                        }, 10000);
                     }
                 });
                 
@@ -183,8 +235,16 @@ wss.on("connection", (ws, req) => {
                     if ((client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) ||
                         (client.readyState === WebSocket.OPEN && (gameObject.winner === 0 || gameObject.winner === 1 || gameObject.winner === 2) && client.id !== 'frontend')) {
                         
+                        let placingIndexes;
+                        if (currentTurn === 0) {
+                            placingIndexes = [0,1,2];
+                        } else {
+                            placingIndexes = [16,17,18];
+                        }
+                        
                         const message = JSON.stringify({
                             field: gameObject.field,
+                            placingIndexes: placingIndexes,
                             currentTurn: players[gameObject.turn].name,
                             winner: gameObject.winner,
                         });
@@ -197,8 +257,46 @@ wss.on("connection", (ws, req) => {
 
                         });
 
+                        timeoutId = setTimeout(() => {
+                            console.log('Player timed out:', players[currentTurn].name);
+                            
+                            if (serverStopped) return;
+                            wss.clients.forEach((client) => {
+                                if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                    client.terminate(); // Forcefully close the WebSocket connection
+                                }
+                            });
+
+                            server.close(function(err) {
+                                if (err) {
+                                    console.log('Error while closing server:', err);
+                                } else {
+                                    console.log('WebSocket server closed successfully.');
+                                }
+                            });
+                            serverStopped = true;
+
+                        }, 10000);
+
                         if (gameObject.winner === 0 || gameObject.winner === 1 || gameObject.winner === 2) {
                             console.log('WINNER!!!:', players[gameObject.winner].name);
+                            if (serverStopped) return;
+                            wss.clients.forEach((client) => {
+                                if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                    client.terminate(); // Forcefully close the WebSocket connection
+                                }
+                            });
+
+                            server.close(function(err) {
+                                if (err) {
+                                    console.log('Error while closing server:', err);
+                                } else {
+                                    console.log('WebSocket server closed successfully.');
+                                }
+                            });
+                            serverStopped = true;
+
+                            clearTimeout(timeoutId);
                         }
                     } else if (client.readyState === WebSocket.OPEN && client.id === 'frontend') {
 
@@ -207,8 +305,10 @@ wss.on("connection", (ws, req) => {
                             field: gameObject.field,
                             player1: players[0].name,
                             player2: players[1].name,
+                            winner: gameObject.winner,
                             winnerHealth: gameObject.winnerHealth,
-                            winner: gameObject.winner
+                            player1Creatures: gameObject.player1Creatures,
+                            player2Creatures: gameObject.player2Creatures
 
                         });
 
