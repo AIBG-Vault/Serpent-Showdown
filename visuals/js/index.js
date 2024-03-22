@@ -72,7 +72,7 @@ function updateMoveCount(moveCounter) {
 function updateCreatureStats(creatures, containerSelector) {
   const creatureMapping = {
     Arc: "Archer",
-    ArP: "ArmoredPeasant",
+    ArP: "Peasant",
     Cav: "Cavalry",
     Kni: "Knight",
     Mar: "Marksman",
@@ -159,6 +159,7 @@ function gameLoop() {
 
     if (dataList.length > 0) {
       parseData(dataList.shift());
+      // console.log(dataList.length);
     }
 
     // Additional game logic can be processed here
@@ -205,6 +206,8 @@ function parseData(data) {
   // console.log(data);
   moveCounter++;
   updateMoveCount(moveCounter);
+
+  console.log(data);
 
   // ========================================
   // set players
