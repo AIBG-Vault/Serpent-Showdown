@@ -1,12 +1,22 @@
+const gameTicksPerSecond = 20; // Adjust as needed
+
 let socket; // WebSocket instance
 let socketConnectingInterval; // Interval for reconnection attempts
 let isConnectingOrConnected = false; // Connection state tracker
 
 let moveCounter = -1;
-let dataList = [];
-let gameTicksPerSecond = 20; // Adjust as needed
-// let hasReceivedCreatureUpdates = false;
+const dataList = [];
 let lastFrameTime = Date.now();
+
+const creatureMapping = {
+  Arc: "Archer",
+  ArP: "Peasant",
+  Cav: "Cavalry",
+  Kni: "Knight",
+  Mar: "Marksman",
+  Phx: "Phoenix",
+  Pik: "Pikeman",
+};
 
 // ========================================
 // websockets
@@ -64,20 +74,6 @@ connectWebSocket();
 // utility
 // ========================================
 
-function hideWinner() {
-  const winnerContainer = $(".winner_container");
-  const winnerMessage = $(".winner_container h1");
-  const winnerHPElem = $(".winner_container h2").last();
-
-  if (winnerContainer.is(":visible")) {
-    winnerContainer.animate({ opacity: 0 }, 500, function () {
-      winnerContainer.css("display", "none");
-      winnerMessage.text("");
-      winnerHPElem.text("Remaining HP: " + "###");
-    });
-  }
-}
-
 function showWinner(data) {
   const winnerId = data.winner;
   const winnerRemainingHP = data.winnerHealth;
@@ -103,20 +99,24 @@ function showWinner(data) {
   }
 }
 
+function hideWinner() {
+  const winnerContainer = $(".winner_container");
+  const winnerMessage = $(".winner_container h1");
+  const winnerHPElem = $(".winner_container h2").last();
+
+  if (winnerContainer.is(":visible")) {
+    winnerContainer.animate({ opacity: 0 }, 500, function () {
+      winnerContainer.css("display", "none");
+      winnerMessage.text("");
+      winnerHPElem.text("Remaining HP: " + "###");
+    });
+  }
+}
+
 function updateMoveCount(moveCounter) {
   document.querySelector(".move_number").textContent =
     "Move: " + (moveCounter || "####");
 }
-
-const creatureMapping = {
-  Arc: "Archer",
-  ArP: "Peasant",
-  Cav: "Cavalry",
-  Kni: "Knight",
-  Mar: "Marksman",
-  Phx: "Phoenix",
-  Pik: "Pikeman",
-};
 
 function updateCreatureStats(creatures, containerSelector) {
   creatures.forEach((creature) => {
@@ -155,6 +155,13 @@ function updateCreatureStats(creatures, containerSelector) {
 // game logic
 // ========================================
 
+function positionFromIndices(column, row) {
+  // Adjust the row number for chessboard.js (which starts at the bottom for "white" orientation)
+  const rowNum = row + 1; // Adjust if your board size changes
+  const colLetter = String.fromCharCode("a".charCodeAt(0) + column); // Converts 0 -> "a", 1 -> "b", etc.
+  return colLetter + rowNum;
+}
+
 function gameLoop() {
   let now = Date.now();
   let elapsed = now - lastFrameTime;
@@ -177,30 +184,6 @@ function gameLoop() {
 // Start the game loop
 requestAnimationFrame(gameLoop);
 
-// function creatureImageURL(creature) {
-//   const teamColor = creature.team === 0 ? "blue" : "orange";
-
-//   const creatureName = creatureMapping[creature.name];
-//   const imageName = creatureName.toLowerCase();
-//   const imgPath = `../img/sprites/gifs-${teamColor}/${imageName}.gif`;
-
-//   console.log(imgPath);
-
-//   return imgPath;
-// }
-
-// function creatureCode(creature) {
-//   const teamColor = creature.team === 0 ? "blue" : "orange";
-
-//   const creatureName = creatureMapping[creature.name];
-//   const imageName = creatureName.toLowerCase();
-//   const imgPath = `../img/sprites/gifs-${teamColor}/${imageName}.gif`;
-
-//   // console.log(imgPath);
-
-//   return imgPath;
-// }
-
 function parseData(data) {
   // console.log(data);
   moveCounter++;
@@ -216,15 +199,8 @@ function parseData(data) {
   // ========================================
   // set board
   let field = data.field;
-  // console.log(gameState);
 
   // Calculate board position, considering that the first index is for columns and the second is for rows
-  function positionFromIndices(column, row) {
-    // Adjust the row number for chessboard.js (which starts at the bottom for "white" orientation)
-    const rowNum = row + 1; // Adjust if your board size changes
-    const colLetter = String.fromCharCode("a".charCodeAt(0) + column); // Converts 0 -> "a", 1 -> "b", etc.
-    return colLetter + rowNum;
-  }
 
   // Main logic to build the position object for chessboard.js
   let position = {};
