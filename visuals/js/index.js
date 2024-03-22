@@ -1,8 +1,10 @@
 let socket; // WebSocket instance
 let socketConnectingInterval; // Interval for reconnection attempts
+let isConnectingOrConnected = false; // Connection state tracker
+
 let moveCounter = -1;
 let dataList = [];
-let gameTicksPerSecond = 25; // Adjust as needed
+let gameTicksPerSecond = 50; // Adjust as needed
 // let hasReceivedCreatureUpdates = false;
 let lastFrameTime = Date.now();
 
@@ -11,6 +13,12 @@ let lastFrameTime = Date.now();
 // ========================================
 
 function connectWebSocket() {
+  // Prevent multiple connections
+  if (isConnectingOrConnected) return;
+
+  // Mark as connecting
+  isConnectingOrConnected = true;
+
   // Initialize or reinitialize the WebSocket connection
   socket = new WebSocket("ws://localhost:3000?id=frontend");
 
@@ -23,15 +31,18 @@ function connectWebSocket() {
       clearInterval(socketConnectingInterval);
       socketConnectingInterval = null;
     }
+    // Mark as connected
+    isConnectingOrConnected = true;
   });
 
   socket.addEventListener("message", (message) => {
-    // console.log("Message from server:", message.data);
     dataList.push(JSON.parse(message.data));
   });
 
   socket.addEventListener("close", (message) => {
-    // console.log("WebSocket connection closed:", message);
+    console.log("WebSocket connection closed:", message);
+    // Reset connection state to allow reconnection attempts
+    isConnectingOrConnected = false;
     // Check if a reconnection attempt isn't already scheduled before setting a new interval
     if (!socketConnectingInterval) {
       socketConnectingInterval = setInterval(connectWebSocket, 1000);
@@ -39,9 +50,9 @@ function connectWebSocket() {
   });
 
   socket.addEventListener("error", (error) => {
-    // console.error("WebSocket error:", error);
+    console.error("WebSocket error:", error);
     // Close the socket if an error occurs to trigger the 'close' event listener
-    // and thereby attempt reconnection
+    // and thereby attempt reconnection. This also implicitly handles the 'close' event.
     socket.close();
   });
 }
@@ -207,8 +218,6 @@ function parseData(data) {
   let field = data.field;
   // console.log(gameState);
 
-  // Assume a mapping function or object is defined
-
   // Calculate board position, considering that the first index is for columns and the second is for rows
   function positionFromIndices(column, row) {
     // Adjust the row number for chessboard.js (which starts at the bottom for "white" orientation)
@@ -227,7 +236,7 @@ function parseData(data) {
         // Calculate the chessboard notation for the current cell
         const cellName = positionFromIndices(column, row);
         // Get the chess piece code for this creature
-        position[cellName] = "wP";
+        position[cellName] = "wArcher";
         // console.log(position);
       }
     }
@@ -255,11 +264,11 @@ function parseData(data) {
 // ========================================
 
 const board = Chessboard("board", {
-  // position: {
-  //   d4: "wP",
-  //   l13: "bArcher",
-  //   //   o13: "bArcher",
-  // },
+  position: {
+    d4: "wP",
+    // l13: "bArcher",
+    //   o13: "bArcher",
+  },
 
   pieceTheme: "img/pieces/{piece}.png",
   showNotation: true,

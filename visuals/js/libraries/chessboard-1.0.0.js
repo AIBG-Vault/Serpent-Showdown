@@ -600,7 +600,7 @@
       !config.hasOwnProperty("pieceTheme") ||
       (!isString(config.pieceTheme) && !isFunction(config.pieceTheme))
     ) {
-      config.pieceTheme = "img/pieces/{piece}.png";
+      config.pieceTheme = "img/pieces/{piece}.gif";
     }
 
     // animation speeds
