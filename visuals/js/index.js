@@ -177,29 +177,29 @@ function gameLoop() {
 // Start the game loop
 requestAnimationFrame(gameLoop);
 
-function creatureImageURL(creature) {
-  const teamColor = creature.team === 0 ? "blue" : "orange";
+// function creatureImageURL(creature) {
+//   const teamColor = creature.team === 0 ? "blue" : "orange";
 
-  const creatureName = creatureMapping[creature.name];
-  const imageName = creatureName.toLowerCase();
-  const imgPath = `../img/sprites/gifs-${teamColor}/${imageName}.gif`;
+//   const creatureName = creatureMapping[creature.name];
+//   const imageName = creatureName.toLowerCase();
+//   const imgPath = `../img/sprites/gifs-${teamColor}/${imageName}.gif`;
 
-  console.log(imgPath);
+//   console.log(imgPath);
 
-  return imgPath;
-}
+//   return imgPath;
+// }
 
-function creatureCode(creature) {
-  const teamColor = creature.team === 0 ? "blue" : "orange";
+// function creatureCode(creature) {
+//   const teamColor = creature.team === 0 ? "blue" : "orange";
 
-  const creatureName = creatureMapping[creature.name];
-  const imageName = creatureName.toLowerCase();
-  const imgPath = `../img/sprites/gifs-${teamColor}/${imageName}.gif`;
+//   const creatureName = creatureMapping[creature.name];
+//   const imageName = creatureName.toLowerCase();
+//   const imgPath = `../img/sprites/gifs-${teamColor}/${imageName}.gif`;
 
-  // console.log(imgPath);
+//   // console.log(imgPath);
 
-  return imgPath;
-}
+//   return imgPath;
+// }
 
 function parseData(data) {
   // console.log(data);
@@ -236,7 +236,12 @@ function parseData(data) {
         // Calculate the chessboard notation for the current cell
         const cellName = positionFromIndices(column, row);
         // Get the chess piece code for this creature
-        position[cellName] = "wArcher";
+        // console.log(creature);
+
+        position[cellName] =
+          creature.team == 0
+            ? "b" + creatureMapping[creature.name]
+            : "o" + creatureMapping[creature.name];
         // console.log(position);
       }
     }
@@ -265,12 +270,23 @@ function parseData(data) {
 
 const board = Chessboard("board", {
   position: {
-    d4: "wP",
-    // l13: "bArcher",
-    //   o13: "bArcher",
+    d4: "bArcher",
+    e5: "bCavalry",
+    f6: "bPeasant",
+    g7: "bKnight",
+    h8: "bMarksman",
+    i9: "bPhoenix",
+    j10: "bPikeman",
+    d5: "oArcher",
+    e6: "oCavalry",
+    f7: "oPeasant",
+    g8: "oKnight",
+    h9: "oMarksman",
+    i10: "oPhoenix",
+    j11: "oPikeman",
   },
 
-  pieceTheme: "img/pieces/{piece}.png",
+  pieceTheme: "img/pieces/{piece}.gif",
   showNotation: true,
   orientation: "black",
 });

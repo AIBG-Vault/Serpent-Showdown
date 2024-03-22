@@ -208,8 +208,31 @@
     console.assert(!validSquare({}));
   }
 
+  var validCreatureNames = [
+    "Archer",
+    "Peasant",
+    "Cavalry",
+    "Knight",
+    "Marksman",
+    "Phoenix",
+    "Pikeman",
+  ]; // Add all your creature names here
+
   function validPieceCode(code) {
-    return isString(code) && code.search(/^[bw][QRNBKPCDJNLTVS]$/) !== -1;
+    if (!isString(code)) return false;
+
+    // Check if the code starts with 'w' or 'b' for the team color
+    var team = code.charAt(0);
+    if (team !== "o" && team !== "b") return false;
+
+    // Extract the creature name/letter code from the input code
+    var nameOrLetterCode = code.substring(1);
+
+    // Check if the rest of the code is a known chess piece or creature name
+    return (
+      ["Q", "R", "N", "B", "K", "P"].includes(nameOrLetterCode) ||
+      validCreatureNames.includes(nameOrLetterCode)
+    );
   }
 
   if (RUN_ASSERTS) {
@@ -600,7 +623,7 @@
       !config.hasOwnProperty("pieceTheme") ||
       (!isString(config.pieceTheme) && !isFunction(config.pieceTheme))
     ) {
-      config.pieceTheme = "img/pieces/{piece}.gif";
+      config.pieceTheme = "img/pieces/{piece}.png";
     }
 
     // animation speeds
@@ -823,7 +846,8 @@
       }
 
       // spare pieces
-      var pieces = "KQRNBP".split("");
+      // var pieces = "KQRNBP".split("");
+      var pieces = ["Archer"];
       for (i = 0; i < pieces.length; i++) {
         var whitePiece = "w" + pieces[i];
         var blackPiece = "b" + pieces[i];
@@ -948,9 +972,9 @@
     }
 
     function buildSparePiecesHTML(color) {
-      var pieces = ["wK", "wQ", "wR", "wB", "wN", "wP"];
+      var pieces = ["wK", "wQ", "wR", "wB", "wN", "wP", "bArcher"];
       if (color === "black") {
-        pieces = ["bK", "bQ", "bR", "bB", "bN", "bP"];
+        pieces = ["bK", "bQ", "bR", "bB", "bN", "bArcher"];
       }
 
       var html = "";

@@ -71,7 +71,7 @@ body {
 }
 
 .middle_container {
-  flex-basis: 50%;
+  flex-basis: 55%;
 }
 
 .middle_container > h1 {
