@@ -196,7 +196,9 @@ class GameField {
     playMeleeRangedMove(moveObject, creature) {
         const { startSquare, targetSquare, attackSquare } = moveObject;
 
-        if (this.targetSquareOutOfReach(startSquare, targetSquare, creature)) {
+        if ( targetSquare === null || targetSquare === undefined ) {
+            // do nothing
+        } else if (this.targetSquareOutOfReach(startSquare, targetSquare, creature)) {
             throw new IllegalMoveException('Target square out of reach', moveObject);
         } else if (targetSquare === null || targetSquare === undefined) { // if creature doesn't move from startSquare
             // do nothing
