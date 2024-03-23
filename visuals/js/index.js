@@ -8,6 +8,9 @@ let moveCounter = -1;
 const dataList = [];
 let lastFrameTime = Date.now();
 
+let teamOneName;
+let teamTwoName;
+
 const creatureMapping = {
   Arc: "Archer",
   ArP: "Peasant",
@@ -34,7 +37,7 @@ function connectWebSocket() {
 
   socket.addEventListener("open", (event) => {
     console.log("WebSocket connection established");
-    hideWinner(); // Hide the winner upon reconnection
+    hideEndScreen(); // Hide the winner upon reconnection
     moveCounter = 0; // Reset move counter
     updateMoveCount(moveCounter); // Update UI with the reset move counter
     if (socketConnectingInterval) {
@@ -77,29 +80,50 @@ connectWebSocket();
 function showWinner(data) {
   const winnerId = data.winner;
   const winnerRemainingHP = data.winnerHealth;
-  const teamOneName = data.player1;
-  const teamTwoName = data.player2;
 
   const winnerContainer = $(".winner_container");
   const winnerMessage = $(".winner_container h1");
-  const winnerHPElem = $(".winner_container h2").last();
+  const extraInfoElem = $(".winner_container h2").last();
 
   if (!winnerContainer.is(":visible")) {
-    let message;
     if (winnerId == -1 || winnerId == 2) {
-      message = "Game draw";
+      winnerMessage.text("Game draw");
+      extraInfoElem.text("");
     } else {
       let winningTeam = winnerId == 0 ? teamOneName : teamTwoName;
-      message = winningTeam;
+      winnerMessage.text(winningTeam);
+      extraInfoElem.text("Remaining HP: " + winnerRemainingHP);
     }
 
-    winnerMessage.text(message);
-    winnerHPElem.text("Remaining HP: " + winnerRemainingHP);
     winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
   }
 }
 
-function hideWinner() {
+function showMessage(data) {
+  const msg = data.message;
+
+  // console.log(data);
+
+  const winnerTeamName =
+    data.currentTurn == teamOneName ? teamTwoName : teamOneName;
+
+  const winnerContainer = $(".winner_container");
+  const winnerMessage = $(".winner_container h1");
+  const extraInfoElem = $(".winner_container h2").last();
+
+  if (!winnerContainer.is(":visible")) {
+    winnerMessage.text(winnerTeamName);
+    if (msg === "Agent timed out") {
+      extraInfoElem.text(data.currentTurn + " timed out");
+    } else {
+      extraInfoElem.text(data.currentTurn + " played an illegal move");
+    }
+
+    winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
+  }
+}
+
+function hideEndScreen() {
   const winnerContainer = $(".winner_container");
   const winnerMessage = $(".winner_container h1");
   const winnerHPElem = $(".winner_container h2").last();
@@ -185,7 +209,15 @@ function gameLoop() {
 requestAnimationFrame(gameLoop);
 
 function parseData(data) {
-  // console.log(data);
+  console.log(data);
+
+  if (data.message) {
+    showMessage(data);
+  }
+
+  teamOneName = data.player1;
+  teamTwoName = data.player2;
+
   moveCounter++;
   updateMoveCount(moveCounter);
 

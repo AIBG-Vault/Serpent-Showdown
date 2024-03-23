@@ -3,6 +3,8 @@ const myId = '0987654321';
 
 const ws = new WebSocket(`ws://localhost:3000?id=${myId}`);
 
+let time = 100;
+
 ws.on('open', () => {
   console.log('Connected to WebSocket server');
 });
@@ -23,7 +25,8 @@ ws.on('message', (data) => {
             ws.send(JSON.stringify(movesToPlay[moveCounter]));
             moveCounter += 2;
             // console.log("moveCounter", moveCounter);
-        }, 2);
+        }, 900);
+        time += 100;
     }
 });
 
