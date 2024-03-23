@@ -16,6 +16,7 @@ let currentTurn = 0;
 let serverStopped = false;
 let winnerNotifCounter = 0;
 let frontendConnected = false;
+let timeoutId;
 
 const players = [
     {
@@ -68,7 +69,6 @@ wss.on("connection", (ws, req) => {
         if (connectedPlayers === 2) {
 
             waitingForOtherPlayer = false;
-            gameObject = new GameField(players)
 
             // Send the game state to the connected players
             connections.forEach((client) => {
@@ -105,7 +105,7 @@ wss.on("connection", (ws, req) => {
                         });
                         serverStopped = true;
 
-                    }, 10000);
+                    }, 1000);
                 }
             });
         } else {
@@ -129,6 +129,7 @@ wss.on("connection", (ws, req) => {
 
     ws.on("message", (message) => {
         console.log(`Received message: ${message}`);
+        console.log('Player who sent the message:', players[currentTurn].name);
 
         if (waitingForOtherPlayer) {
             ws.send(
@@ -145,84 +146,111 @@ wss.on("connection", (ws, req) => {
                 return;
             }
 
-            clearTimeout(timeoutId);
-
             // if statement for restart option
-            if (move.restart) {
+            // if (move.restart) {
 
-                gameObject = new GameField(players);
-                currentTurn = 0;
+            //     gameObject = new GameField(players);
+            //     currentTurn = 0;
 
-                connections.forEach((client) => {
+            //     connections.forEach((client) => {
 
-                    if (client.readyState === WebSocket.OPEN && client.id === 'frontend') {
+            //         if (client.readyState === WebSocket.OPEN && client.id === 'frontend') {
 
-                        const message = JSON.stringify({
+            //             const message = JSON.stringify({
 
-                            field: gameObject.field,
-                            player1: players[0].name,
-                            player2: players[1].name,
-                            winner: gameObject.winner,
-                            winnerHealth: gameObject.winnerHealth,
-                            player1Creatures: gameObject.player1Creatures,
-                            player2Creatures: gameObject.player2Creatures
+            //                 field: gameObject.field,
+            //                 player1: players[0].name,
+            //                 player2: players[1].name,
+            //                 winner: gameObject.winner,
+            //                 winnerHealth: gameObject.winnerHealth,
+            //                 player1Creatures: gameObject.player1Creatures,
+            //                 player2Creatures: gameObject.player2Creatures
 
-                        });
+            //             });
 
-                        client.send(message, (error) => {
-                            if (error) {
-                                console.error("Error sending message:", error);
-                            }
-                        });
-                    } else if (client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) {
+            //             client.send(message, (error) => {
+            //                 if (error) {
+            //                     console.error("Error sending message:", error);
+            //                 }
+            //             });
+            //         } else if (client.readyState === WebSocket.OPEN && client.id === players[currentTurn].id) {
 
-                        const message = JSON.stringify({
-                            field: gameObject.field,
-                            placingIndexes: [0,1,2],
-                            currentTurn: players[gameObject.turn].name,
-                            winner: gameObject.winner,
-                        });
+            //             const message = JSON.stringify({
+            //                 field: gameObject.field,
+            //                 placingIndexes: [0,1,2],
+            //                 currentTurn: players[gameObject.turn].name,
+            //                 winner: gameObject.winner,
+            //             });
 
-                        client.send(message, (error) => {
-                            if (error) {
-                                console.error("Error sending message:", error);
-                            }
-                        });
+            //             client.send(message, (error) => {
+            //                 if (error) {
+            //                     console.error("Error sending message:", error);
+            //                 }
+            //             });
 
-                        timeoutId = setTimeout(() => {
-                            console.log('Player timed out:', players[currentTurn].name);
+            //             timeoutId = setTimeout(() => {
+            //                 console.log('Player timed out:', players[currentTurn].name);
                             
-                            if (serverStopped) return;
-                            wss.clients.forEach((client) => {
-                                if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
-                                    client.terminate(); // Forcefully close the WebSocket connection
-                                }
-                            });
+            //                 if (serverStopped) return;
+            //                 wss.clients.forEach((client) => {
+            //                     if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+            //                         client.terminate(); // Forcefully close the WebSocket connection
+            //                     }
+            //                 });
 
-                            server.close(function(err) {
-                                if (err) {
-                                    console.log('Error while closing server:', err);
-                                } else {
-                                    console.log('WebSocket server closed successfully.');
-                                }
-                            });
-                            serverStopped = true;
+            //                 server.close(function(err) {
+            //                     if (err) {
+            //                         console.log('Error while closing server:', err);
+            //                     } else {
+            //                         console.log('WebSocket server closed successfully.');
+            //                     }
+            //                 });
+            //                 serverStopped = true;
 
-                        }, 10000);
-                    }
-                });
+            //             }, 1000);
+            //         }
+            //     });
                 
-            } else if (move.playerId === players[currentTurn].id) {
+            // } else 
+            if (move.playerId === players[currentTurn].id) {
+                clearTimeout(timeoutId);
 
                 try {
                     gameObject.playMove(move);
                 } catch (error) {
                     if (error instanceof IllegalMoveException) {
-                        ws.send(JSON.stringify({
+                        const message = JSON.stringify({
                             message: error.message,
-                            code: 100,
+                            currentTurn: players[currentTurn].name,
                             move: move
-                        }));
+                        });
+
+                        console.log('Illegal move:', message);
+
+                        connections.forEach((client) => {
+                            client.send(message, (error) => {
+                                if (error) {
+                                    console.error('Error sending message:', error);
+                                } else {
+                                    winnerNotifCounter++;
+                                }
+                            });
+                        });
+
+                        connections.forEach((client) => {
+                            if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                client.terminate(); // Forcefully close the WebSocket connection
+                            }
+                        });
+
+                        server.close(function(err) {
+                            if (err) {
+                                console.log('Error while closing server:', err);
+                            } else {
+                                console.log('WebSocket server closed successfully.');
+                            }
+                        });
+
                         return;
                     } else {
                         throw error;
@@ -282,7 +310,7 @@ wss.on("connection", (ws, req) => {
                             });
                             serverStopped = true;
 
-                        }, 10000);
+                        }, 1000);
 
                         if (gameObject.winner === 0 || gameObject.winner === 1 || gameObject.winner === 2) {
                             console.log('WINNER!!!:', players[gameObject.winner].name);

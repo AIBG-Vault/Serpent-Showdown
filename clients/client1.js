@@ -23,7 +23,7 @@ ws.on('message', (data) => {
             ws.send(JSON.stringify(movesToPlay[moveCounter]));
             moveCounter += 2;
             //console.log("moveCounter", moveCounter);
-        }, 2);
+        }, 985);
     }
 });
 
