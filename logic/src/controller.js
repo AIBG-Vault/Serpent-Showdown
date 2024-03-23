@@ -14,6 +14,8 @@ let connectedPlayers = 0;
 let waitingForOtherPlayer = false;
 let currentTurn = 0;
 let serverStopped = false;
+let winnerNotifCounter = 0;
+let frontendConnected = false;
 
 const players = [
     {
@@ -56,6 +58,8 @@ wss.on("connection", (ws, req) => {
             player1Creatures: gameObject.player1Creatures,
             player2Creatures: gameObject.player2Creatures
         }));
+
+        frontendConnected = true;
 
     } else if (receivedId === players[0].id || receivedId === players[1].id) {
 
@@ -253,6 +257,8 @@ wss.on("connection", (ws, req) => {
 
                             if (error) {
                                 console.error('Error sending message:', error);
+                            } else {
+                                winnerNotifCounter++;
                             }
 
                         });
@@ -280,21 +286,6 @@ wss.on("connection", (ws, req) => {
 
                         if (gameObject.winner === 0 || gameObject.winner === 1 || gameObject.winner === 2) {
                             console.log('WINNER!!!:', players[gameObject.winner].name);
-                            if (serverStopped) return;
-                            wss.clients.forEach((client) => {
-                                if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
-                                    client.terminate(); // Forcefully close the WebSocket connection
-                                }
-                            });
-
-                            server.close(function(err) {
-                                if (err) {
-                                    console.log('Error while closing server:', err);
-                                } else {
-                                    console.log('WebSocket server closed successfully.');
-                                }
-                            });
-                            serverStopped = true;
 
                             clearTimeout(timeoutId);
                         }
@@ -316,11 +307,37 @@ wss.on("connection", (ws, req) => {
 
                             if (error) {
                                 console.error('Error sending message:', error);
+                            } else {
+                                winnerNotifCounter++;
                             }
 
                         });
 
                     }
+
+                    if ((frontendConnected && winnerNotifCounter === 3) || (!frontendConnected && winnerNotifCounter === 2)) {
+                        clearTimeout(timeoutId);
+
+                        if (serverStopped) return;
+
+                        wss.clients.forEach((client) => {
+                            if (client.readyState === WebSocket.OPEN || client.readyState === WebSocket.CONNECTING) {
+                                client.terminate(); // Forcefully close the WebSocket connection
+                            }
+                        });
+
+                        server.close(function (err) {
+                            if (err) {
+                                console.log('Error while closing server:', err);
+                            } else {
+                                console.log('WebSocket server closed successfully.');
+                            }
+                        });
+                        serverStopped = true;
+                    }
+
+                    winnerNotifCounter = 0;
+
                 });
             } else {
                 connections.forEach((client) => {
