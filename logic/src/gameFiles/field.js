@@ -229,7 +229,9 @@ class GameField {
             this.attackCreature(creature, attackedCreature, attackSquare);
         }
 
-        if (attackSquare) {
+        if (targetSquare === null || targetSquare === undefined) {
+            // do nothing
+        } else if (attackSquare) {
             this.moveCreature(targetSquare, startSquare, creature);
         }
     }
