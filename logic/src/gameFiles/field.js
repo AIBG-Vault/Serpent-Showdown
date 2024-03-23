@@ -54,7 +54,7 @@ class GameField {
         if (moveObject.creatureId < 1 || moveObject.creatureId > 7) {
             throw new IllegalMoveException('Invalid creature id. Id can only be between 1 and 7.', moveObject);
         }
-        
+
         if (this.turn === 0){
             if (moveObject.x > 2) {
                 throw new IllegalMoveException('Illegal placement', moveObject);
@@ -177,6 +177,10 @@ class GameField {
         } else {
             this.moveCreature(startSquare, targetSquare, creature);
             moved = true;
+        }
+
+        if (attackSquare === null || attackSquare === undefined) { // if creature doesn't attack
+            return;
         }
 
         if (moved && attackSquare) {
