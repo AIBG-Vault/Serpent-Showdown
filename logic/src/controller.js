@@ -219,7 +219,7 @@ wss.on("connection", (ws, req) => {
                 } catch (error) {
                     if (error instanceof IllegalMoveException) {
                         ws.send(JSON.stringify({
-                            message: 'Illegal move. Please try another move or restart the game by disconnecting both agents and connecting them again.',
+                            message: error.message,
                             code: 100,
                             move: move
                         }));

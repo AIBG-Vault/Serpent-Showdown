@@ -88,6 +88,9 @@ class GameField {
             this.addCreature(moveObject);
         } else {
             this.movesWithoutAttackCounter++;
+            if ((moveObject.targetSquare === null || moveObject.targetSquare === undefined) && (moveObject.attackSquare === null || moveObject.attackSquare === undefined)) {
+                throw new IllegalMoveException('Invalid move object. You need to provide either tagretSquare or attackSquare alongside startSquare', moveObject);
+            }
             if (this.startSquareEmpty(moveObject.startSquare)) {
                 throw new IllegalMoveException('Start square empty', moveObject);
             } else if (this.squareOccupiedByEnemyCreature(moveObject.startSquare)) {
@@ -210,6 +213,13 @@ class GameField {
 
         if (attackSquare === null || attackSquare === undefined){
             // do nothing
+        } else if ((targetSquare === null || targetSquare === undefined) && startSquare && attackSquare) {
+            if (this.attackSquareOutOfRange(startSquare, attackSquare)) {
+                throw new IllegalMoveException('Attack square out of range', moveObject);
+            } else {
+                const attackedCreature = this.field[attackSquare.y][attackSquare.x];
+                this.attackCreature(creature, attackedCreature, attackSquare);
+            }
         } else if (this.attackSquareOutOfRange(targetSquare, attackSquare)) {
             throw new IllegalMoveException('Attack square out of range', moveObject);
         } else if (this.attackSquareEmpty(attackSquare)) {
