@@ -18,11 +18,11 @@ let currentTurn = 0;
 let serverStopped = false;
 let winnerNotifCounter = 0;
 let frontendConnected = false;
-let timeoutId;
+// let timeoutId;
 
 const players = [
   {
-    name: "Player 1",
+    name: "xxxfer",
     id: "1234567890",
   },
   {
@@ -89,50 +89,50 @@ wss.on("connection", (ws, req) => {
             }
           });
 
-          timeoutId = setTimeout(() => {
-            console.log("Player timed out:", players[currentTurn].name);
+        //   timeoutId = setTimeout(() => {
+        //     console.log("Player timed out:", players[currentTurn].name);
 
-            const msg = JSON.stringify({
-              message: "Agent timed out",
-              currentTurn: players[currentTurn].name,
-            });
+        //     const msg = JSON.stringify({
+        //       message: "Agent timed out",
+        //       currentTurn: players[currentTurn].name,
+        //     });
 
-            connections.forEach((client) => {
-              client.send(msg, (error) => {
-                if (error) {
-                  console.error("Error sending message:", error);
-                } else {
-                  winnerNotifCounter++;
-                }
-              });
-            });
+        //     connections.forEach((client) => {
+        //       client.send(msg, (error) => {
+        //         if (error) {
+        //           console.error("Error sending message:", error);
+        //         } else {
+        //           winnerNotifCounter++;
+        //         }
+        //       });
+        //     });
 
-            if (
-              (frontendConnected && winnerNotifCounter === 3) ||
-              (!frontendConnected && winnerNotifCounter === 2)
-            ) {
-              clearTimeout(timeoutId);
+        //     if (
+        //       (frontendConnected && winnerNotifCounter === 3) ||
+        //       (!frontendConnected && winnerNotifCounter === 2)
+        //     ) {
+        //       clearTimeout(timeoutId);
 
-              if (serverStopped) return;
-              wss.clients.forEach((client) => {
-                if (
-                  client.readyState === WebSocket.OPEN ||
-                  client.readyState === WebSocket.CONNECTING
-                ) {
-                  client.terminate(); // Forcefully close the WebSocket connection
-                }
-              });
+        //       if (serverStopped) return;
+        //       wss.clients.forEach((client) => {
+        //         if (
+        //           client.readyState === WebSocket.OPEN ||
+        //           client.readyState === WebSocket.CONNECTING
+        //         ) {
+        //           client.terminate(); // Forcefully close the WebSocket connection
+        //         }
+        //       });
 
-              server.close(function (err) {
-                if (err) {
-                  console.log("Error while closing server:", err);
-                } else {
-                  console.log("WebSocket server closed successfully.");
-                }
-              });
-              serverStopped = true;
-            }
-          }, 1000);
+        //       server.close(function (err) {
+        //         if (err) {
+        //           console.log("Error while closing server:", err);
+        //         } else {
+        //           console.log("WebSocket server closed successfully.");
+        //         }
+        //       });
+        //       serverStopped = true;
+        //     }
+        //   }, 1000);
         }
       });
     } else {
@@ -241,7 +241,7 @@ wss.on("connection", (ws, req) => {
 
       // } else
       if (move.playerId === players[currentTurn].id) {
-        clearTimeout(timeoutId);
+        // clearTimeout(timeoutId);
 
         try {
           gameObject.playMove(move);
@@ -326,28 +326,28 @@ wss.on("connection", (ws, req) => {
               }
             });
 
-            timeoutId = setTimeout(() => {
-              console.log("Player timed out:", players[currentTurn].name);
+            // timeoutId = setTimeout(() => {
+            //   console.log("Player timed out:", players[currentTurn].name);
 
-              if (serverStopped) return;
-              wss.clients.forEach((client) => {
-                if (
-                  client.readyState === WebSocket.OPEN ||
-                  client.readyState === WebSocket.CONNECTING
-                ) {
-                  client.terminate(); // Forcefully close the WebSocket connection
-                }
-              });
+            //   if (serverStopped) return;
+            //   wss.clients.forEach((client) => {
+            //     if (
+            //       client.readyState === WebSocket.OPEN ||
+            //       client.readyState === WebSocket.CONNECTING
+            //     ) {
+            //       client.terminate(); // Forcefully close the WebSocket connection
+            //     }
+            //   });
 
-              server.close(function (err) {
-                if (err) {
-                  console.log("Error while closing server:", err);
-                } else {
-                  console.log("WebSocket server closed successfully.");
-                }
-              });
-              serverStopped = true;
-            }, 1000);
+            //   server.close(function (err) {
+            //     if (err) {
+            //       console.log("Error while closing server:", err);
+            //     } else {
+            //       console.log("WebSocket server closed successfully.");
+            //     }
+            //   });
+            //   serverStopped = true;
+            // }, 1000);
 
             if (
               gameObject.winner === 0 ||
@@ -356,7 +356,7 @@ wss.on("connection", (ws, req) => {
             ) {
               console.log("WINNER!!!:", players[gameObject.winner].name);
 
-              clearTimeout(timeoutId);
+              // clearTimeout(timeoutId);
             }
           } else if (
             client.readyState === WebSocket.OPEN &&
@@ -385,7 +385,7 @@ wss.on("connection", (ws, req) => {
             (frontendConnected && winnerNotifCounter === 3) ||
             (!frontendConnected && winnerNotifCounter === 2)
           ) {
-            clearTimeout(timeoutId);
+            // clearTimeout(timeoutId);
 
             if (serverStopped) return;
 
