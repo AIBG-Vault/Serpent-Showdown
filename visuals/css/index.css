@@ -87,7 +87,7 @@ body {
 }
 
 .middle_container {
-  flex-basis: 55%;
+  flex-basis: 50%;
 }
 
 img.blue_piece {
@@ -112,6 +112,11 @@ img.orange_piece {
   margin-bottom: 4rem;
 }
 
+.left_container,
+.right_container {
+  flex-basis: 25%;
+}
+
 .left_container {
   text-align: left;
 }
@@ -124,6 +129,7 @@ img.orange_piece {
   font-size: min(2.5vw, 6rem);
 
   margin-bottom: 1.5rem;
+  word-break: break-all;
 }
 
 .creatures {
