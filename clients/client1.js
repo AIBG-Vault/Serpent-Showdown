@@ -1,5 +1,13 @@
 const WebSocket = require("ws");
-const myId = "1234567890";
+
+// Get the id from the command-line arguments
+let myId = process.argv[2]; // process.argv[0] is node, process.argv[1] is client1.js
+
+if (!myId) {
+  myId = "1234567890";
+  console.error("ID not provided as a parameter using default: " + myId);
+  // process.exit(1);
+}
 
 const ws = new WebSocket(`ws://localhost:3000?id=${myId}`);
 
@@ -18,7 +26,7 @@ ws.on("message", (data) => {
 
   // Send a move to the server
   if (message.currentTurn && message.winner === null) {
-    console.log("Sending move:", movesToPlay[moveCounter]);
+    // console.log("Sending move:", movesToPlay[moveCounter]);
     setTimeout(() => {
       ws.send(JSON.stringify(movesToPlay[moveCounter]));
       moveCounter += 2;
