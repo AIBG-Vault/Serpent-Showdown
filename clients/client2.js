@@ -6,12 +6,11 @@ let myId = process.argv[2]; // process.argv[0] is node, process.argv[1] is clien
 if (!myId) {
   myId = "0987654321";
   console.error("ID not provided as a parameter using default: " + myId);
-  // process.exit(1);
 }
 
 const ws = new WebSocket(`ws://localhost:3000?id=${myId}`);
 
-let time = 100;
+let delayBetweenMoves = 2;
 
 ws.on("open", () => {
   console.log("Connected to WebSocket server");
@@ -22,8 +21,7 @@ ws.on("message", (data) => {
   console.log("Received message:", message);
 
   if (message.winner !== null && message.winner !== undefined) {
-    console.log("Game over. Disconnecting from WebSocket server");
-    ws.close();
+    console.log("Game over");
   }
 
   // Send a move to the server
@@ -33,13 +31,14 @@ ws.on("message", (data) => {
       ws.send(JSON.stringify(movesToPlay[moveCounter]));
       moveCounter += 2;
       // console.log("moveCounter", moveCounter);
-    }, 2);
-    time += 100;
+    }, delayBetweenMoves);
+
+    // delayBetweenMoves += 300;
   }
 });
 
 ws.on("close", () => {
-  console.log("Disconnected from WebSocket server");
+  console.log("Disconnected from WebSocket by server");
 });
 
 ws.on("error", (error) => {

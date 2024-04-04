@@ -11,6 +11,8 @@ if (!myId) {
 
 const ws = new WebSocket(`ws://localhost:3000?id=${myId}`);
 
+let delayBetweenMoves = 2;
+
 ws.on("open", () => {
   console.log("Connected to WebSocket server");
 });
@@ -20,8 +22,7 @@ ws.on("message", (data) => {
   console.log("Received message:", message);
 
   if (message.winner !== null && message.winner !== undefined) {
-    console.log("Game over. Disconnecting from WebSocket server");
-    ws.close();
+    console.log("Game over");
   }
 
   // Send a move to the server
@@ -31,13 +32,14 @@ ws.on("message", (data) => {
       ws.send(JSON.stringify(movesToPlay[moveCounter]));
       moveCounter += 2;
       //console.log("moveCounter", moveCounter);
-    }, 2);
+    }, delayBetweenMoves);
+
+    // delayBetweenMoves += 300;
   }
 });
 
 ws.on("close", () => {
-  ws.close();
-  console.log("Disconnected from WebSocket server");
+  console.log("Disconnected from WebSocket by server");
 });
 
 ws.on("error", (error) => {
