@@ -69,6 +69,8 @@ body {
 
   font-size: min(6vw, 10rem);
   font-family: inherit;
+
+  padding-bottom: 2rem;
 }
 
 .winner_container h2 {

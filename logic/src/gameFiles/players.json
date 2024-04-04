@@ -1,10 +1,18 @@
-{
-    "player1": {
-        "name": "Player 1",
-        "id": "1234567890"
-    },
-    "player2": {
-        "name": "Player 2",
-        "id": "0987654321"
-    }
-}
+[
+  {
+    "name": "Test agent 01",
+    "id": "12345"
+  },
+  {
+    "name": "Test agent 02",
+    "id": "54321"
+  },
+  {
+    "name": "BEST agent Uno",
+    "id": "asdfg"
+  },
+  {
+    "name": "BEST agent Duo",
+    "id": "gfdsa"
+  }
+]

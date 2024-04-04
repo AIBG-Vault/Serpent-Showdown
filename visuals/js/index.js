@@ -1,15 +1,15 @@
-const gameTicksPerSecond = 10; // Adjust as needed
+const gameTicksPerSecond = 20; // Adjust as needed
 
 let socket; // WebSocket instance
 let socketConnectingInterval; // Interval for reconnection attempts
 let isConnectingOrConnected = false; // Connection state tracker
 
 let moveCounter = -1;
-const dataList = [];
+let dataList = [];
 let lastFrameTime = Date.now();
 
-let teamOneName;
-let teamTwoName;
+let teamOneName = null;
+let teamTwoName = null;
 
 const creatureMapping = {
   Arc: "Archer",
@@ -37,9 +37,18 @@ function connectWebSocket() {
 
   socket.addEventListener("open", (event) => {
     console.log("WebSocket connection established");
-    hideEndScreen(); // Hide the winner upon reconnection
-    moveCounter = 0; // Reset move counter
+
+    // reset frontend
+    moveCounter = -1; // Reset move counter
+    dataList = [];
+    lastFrameTime = Date.now();
+
+    teamOneName = null;
+    teamTwoName = null;
+
     updateMoveCount(moveCounter); // Update UI with the reset move counter
+    toggleEndScreen(null); // Hide the winner upon reconnection
+
     if (socketConnectingInterval) {
       clearInterval(socketConnectingInterval);
       socketConnectingInterval = null;
@@ -58,7 +67,7 @@ function connectWebSocket() {
     isConnectingOrConnected = false;
     // Check if a reconnection attempt isn't already scheduled before setting a new interval
     if (!socketConnectingInterval) {
-      socketConnectingInterval = setInterval(connectWebSocket, 1000);
+      socketConnectingInterval = setInterval(connectWebSocket, 500);
     }
   });
 
@@ -77,62 +86,31 @@ connectWebSocket();
 // utility
 // ========================================
 
-function showWinner(data) {
-  const winnerId = data.winner;
-  const winnerRemainingHP = data.winnerHealth;
-
-  const winnerContainer = $(".winner_container");
-  const winnerMessage = $(".winner_container h1");
-  const extraInfoElem = $(".winner_container h2").last();
-
-  if (!winnerContainer.is(":visible")) {
-    if (winnerId == -1 || winnerId == 2) {
-      winnerMessage.text("Game draw");
-      extraInfoElem.text("");
-    } else {
-      let winningTeam = winnerId == 0 ? teamOneName : teamTwoName;
-      winnerMessage.text(winningTeam);
-      extraInfoElem.text("Remaining HP: " + winnerRemainingHP);
-    }
-
-    winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
-  }
-}
-
-function showMessage(data) {
-  const msg = data.message;
-
+function toggleEndScreen(data) {
   // console.log(data);
 
-  const winnerTeamName =
-    data.currentTurn == teamOneName ? teamTwoName : teamOneName;
-
   const winnerContainer = $(".winner_container");
-  const winnerMessage = $(".winner_container h1");
+  const winnerNameElem = $(".winner_container h1");
   const extraInfoElem = $(".winner_container h2").last();
 
-  if (!winnerContainer.is(":visible")) {
-    winnerMessage.text(winnerTeamName);
-    if (msg === "Agent timed out") {
-      extraInfoElem.text(data.currentTurn + " timed out");
-    } else {
-      extraInfoElem.text(data.currentTurn + " played an illegal move");
+  if (data !== null) {
+    if (data.winner == -1) {
+      winnerNameElem.text("Game draw");
+      extraInfoElem.text("");
+    } else if (data.winnerHealth) {
+      winnerNameElem.text(data.winner);
+      extraInfoElem.text("Remaining HP: " + data.winnerHealth);
+    } else if (data.message) {
+      winnerNameElem.text(data.winner);
+      extraInfoElem.text(data.message);
     }
 
     winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
-  }
-}
-
-function hideEndScreen() {
-  const winnerContainer = $(".winner_container");
-  const winnerMessage = $(".winner_container h1");
-  const winnerHPElem = $(".winner_container h2").last();
-
-  if (winnerContainer.is(":visible")) {
+  } else if (data === null) {
     winnerContainer.animate({ opacity: 0 }, 500, function () {
       winnerContainer.css("display", "none");
-      winnerMessage.text("");
-      winnerHPElem.text("Remaining HP: " + "###");
+      winnerNameElem.text("");
+      extraInfoElem.text("");
     });
   }
 }
@@ -194,12 +172,11 @@ function gameLoop() {
   if (elapsed > 1000 / gameTicksPerSecond) {
     lastFrameTime = now - (elapsed % (1000 / gameTicksPerSecond));
 
+    // console.log(dataList.length);
     if (dataList.length > 0) {
       parseData(dataList.shift());
       // console.log(dataList.length);
     }
-
-    // Additional game logic can be processed here
   }
 
   requestAnimationFrame(gameLoop);
@@ -209,10 +186,11 @@ function gameLoop() {
 requestAnimationFrame(gameLoop);
 
 function parseData(data) {
-  console.log(data);
+  // console.log(data);
 
-  if (data.message) {
-    showMessage(data);
+  if (data.winner) {
+    toggleEndScreen(data);
+    return;
   }
 
   teamOneName = data.player1;
@@ -225,16 +203,16 @@ function parseData(data) {
   // set players
 
   const teamNameElems = document.querySelectorAll(".team_name");
-  teamNameElems[0].textContent = data.player1 || "Tema name 1";
-  teamNameElems[1].textContent = data.player2 || "Team name 2";
+  teamNameElems[0].textContent = teamOneName || "Team name 1";
+  teamNameElems[1].textContent = teamTwoName || "Team name 2";
 
   // ========================================
   // set board
   let field = data.field;
 
-  // Calculate board position, considering that the first index is for columns and the second is for rows
-
   // Main logic to build the position object for chessboard.js
+  // considering that the first index is for columns and the second is for rows
+
   let position = {};
 
   for (let column = 0; column < field[0].length; column++) {
@@ -266,10 +244,6 @@ function parseData(data) {
 
   updateCreatureStats(teamOneCreatures, ".left_container .creatures");
   updateCreatureStats(teamTwoCreatures, ".right_container .creatures");
-
-  if (data.winner !== null) {
-    showWinner(data);
-  }
 }
 
 // ========================================
@@ -306,7 +280,7 @@ $(window).resize(board.resize);
 
 particlesJS.load(
   "particles-js",
-  "../assets/particlesjs-config.json",
+  "./assets/particlesjs-config.json",
   function () {
     console.log("callback - particles.js config loaded");
   }
