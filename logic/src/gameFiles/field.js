@@ -8,7 +8,7 @@ const { ArmoredPeasant } = require('../gameFiles/creatures/armoredPeasant');
 const { Phoenix } = require('../gameFiles/creatures/phoenix');
 
 class GameField {
-    constructor(players) {
+    constructor() {
         this.field = Array.from({ length: 13 }, () => Array.from({ length: 18 }, () => null));
         this.creatureNumber = [7, 7];
         this.winner = null;

@@ -29,7 +29,7 @@ fs.readFile("./src/gameFiles/players.json", "utf8", (err, data) => {
   try {
     const allPlayers = JSON.parse(data);
     allPlayers.forEach((player) => playersMap.set(player.id, player)); // Populate playersMap
-    gameObject = new GameField(allPlayers); // Assuming GameField can handle players as an array
+    gameObject = new GameField();
   } catch (error) {
     console.error("Error parsing JSON:", error);
   }
@@ -136,6 +136,7 @@ function handlePlayerConnection(ws, playerId) {
         client.id === currentPlayers[0].id
       ) {
         const message = JSON.stringify({
+          field: gameObject.field,
           currentTurn: currentPlayers[0].id,
         });
 
@@ -181,22 +182,24 @@ function handleMessage(ws, message) {
 
     if (move.playerId !== currentPlayers[gameObject.turn].id) {
       connections.forEach((client) => {
-        const message = JSON.stringify({
-          message:
-            "It is not your turn. Please wait for the other player to make a move.",
-        });
-
-        client.send(message, (error) => {
-          if (error) {
-            console.error("Error sending message:", error);
-          }
-        });
+        if (client.readyState === WebSocket.OPEN && client.id === move.playerId) {
+          const message = JSON.stringify({
+            message:
+              "It is not your turn. Please wait for the other player to make a move.",
+          });
+  
+          client.send(message, (error) => {
+            if (error) {
+              console.error("Error sending message:", error);
+            }
+          });
+        }
       });
     } else {
       clearTimeout(timeoutId);
 
       try {
-        gameObject.playMove(move);
+        gameObject.playMove(move); // this method automatically switches the turn
       } catch (error) {
         if (error instanceof IllegalMoveException) {
           playerPlayedAnIllegalMove = true;
