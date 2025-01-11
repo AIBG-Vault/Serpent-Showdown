@@ -21,7 +21,7 @@ let playerTimedOut = false;
 let playerPlayedAnIllegalMove = false;
 
 // Load players.json and initialize gameObject
-fs.readFile("./src/gameFiles/players.json", "utf8", (err, data) => {
+fs.readFile("./players.json", "utf8", (err, data) => {
   if (err) {
     console.error("Error reading file:", err);
     return;
@@ -182,12 +182,15 @@ function handleMessage(ws, message) {
 
     if (move.playerId !== currentPlayers[gameObject.turn].id) {
       connections.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN && client.id === move.playerId) {
+        if (
+          client.readyState === WebSocket.OPEN &&
+          client.id === move.playerId
+        ) {
           const message = JSON.stringify({
             message:
               "It is not your turn. Please wait for the other player to make a move.",
           });
-  
+
           client.send(message, (error) => {
             if (error) {
               console.error("Error sending message:", error);
