@@ -5,7 +5,10 @@
 1. Install Node.js and npm (for server and JavaScript clients)
 2. Install Python 3.7+ (for Python clients)
 3. Install an IDE with Live Server extension (for visuals)
-4. Install required dependencies:
+4. Install code formatters:
+   - Prettier for JavaScript/Node.js development
+   - Black for Python development
+5. Install required dependencies:
 
 For server:
 
@@ -25,6 +28,7 @@ For Python client:
 
 ```bash
 pip install websockets
+pip install black  # for code formatting
 ```
 
 ## Running the Server
