@@ -4,7 +4,8 @@
 
 1. Install Node.js and npm (for server and JavaScript clients)
 2. Install Python 3.7+ (for Python clients)
-3. Install required dependencies:
+3. Install an IDE with Live Server extension (for visuals)
+4. Install required dependencies:
 
 For server:
 
@@ -48,6 +49,14 @@ node server.js # Runs without auto-restart
 ```
 
 The server will run on port 3000.
+
+## Running the Visuals
+
+1. Open the project in your IDE
+2. Right-click on visuals/index.html and select "Open with Live Server"
+   - If you don't see this option, install the "Live Server" extension first
+3. The game visualization will open in your default browser
+4. The visuals will automatically connect to the server when it's running
 
 ## Running Clients
 
