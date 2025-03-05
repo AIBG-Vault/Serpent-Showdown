@@ -11,16 +11,6 @@ let lastFrameTime = Date.now();
 let teamOneName = null;
 let teamTwoName = null;
 
-const creatureMapping = {
-  Arc: "Archer",
-  ArP: "Peasant",
-  Cav: "Cavalry",
-  Kni: "Knight",
-  Mar: "Marksman",
-  Phx: "Phoenix",
-  Pik: "Pikeman",
-};
-
 // ========================================
 // websockets
 // ========================================
@@ -58,7 +48,9 @@ function connectWebSocket() {
   });
 
   socket.addEventListener("message", (message) => {
-    dataList.push(JSON.parse(message.data));
+    const data = JSON.parse(message.data);
+    console.log("Received from server:", data); // Add immediate logging
+    dataList.push(data);
   });
 
   socket.addEventListener("close", (message) => {
@@ -99,7 +91,7 @@ function toggleEndScreen(data) {
       extraInfoElem.text("");
     } else if (data.winnerHealth) {
       winnerNameElem.text(data.winner);
-      extraInfoElem.text("Remaining HP: " + data.winnerHealth);
+      extraInfoElem.text("Points: " + data.winnerHealth);
     } else if (data.message) {
       winnerNameElem.text(data.winner);
       extraInfoElem.text(data.message);
@@ -118,39 +110,6 @@ function toggleEndScreen(data) {
 function updateMoveCount(moveCounter) {
   document.querySelector(".move_number").textContent =
     "Move: " + (moveCounter || "####");
-}
-
-function updateCreatureStats(creatures, containerSelector) {
-  creatures.forEach((creature) => {
-    if (creature) {
-      // Ensure creature is not null
-      const creatureName = creatureMapping[creature.name];
-      if (creatureName) {
-        const creatureElement = Array.from(
-          document.querySelectorAll(containerSelector + " .creature img[alt]")
-        ).find((img) => img.alt === creatureName)?.parentNode;
-
-        // Update HP
-        const hpElement = creatureElement.querySelector(".HP p");
-
-        if (creature.health > 0) {
-          hpElement.textContent = creature.health;
-          creatureElement.classList.remove("dead");
-        } else {
-          hpElement.textContent = 0;
-          creatureElement.classList.add("dead");
-        }
-
-        // Update Attack
-        const attackElement = creatureElement.querySelector(".Attack p");
-        attackElement.textContent = creature.attackDamage;
-
-        // Update ROM
-        const romElement = creatureElement.querySelector(".ROM p");
-        romElement.textContent = creature.rangeOfMovement;
-      }
-    }
-  });
 }
 
 // ========================================
@@ -186,7 +145,7 @@ function gameLoop() {
 requestAnimationFrame(gameLoop);
 
 function parseData(data) {
-  // console.log(data);
+  console.log("Processing game state:", data); // Log when processing
 
   if (data.winner) {
     toggleEndScreen(data);
@@ -217,33 +176,17 @@ function parseData(data) {
 
   for (let column = 0; column < field[0].length; column++) {
     for (let row = 0; row < field.length; row++) {
-      let creature = field[row][column];
-      if (creature !== null) {
-        // Calculate the chessboard notation for the current cell
-        const cellName = positionFromIndices(column, row);
-        // Get the chess piece code for this creature
-        // console.log(creature);
-
-        position[cellName] =
-          creature.team == 0
-            ? "b" + creatureMapping[creature.name]
-            : "o" + creatureMapping[creature.name];
-        // console.log(position);
+      let cell = field[row][column];
+      if (cell !== null) {
+        const cellName =
+          String.fromCharCode("a".charCodeAt(0) + column) + (row + 1);
+        position[cellName] = cell === cell.toUpperCase() ? "bH" : "bB"; // Head or Body
       }
     }
   }
 
   // Update the board with the new position
   board.position(position);
-
-  // ========================================
-  // set creatures
-
-  let teamOneCreatures = data.player1Creatures;
-  let teamTwoCreatures = data.player2Creatures;
-
-  updateCreatureStats(teamOneCreatures, ".left_container .creatures");
-  updateCreatureStats(teamTwoCreatures, ".right_container .creatures");
 }
 
 // ========================================

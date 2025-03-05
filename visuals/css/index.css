@@ -28,7 +28,7 @@ body {
   color: white;
 }
 
-/* background */
+/* Background */
 #particles-js {
   width: 100%;
   height: 100%;
@@ -90,14 +90,6 @@ body {
 
 .middle_container {
   flex-basis: 50%;
-}
-
-img.blue_piece {
-  transform: scaleX(-1);
-}
-
-img.orange_piece {
-  transform: scaleX(1);
 }
 
 .middle_container > h1 {
