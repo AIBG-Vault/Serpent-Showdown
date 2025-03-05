@@ -46,8 +46,8 @@ cd clients
 node agent_2.js [playerID] [direction]
 ```
 
-- `playerID`: Your unique player ID (default: "12345")
-- `direction`: Movement direction ("up", "down", "left", "right")
+- `playerID`: Your unique player ID (default: "A")
+- `direction`: Movement direction ("up", "down", "left", "right", "random")
 
 ## Game Flow
 

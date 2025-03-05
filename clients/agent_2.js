@@ -8,13 +8,14 @@ const WebSocket = require("ws");
 let agentId = process.argv[2]; // each team has their secret unique ID
 
 if (!agentId) {
-  agentId = "12345";
+  agentId = "A";
   console.error("ID not provided as a parameter, using default: " + agentId);
 }
 // console.log(agentId);
 
 const direction = process.argv[3]; // up, down, left, right
-if (!direction || !["up", "down", "left", "right"].includes(direction)) {
+const validDirections = ["up", "down", "left", "right"];
+if (!direction || (!["up", "down", "left", "right", "random"].includes(direction))) {
   console.error("Direction not provided or invalid, using default: up");
   direction = "up";
 }
@@ -36,7 +37,9 @@ ws.on("message", (data) => {
   if (!gameIsOver) {
     const move = {
       playerId: agentId,
-      direction: direction,
+      direction: direction === "random" 
+        ? validDirections[Math.floor(Math.random() * validDirections.length)]
+        : direction,
     };
 
     setTimeout(() => {
