@@ -8,7 +8,7 @@ const WebSocket = require("ws");
 let agentId = process.argv[2]; // each team has their secret unique ID
 
 if (!agentId) {
-  agentId = "12345";
+  agentId = "J";
   console.error("ID not provided as a parameter, using default: " + agentId);
 }
 // console.log(agentId);

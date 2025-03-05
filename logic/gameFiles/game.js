@@ -1,11 +1,11 @@
 class SnakeGame {
   constructor() {
-    const fieldSize = {
+    const mapSize = {
       rows: 5, // 25
       columns: 9, // 35
     };
-    this.field = Array.from({ length: fieldSize.rows }, () =>
-      Array.from({ length: fieldSize.columns }, () => null)
+    this.map = Array.from({ length: mapSize.rows }, () =>
+      Array.from({ length: mapSize.columns }, () => null)
     );
     this.players = [];
     this.maxMoves = 100; // Maximum moves before game ends
@@ -13,8 +13,8 @@ class SnakeGame {
     this.micePoints = 500; // Points for eating mice
     this.playerStartLength = 2; // Starting length of players
     this.playerPositions = [
-      { x: 0, y: Math.floor(this.field[0].length / 2) },
-      { x: this.field.length - 1, y: Math.floor(this.field[0].length / 2) },
+      { x: 0, y: Math.floor(this.map[0].length / 2) },
+      { x: this.map.length - 1, y: Math.floor(this.map[0].length / 2) },
     ];
     this.moveCount = 0;
     this.mice = [];
@@ -34,29 +34,29 @@ class SnakeGame {
 
   initializePlayerBody(playerId) {
     const body = [];
-    const startY = Math.floor(this.field[0].length / 2);
+    const startY = Math.floor(this.map[0].length / 2);
     if (playerId === "player1") {
       for (let i = 0; i < this.playerStartLength; i++) {
         body.push({ x: 0, y: startY + i }); // Player 1 starts from the left
       }
     } else {
       for (let i = 0; i < this.playerStartLength; i++) {
-        body.push({ x: this.field.length - 1, y: startY - i }); // Player 2 starts from the right
+        body.push({ x: this.map.length - 1, y: startY - i }); // Player 2 starts from the right
       }
     }
     return body;
   }
 
   updateField() {
-    this.field.forEach((row) => row.fill(null));
+    this.map.forEach((row) => row.fill(null));
     this.players.forEach((player) => {
       player.body.forEach((segment) => {
-        this.field[segment.x][segment.y] = player.id; // Place each segment of the player on the field
+        this.map[segment.x][segment.y] = player.id; // Place each segment of the player on the field
       });
     });
     this.mice.forEach((mouse) => {
       const { x, y } = mouse;
-      this.field[x][y] = "m"; // Place mice on the field
+      this.map[x][y] = "m"; // Place mice on the field
     });
 
     // console.log(this.field);
@@ -87,7 +87,7 @@ class SnakeGame {
     // Check for collisions
     const collision = this.checkCollision(head, playerId);
     if (collision) {
-      if (this.field[head.x][head.y] !== playerId) {
+      if (this.map[head.x][head.y] !== playerId) {
         this.endGame(playerId === this.players[0].id ? 1 : 0); // End game for wall or other player collision
         return;
       } else {
@@ -128,9 +128,9 @@ class SnakeGame {
     // Check for wall collision
     if (
       head.x < 0 ||
-      head.x >= this.field.length ||
+      head.x >= this.map.length ||
       head.y < 0 ||
-      head.y >= this.field[0].length
+      head.y >= this.map[0].length
     ) {
       console.log(`Player ${playerId} hit the wall!`);
       return true; // Wall collision
@@ -138,7 +138,7 @@ class SnakeGame {
 
     // Check for body collision with the other player
     const otherPlayer = this.players.find((p) => p.id !== playerId);
-    if (this.field[head.x][head.y] === otherPlayer.id) {
+    if (this.map[head.x][head.y] === otherPlayer.id) {
       console.log(`Player ${playerId} collided with ${otherPlayer.id}!`);
       return true; // Collision with the other player
     }
@@ -173,9 +173,9 @@ class SnakeGame {
     const validPositions = [];
 
     // Collect all valid empty positions on the field
-    for (let x = 0; x < this.field.length; x++) {
-      for (let y = 0; y < this.field[0].length; y++) {
-        if (this.field[x][y] === null) {
+    for (let x = 0; x < this.map.length; x++) {
+      for (let y = 0; y < this.map[0].length; y++) {
+        if (this.map[x][y] === null) {
           validPositions.push({ x, y });
         }
       }
@@ -190,7 +190,7 @@ class SnakeGame {
 
       // Place the mouse on the field
       this.mice.push({ x, y });
-      this.field[x][y] = "m"; // Mark the position as occupied by a mouse
+      this.map[x][y] = "m"; // Mark the position as occupied by a mouse
 
       // Remove the position from validPositions to avoid duplicates
       validPositions.splice(randomIndex, 1);
@@ -215,7 +215,7 @@ class SnakeGame {
 
     // Print the field
     console.log("Game Field:");
-    this.field.forEach((row) => {
+    this.map.forEach((row) => {
       console.log(row.map((cell) => (cell === null ? "." : cell)).join(" "));
     });
 
