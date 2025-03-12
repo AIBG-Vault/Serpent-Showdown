@@ -13,6 +13,10 @@ class SnakeGame {
     this.gameOver = false;
     this.winner = null;
     this.internalMoveCounter = 0; // Add move counter
+
+    // Apple properties
+    this.apple = null;
+    this.generateApple();
   }
 
   addPlayer(playerId) {
@@ -30,10 +34,21 @@ class SnakeGame {
         { x: startX, y: startY }, // Head
         { x: startX, y: isFirstPlayer ? startY - 1 : startY + 1 }, // Tail
       ],
+      score: 0, // Initialize player score
     };
 
     this.players.push(player);
     this.updateMap();
+  }
+
+  generateApple() {
+    let appleX, appleY;
+    do {
+      appleX = Math.floor(Math.random() * this.rows);
+      appleY = Math.floor(Math.random() * this.columns);
+    } while (this.map[appleX][appleY] !== null); // Ensure apple doesn't overlap with snake
+
+    this.apple = { x: appleX, y: appleY };
   }
 
   playMove(playerId, direction) {
@@ -64,9 +79,19 @@ class SnakeGame {
     // Increment move counter
     this.internalMoveCounter++;
 
-    // Move snake: add new head and remove tail
-    player.body.unshift(head);
-    player.body.pop();
+    // Check if the new head position is the apple
+    if (this.apple && head.x === this.apple.x && head.y === this.apple.y) {
+      // Elongate the snake by not removing the tail
+      player.body.unshift(head);
+      player.score += 1; // Increase player score
+      this.generateApple(); // Generate a new apple
+    } else {
+      // Move snake: add new head and remove tail
+      player.body.unshift(head);
+      player.body.pop();
+    }
+
+    this.updateMap();
   }
 
   processMoves(moves) {
@@ -81,7 +106,6 @@ class SnakeGame {
       // Determine the winner
       if (collidedPlayers.length === 1) {
         this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
-
         console.log(`Game Over! Player ${this.winner} wins!`);
       } else {
         // Both players collided, no winner
@@ -170,6 +194,11 @@ class SnakeGame {
         this.map[segment.x][segment.y] = player.id.toLowerCase();
       }
     });
+
+    // Place apple on map
+    if (this.apple) {
+      this.map[this.apple.x][this.apple.y] = "A"; // Oznaka apple 'A'
+    }
   }
 
   printState() {
