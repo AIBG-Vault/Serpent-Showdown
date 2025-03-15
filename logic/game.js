@@ -16,7 +16,7 @@ class SnakeGame {
   }
 
   addPlayer(playerId) {
-    const startLength = 2;
+    const startLength = 4; // Changed from 2 to 4 (or any desired length)
     const isFirstPlayer = this.players.length === 0;
 
     // Calculate starting position
@@ -26,11 +26,19 @@ class SnakeGame {
     // Create player with initial snake body
     const player = {
       id: playerId,
-      body: [
-        { x: startX, y: startY }, // Head
-        { x: startX, y: isFirstPlayer ? startY - 1 : startY + 1 }, // Tail
-      ],
+      body: [],
     };
+
+    // Add head first
+    player.body.push({ x: startX, y: startY });
+
+    // Add body segments
+    for (let i = 1; i < startLength; i++) {
+      player.body.push({
+        x: startX,
+        y: isFirstPlayer ? startY - i : startY + i,
+      });
+    }
 
     this.players.push(player);
     this.updateMap();
