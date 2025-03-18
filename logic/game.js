@@ -1,8 +1,8 @@
 class SnakeGame {
   constructor() {
     // Configurable map size
-    this.rows = 5; // 25
-    this.columns = 15; // 35
+    this.rows = 6; // 25
+    this.columns = 6; // 35
 
     // Initialize empty map
     this.map = Array.from({ length: this.rows }, () =>
@@ -15,8 +15,8 @@ class SnakeGame {
     this.internalMoveCounter = 0; // Add move counter
 
     // Apple properties
-    this.apple = null;
-    this.generateApple();
+    this.apples = []; // Store apples as an array of positions
+    this.generateApples(); // Generate initial apples
   }
 
   addPlayer(playerId) {
@@ -41,14 +41,22 @@ class SnakeGame {
     this.updateMap();
   }
 
-  generateApple() {
+  // Generate mirrored apples
+  generateApples() {
+    this.apples = []; // Clear existing apples
+
+    // Generate an apple on the left half of the map
     let appleX, appleY;
     do {
       appleX = Math.floor(Math.random() * this.rows);
-      appleY = Math.floor(Math.random() * this.columns);
+      appleY = Math.floor(Math.random() * (this.columns / 2));
     } while (this.map[appleX][appleY] !== null); // Ensure apple doesn't overlap with snake
 
-    this.apple = { x: appleX, y: appleY };
+    // Add the apple and its mirrored counterpart
+    this.apples.push({ x: appleX, y: appleY });
+    this.apples.push({ x: appleX, y: this.columns - 1 - appleY });
+
+    console.log("Generated apples:", this.apples);
   }
 
   playMove(playerId, direction) {
@@ -79,16 +87,32 @@ class SnakeGame {
     // Increment move counter
     this.internalMoveCounter++;
 
-    // Check if the new head position is the apple
-    if (this.apple && head.x === this.apple.x && head.y === this.apple.y) {
+    // Check if the new head position is on an apple
+    const eatenAppleIndex = this.apples.findIndex(
+      (apple) => apple.x === head.x && apple.y === head.y
+    );
+
+    if (eatenAppleIndex !== -1) {
       // Elongate the snake by not removing the tail
       player.body.unshift(head);
       player.score += 1; // Increase player score
-      this.generateApple(); // Generate a new apple
+
+      // Remove the eaten apple and its mirrored counterpart
+      this.apples.splice(eatenAppleIndex, 1);
+      if (eatenAppleIndex % 2 === 0) {
+        this.apples.splice(eatenAppleIndex, 1); // Remove mirrored apple
+      } else {
+        this.apples.splice(eatenAppleIndex - 1, 1); // Remove mirrored apple
+      }
     } else {
       // Move snake: add new head and remove tail
       player.body.unshift(head);
       player.body.pop();
+    }
+
+    // Generate new apples every 5 moves
+    if (this.internalMoveCounter % 5 === 0) {
+      this.generateApples();
     }
 
     this.updateMap();
@@ -195,10 +219,10 @@ class SnakeGame {
       }
     });
 
-    // Place apple on map
-    if (this.apple) {
-      this.map[this.apple.x][this.apple.y] = "A"; // Oznaka apple 'A'
-    }
+    // Place apples on map
+    this.apples.forEach((apple) => {
+      this.map[apple.x][apple.y] = "A"; // Represent apple with 'A'
+    });
   }
 
   printState() {

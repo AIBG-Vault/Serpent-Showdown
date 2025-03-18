@@ -180,11 +180,15 @@ function handleMessage(ws, message) {
       if (client.readyState === WebSocket.OPEN) {
         const gameState = {
           map: game.map,
+          players: game.players,
+          /* Add the player score to the game state 
+          /*
           players: game.players.map((player) => ({
             id: player.id,
             body: player.body,
             score: player.score, // Include player score
           })),
+          */
           gameOver: game.gameOver,
           winner: game.winner,
           moveCounter: game.internalMoveCounter,
