@@ -144,6 +144,16 @@ function rejectConnection(ws, receivedId) {
   ws.close();
 }
 
+/**
+ * Processes an incoming WebSocket message representing a player's move.
+ *
+ * This function handles a move message for a multiplayer Snake game. If fewer than two players are connected,
+ * it notifies the sender to wait. It then attempts to parse the message as JSON and ensures the move includes
+ * the required properties. Once moves from both players are received, it processes them to update the game state,
+ * broadcasts the updated state to all clients, and closes connections if the game is over.
+ *
+ * @param {string} message - A JSON string representing a player's move with required properties: playerId and direction.
+ */
 function handleMessage(ws, message) {
   console.log(`Received message: ${message}`);
 
