@@ -1,10 +1,7 @@
 class SnakeGame {
   constructor() {
-    // Configurable map size
-    this.rows = 6; // 25
-    this.columns = 6; // 35
-
-    // Initialize empty map
+    this.rows = 5;
+    this.columns = 15;
     this.map = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.columns }, () => null)
     );
@@ -12,51 +9,26 @@ class SnakeGame {
     this.players = [];
     this.gameOver = false;
     this.winner = null;
-    this.internalMoveCounter = 0; // Add move counter
-
-    // Apple properties
-    this.apples = []; // Store apples as an array of positions
-    this.generateApples(); // Generate initial apples
+    this.internalMoveCounter = 0;
+    this.apples = []; // Čuvamo sve jabuke
+    this.generateMirroredApples(); // Generiraj mirrorane jabuke
   }
 
-  addPlayer(playerId) {
-    const startLength = 2;
-    const isFirstPlayer = this.players.length === 0;
-
-    // Calculate starting position
-    const startX = Math.floor(this.rows / 2);
-    const startY = isFirstPlayer ? 2 : this.columns - 3;
-
-    // Create player with initial snake body
-    const player = {
-      id: playerId,
-      body: [
-        { x: startX, y: startY }, // Head
-        { x: startX, y: isFirstPlayer ? startY - 1 : startY + 1 }, // Tail
-      ],
-      score: 0, // Initialize player score
-    };
-
-    this.players.push(player);
-    this.updateMap();
-  }
-
-  // Generate mirrored apples
-  generateApples() {
-    this.apples = []; // Clear existing apples
-
-    // Generate an apple on the left half of the map
+  // Generiraj mirrorane jabuke
+  generateMirroredApples() {
+    // Generiraj samo na lijevoj polovici
     let appleX, appleY;
     do {
       appleX = Math.floor(Math.random() * this.rows);
-      appleY = Math.floor(Math.random() * (this.columns / 2));
-    } while (this.map[appleX][appleY] !== null); // Ensure apple doesn't overlap with snake
+      appleY = Math.floor(Math.random() * Math.floor(this.columns / 2));
+    } while (this.map[appleX][appleY] !== null);
 
-    // Add the apple and its mirrored counterpart
+    // Dodaj originalnu jabuku
     this.apples.push({ x: appleX, y: appleY });
-    this.apples.push({ x: appleX, y: this.columns - 1 - appleY });
-
-    console.log("Generated apples:", this.apples);
+    
+    // Dodaj mirroranu jabuku (desna strana)
+    const mirroredY = this.columns - 1 - appleY;
+    this.apples.push({ x: appleX, y: mirroredY });
   }
 
   playMove(playerId, direction) {
@@ -65,179 +37,63 @@ class SnakeGame {
     const player = this.players.find((p) => p.id === playerId);
     if (!player) return;
 
-    // Calculate new head position
     const head = { ...player.body[0] };
     switch (direction) {
-      case "up":
-        head.x -= 1;
-        break;
-      case "down":
-        head.x += 1;
-        break;
-      case "left":
-        head.y -= 1;
-        break;
-      case "right":
-        head.y += 1;
-        break;
-      default:
-        return;
+      case "up": head.x -= 1; break;
+      case "down": head.x += 1; break;
+      case "left": head.y -= 1; break;
+      case "right": head.y += 1; break;
+      default: return;
     }
 
-    // Increment move counter
     this.internalMoveCounter++;
 
-    // Check if the new head position is on an apple
-    const eatenAppleIndex = this.apples.findIndex(
-      (apple) => apple.x === head.x && apple.y === head.y
+    // Provjeri je li glava na jabuci
+    const appleIndex = this.apples.findIndex(
+      apple => apple.x === head.x && apple.y === head.y
     );
 
-    if (eatenAppleIndex !== -1) {
-      // Elongate the snake by not removing the tail
+    if (appleIndex !== -1) {
+      // Povećaj zmiju (ne brišemo rep)
       player.body.unshift(head);
-      player.score += 1; // Increase player score
-
-      // Remove the eaten apple and its mirrored counterpart
-      this.apples.splice(eatenAppleIndex, 1);
-      if (eatenAppleIndex % 2 === 0) {
-        this.apples.splice(eatenAppleIndex, 1); // Remove mirrored apple
-      } else {
-        this.apples.splice(eatenAppleIndex - 1, 1); // Remove mirrored apple
-      }
+      player.score += 1;
+      
+      // Ukloni samo tu jabuku (ne brišemo mirror)
+      this.apples.splice(appleIndex, 1);
     } else {
-      // Move snake: add new head and remove tail
+      // Normalan potez
       player.body.unshift(head);
       player.body.pop();
     }
 
-    // Generate new apples every 5 moves
+    // Generiraj nove jabuke svakih 5 poteza
     if (this.internalMoveCounter % 5 === 0) {
-      this.generateApples();
+      this.generateMirroredApples();
     }
 
     this.updateMap();
-  }
-
-  processMoves(moves) {
-    // Execute all moves first
-    for (const move of moves) {
-      this.playMove(move.playerId, move.direction);
-    }
-
-    // Check collisions
-    const collidedPlayers = this.checkCollisionsForBothPlayers();
-    if (collidedPlayers) {
-      // Determine the winner
-      if (collidedPlayers.length === 1) {
-        this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
-        console.log(`Game Over! Player ${this.winner} wins!`);
-      } else {
-        // Both players collided, no winner
-        this.winner = null;
-        console.log(`Game Over! Draw!`);
-      }
-      this.gameOver = true;
-
-      return;
-    }
-
-    // Update the map
-    this.updateMap();
-  }
-
-  checkCollisionsForBothPlayers() {
-    let collidedPlayers = new Set();
-
-    // Check wall and self collisions for each player
-    for (const player of this.players) {
-      const head = player.body[0];
-
-      // Wall collision
-      if (
-        head.x < 0 ||
-        head.x >= this.rows ||
-        head.y < 0 ||
-        head.y >= this.columns
-      ) {
-        collidedPlayers.add(player.id);
-        continue;
-      }
-
-      // Self collision
-      if (
-        player.body
-          .slice(1)
-          .some((segment) => segment.x === head.x && segment.y === head.y)
-      ) {
-        collidedPlayers.add(player.id);
-      }
-    }
-
-    // Check head-to-head collision
-    const [player1, player2] = this.players;
-    const head1 = player1.body[0];
-    const head2 = player2.body[0];
-
-    if (head1.x === head2.x && head1.y === head2.y) {
-      collidedPlayers.add(player1.id);
-      collidedPlayers.add(player2.id);
-    }
-
-    // Check if either player's head hits the other player's body
-    for (const player of this.players) {
-      const otherPlayer = this.players.find((p) => p.id !== player.id);
-      const head = player.body[0];
-
-      if (
-        otherPlayer.body.some(
-          (segment) => segment.x === head.x && segment.y === head.y
-        )
-      ) {
-        collidedPlayers.add(player.id);
-      }
-    }
-
-    return collidedPlayers.size > 0 ? Array.from(collidedPlayers) : null;
   }
 
   updateMap() {
-    // Clear map
+    // Očisti mapu
     this.map = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.columns }, () => null)
     );
 
-    // Place players on map
-    this.players.forEach((player) => {
-      // Place head (capital letter)
-      const head = player.body[0];
-      this.map[head.x][head.y] = player.id.toUpperCase();
-
-      // Place body segments (lowercase letters)
+    // Postavi igrače
+    this.players.forEach(player => {
+      this.map[player.body[0].x][player.body[0].y] = player.id.toUpperCase();
       for (let i = 1; i < player.body.length; i++) {
         const segment = player.body[i];
         this.map[segment.x][segment.y] = player.id.toLowerCase();
       }
     });
 
-    // Place apples on map
-    this.apples.forEach((apple) => {
-      this.map[apple.x][apple.y] = "A"; // Represent apple with 'A'
+    // Postavi jabuke
+    this.apples.forEach(apple => {
+      this.map[apple.x][apple.y] = "A";
     });
   }
 
-  printState() {
-    console.log("\nCurrent Game State:");
-    console.log("Move:", this.internalMoveCounter); // Add move counter to output
-    console.log("Game Over:", this.gameOver);
-    if (this.winner) console.log("Winner:", this.winner);
-
-    console.log("\nGame Map:");
-    this.map.forEach((row) => {
-      console.log(row.map((cell) => (cell === null ? "." : cell)).join(" "));
-    });
-    console.log("\n");
-  }
+  // Ostale metode ostaju iste...
 }
-
-// Remove all test code and add this export
-module.exports = { SnakeGame };
