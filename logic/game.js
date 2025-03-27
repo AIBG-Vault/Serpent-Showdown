@@ -16,18 +16,29 @@ class SnakeGame {
 
   // Generiraj mirrorane jabuke
   generateMirroredApples() {
-    // Generiraj samo na lijevoj polovici
-    let appleX, appleY;
+    let appleX, appleY, mirroredY;
+    let attempts = 0;
+    const maxAttempts = 50; // Prevent infinite loops
+    
     do {
+      // Generate random position on left half
       appleX = Math.floor(Math.random() * this.rows);
       appleY = Math.floor(Math.random() * Math.floor(this.columns / 2));
-    } while (this.map[appleX][appleY] !== null);
-
-    // Dodaj originalnu jabuku
+      mirroredY = this.columns - 1 - appleY;
+      
+      // Check both positions are free
+      const positionFree = this.map[appleX][appleY] === null && 
+                          this.map[appleX][mirroredY] === null;
+      
+      attempts++;
+      if (attempts >= maxAttempts) {
+        console.log("Couldn't find valid mirrored apple positions after 50 attempts");
+        return; // Skip this generation if we can't find valid spots
+      }
+    } while (!positionFree);
+  
+    // Add both apples
     this.apples.push({ x: appleX, y: appleY });
-    
-    // Dodaj mirroranu jabuku (desna strana)
-    const mirroredY = this.columns - 1 - appleY;
     this.apples.push({ x: appleX, y: mirroredY });
   }
 
