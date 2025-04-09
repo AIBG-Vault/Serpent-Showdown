@@ -104,6 +104,12 @@ class SnakeGame {
       return; // Skip the move
     }
 
+    // Penalize invalid moves
+    if (!["up", "down", "left", "right"].includes(direction)) {
+      player.score = Math.max(0, player.score - 5);
+      return; // Skip the move
+    }
+
     const head = { ...player.body[0] };
     switch (direction) {
       case "up":
