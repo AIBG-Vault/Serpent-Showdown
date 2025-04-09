@@ -1,6 +1,6 @@
 // Game configuration constants
 /** Number of rows in the game grid. Will be increased to 25 in production. */
-const GAME_ROWS = 15;
+const GAME_ROWS = 5;
 /** Number of columns in the game grid. Will be increased to 35 in production. */
 const GAME_COLUMNS = 15;
 /** Initial length of each player's snake. Will be increased to 5 in production. */
@@ -79,9 +79,9 @@ class SnakeGame {
 
     this.internalMoveCounter++;
 
-    // if (this.internalMoveCounter % 5 === 0) {
-    this.generateMirroredApples();
-    // }
+    if (this.internalMoveCounter % 5 === 0) {
+      this.generateMirroredApples();
+    }
 
     this.updateMap();
   }
@@ -184,21 +184,28 @@ class SnakeGame {
     for (const player of this.players) {
       const head = player.body[0];
 
-      if (
-        head.x < 0 ||
-        head.x >= this.numOfRows ||
-        head.y < 0 ||
-        head.y >= this.numOfColumns
-      ) {
+      // Wall collision checks
+      if (head.x < 0) {
+        console.log(`Player ${player.id} died by hitting the top wall`);
         collidedPlayers.add(player.id);
-        continue;
-      }
-
-      if (
+      } else if (head.x >= this.numOfRows) {
+        console.log(`Player ${player.id} died by hitting the bottom wall`);
+        collidedPlayers.add(player.id);
+      } else if (head.y < 0) {
+        console.log(`Player ${player.id} died by hitting the left wall`);
+        collidedPlayers.add(player.id);
+      } else if (head.y >= this.numOfColumns) {
+        console.log(`Player ${player.id} died by hitting the right wall`);
+        collidedPlayers.add(player.id);
+      } else if (
+        // Self collision
         player.body
           .slice(1)
           .some((segment) => segment.x === head.x && segment.y === head.y)
       ) {
+        console.log(
+          `Player ${player.id} died by colliding with their own body`
+        );
         collidedPlayers.add(player.id);
       }
     }
@@ -208,20 +215,28 @@ class SnakeGame {
     const head2 = player2.body[0];
 
     if (head1.x === head2.x && head1.y === head2.y) {
+      // Head-to-head collision
+      console.log(
+        `Players ${player1.id} and ${player2.id} died in head-on collision`
+      );
       collidedPlayers.add(player1.id);
       collidedPlayers.add(player2.id);
-    }
+    } else {
+      // Other player's body collision
+      for (const player of this.players) {
+        const otherPlayer = this.players.find((p) => p.id !== player.id);
+        const head = player.body[0];
 
-    for (const player of this.players) {
-      const otherPlayer = this.players.find((p) => p.id !== player.id);
-      const head = player.body[0];
-
-      if (
-        otherPlayer.body.some(
-          (segment) => segment.x === head.x && segment.y === head.y
-        )
-      ) {
-        collidedPlayers.add(player.id);
+        if (
+          otherPlayer.body.some(
+            (segment) => segment.x === head.x && segment.y === head.y
+          )
+        ) {
+          console.log(
+            `Player ${player.id} died by colliding with player ${otherPlayer.id}'s body`
+          );
+          collidedPlayers.add(player.id);
+        }
       }
     }
 
