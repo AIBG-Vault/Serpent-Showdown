@@ -34,6 +34,7 @@ class SnakeGame {
       id: playerId,
       body: [],
       score: 0,
+      length: this.playersStartingLength,
     };
 
     // Add head first
@@ -51,72 +52,38 @@ class SnakeGame {
     this.updateMap();
   }
 
-  generateMirroredApples() {
-    let attempts = 0;
-    const maxAttempts = this.columns * this.rows;
+  processMoves(moves) {
+    for (const move of moves) {
+      this.playMove(move.playerId, move.direction);
+    }
 
-    while (attempts < maxAttempts) {
-      const appleX = Math.floor(Math.random() * this.numOfRows);
-      const appleY = Math.floor(
-        Math.random() * Math.floor(this.numOfColumns / 2)
-      );
-
-      const mirroredX = appleX;
-      const mirroredY = this.numOfColumns - 1 - appleY;
-
-      // Check if both positions are free in the current map
-      const isPositionFree =
-        this.map[appleX][appleY] === null &&
-        this.map[mirroredX][mirroredY] === null;
-
-      if (isPositionFree) {
-        this.apples.push({ x: appleX, y: appleY });
-        this.apples.push({ x: appleX, y: mirroredY });
-        return;
+    const collidedPlayers = this.checkPlayersCollisions();
+    if (collidedPlayers) {
+      if (collidedPlayers.length === 1) {
+        this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
+        console.log(`Game Over! Player ${this.winner} wins!`);
+      } else {
+        // In case of collision, higher score wins
+        const [player1, player2] = this.players;
+        if (player1.score > player2.score) {
+          this.winner = player1.id;
+        } else if (player2.score > player1.score) {
+          this.winner = player2.id;
+        } else {
+          this.winner = -1; // Represent a draw
+          console.log(`Game Over! Draw!`);
+        }
       }
-
-      attempts++;
+      return;
     }
 
-    // Only log if we couldn't find positions after max attempts
-    console.log("Couldn't find valid mirrored apple positions");
-  }
+    this.internalMoveCounter++;
 
-  getCurrentDirection(player) {
-    const head = player.body[0];
-    const neck = player.body[1];
+    // if (this.internalMoveCounter % 5 === 0) {
+    this.generateMirroredApples();
+    // }
 
-    if (!neck) return null;
-
-    if (head.x === neck.x) {
-      return head.y > neck.y ? "right" : "left";
-    } else {
-      return head.x > neck.x ? "down" : "up";
-    }
-  }
-
-  isOppositeDirection(current, newDirection) {
-    const opposites = {
-      up: "down",
-      down: "up",
-      left: "right",
-      right: "left",
-    };
-    return opposites[current] === newDirection;
-  }
-
-  handleAppleCollision(player, head) {
-    const appleIndex = this.apples.findIndex(
-      (apple) => apple.x === head.x && apple.y === head.y
-    );
-
-    if (appleIndex !== -1) {
-      player.body.unshift(head);
-      player.score += 1;
-      this.apples.splice(appleIndex, 1);
-      return true;
-    }
-    return false;
+    this.updateMap();
   }
 
   playMove(playerId, direction) {
@@ -156,41 +123,61 @@ class SnakeGame {
     }
   }
 
-  processMoves(moves) {
-    for (const move of moves) {
-      this.playMove(move.playerId, move.direction);
+  getCurrentDirection(player) {
+    const head = player.body[0];
+    const neck = player.body[1];
+
+    if (!neck) return null;
+
+    if (head.x === neck.x) {
+      return head.y > neck.y ? "right" : "left";
+    } else {
+      return head.x > neck.x ? "down" : "up";
     }
-
-    const collidedPlayers = this.checkCollisionsForBothPlayers();
-    if (collidedPlayers) {
-      if (collidedPlayers.length === 1) {
-        this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
-        console.log(`Game Over! Player ${this.winner} wins!`);
-      } else {
-        // In case of collision, higher score wins
-        const [player1, player2] = this.players;
-        if (player1.score > player2.score) {
-          this.winner = player1.id;
-        } else if (player2.score > player1.score) {
-          this.winner = player2.id;
-        } else {
-          this.winner = -1; // Represent a draw
-          console.log(`Game Over! Draw!`);
-        }
-      }
-      return;
-    }
-
-    this.internalMoveCounter++;
-
-    if (this.internalMoveCounter % 5 === 0) {
-      this.generateMirroredApples();
-    }
-
-    this.updateMap();
   }
 
-  checkCollisionsForBothPlayers() {
+  isOppositeDirection(current, newDirection) {
+    const opposites = {
+      up: "down",
+      down: "up",
+      left: "right",
+      right: "left",
+    };
+    return opposites[current] === newDirection;
+  }
+
+  generateMirroredApples() {
+    let attempts = 0;
+    const maxAttempts = this.numOfColumns * this.numOfRows;
+
+    while (attempts < maxAttempts) {
+      const appleX = Math.floor(Math.random() * this.numOfRows);
+      const appleY = Math.floor(
+        Math.random() * Math.floor(this.numOfColumns / 2)
+      );
+
+      const mirroredX = appleX;
+      const mirroredY = this.numOfColumns - 1 - appleY;
+
+      // Check if both positions are free in the current map
+      const isPositionFree =
+        this.map[appleX][appleY] === null &&
+        this.map[mirroredX][mirroredY] === null;
+
+      if (isPositionFree) {
+        this.apples.push({ x: appleX, y: appleY });
+        this.apples.push({ x: appleX, y: mirroredY });
+        return;
+      }
+
+      attempts++;
+    }
+
+    // Only log if we couldn't find positions after max attempts
+    console.log("Couldn't find valid mirrored apple positions");
+  }
+
+  checkPlayersCollisions() {
     let collidedPlayers = new Set();
 
     for (const player of this.players) {
@@ -238,6 +225,21 @@ class SnakeGame {
     }
 
     return collidedPlayers.size > 0 ? Array.from(collidedPlayers) : null;
+  }
+
+  handleAppleCollision(player, head) {
+    const appleIndex = this.apples.findIndex(
+      (apple) => apple.x === head.x && apple.y === head.y
+    );
+
+    if (appleIndex !== -1) {
+      player.body.unshift(head);
+      player.score += 5;
+      player.length += 1;
+      this.apples.splice(appleIndex, 1);
+      return true;
+    }
+    return false;
   }
 
   updateMap() {
