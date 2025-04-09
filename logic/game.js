@@ -63,15 +63,19 @@ class SnakeGame {
         this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
         console.log(`Game Over! Player ${this.winner} wins!`);
       } else {
-        // In case of collision, higher score wins
+        // In case of collision, compare scores first, then lengths
         const [player1, player2] = this.players;
         if (player1.score > player2.score) {
           this.winner = player1.id;
         } else if (player2.score > player1.score) {
           this.winner = player2.id;
+        } else if (player1.length > player2.length) {
+          this.winner = player1.id;
+        } else if (player2.length > player1.length) {
+          this.winner = player2.id;
         } else {
-          this.winner = -1; // Represent a draw
-          console.log(`Game Over! Draw!`);
+          this.winner = -1; // Represent a draw when both score and length are equal
+          console.log(`Game Over! Draw! Equal scores and lengths`);
         }
       }
       return;
