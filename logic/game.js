@@ -1,7 +1,17 @@
+// Game configuration constants
+/** Number of rows in the game grid. Will be increased to 25 in production. */
+const GAME_ROWS = 5;
+/** Number of columns in the game grid. Will be increased to 35 in production. */
+const GAME_COLUMNS = 15;
+/** Initial length of each player's snake. Will be increased to 5 in production. */
+const PLAYERS_STARTING_LENGTH = 4; // Match the PR title which mentions length 4
+
 class SnakeGame {
   constructor() {
-    this.rows = 5;
-    this.columns = 15;
+    this.rows = GAME_ROWS;
+    this.columns = GAME_COLUMNS;
+    this.playersStartingLength = PLAYERS_STARTING_LENGTH;
+
     this.map = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.columns }, () => null)
     );
@@ -11,23 +21,32 @@ class SnakeGame {
     this.winner = null;
     this.internalMoveCounter = 0;
     this.apples = [];
-    this.generateMirroredApples();
   }
 
   addPlayer(playerId) {
-    const startLength = 2;
     const isFirstPlayer = this.players.length === 0;
-    const startX = Math.floor(this.rows / 2);
-    const startY = isFirstPlayer ? 2 : this.columns - 3;
+
+    const startRowIndex = Math.floor(this.rows / 2);
+    const startColumnIndex = isFirstPlayer
+      ? this.playersStartingLength
+      : this.columns - (this.playersStartingLength + 1);
 
     const player = {
       id: playerId,
-      body: [
-        { x: startX, y: startY },
-        { x: startX, y: isFirstPlayer ? startY - 1 : startY + 1 },
-      ],
+      body: [],
       score: 0,
     };
+
+    // Add head first
+    player.body.push({ x: startRowIndex, y: startColumnIndex });
+
+    // Add body segments
+    for (let i = 1; i < this.playersStartingLength; i++) {
+      player.body.push({
+        x: startRowIndex,
+        y: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
+      });
+    }
 
     this.players.push(player);
     this.updateMap();
