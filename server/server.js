@@ -71,7 +71,6 @@ function handleFrontendConnection(ws) {
     JSON.stringify({
       map: game.map,
       players: game.players,
-      gameOver: game.gameOver,
       winner: game.winner,
       moveCounter: game.internalMoveCounter,
     })
@@ -181,15 +180,6 @@ function handleMessage(ws, message) {
         const gameState = {
           map: game.map,
           players: game.players,
-          /* Add the player score to the game state 
-          /*
-          players: game.players.map((player) => ({
-            id: player.id,
-            body: player.body,
-            score: player.score, // Include player score
-          })),
-          */
-          gameOver: game.gameOver,
           winner: game.winner,
           moveCounter: game.internalMoveCounter,
         };
@@ -198,7 +188,7 @@ function handleMessage(ws, message) {
     });
 
     // Handle game over
-    if (game.gameOver) {
+    if (game.winner) {
       console.log(`Game Over! Winner: ${game.winner}`);
       closeConnectionsAndServer();
     }

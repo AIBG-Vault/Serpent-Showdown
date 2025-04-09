@@ -17,7 +17,6 @@ class SnakeGame {
     );
 
     this.players = [];
-    this.gameOver = false;
     this.winner = null;
     this.internalMoveCounter = 0;
     this.apples = [];
@@ -158,8 +157,6 @@ class SnakeGame {
   }
 
   processMoves(moves) {
-    if (this.gameOver) return;
-
     for (const move of moves) {
       this.playMove(move.playerId, move.direction);
     }
@@ -177,11 +174,10 @@ class SnakeGame {
         } else if (player2.score > player1.score) {
           this.winner = player2.id;
         } else {
-          this.winner = null;
+          this.winner = -1; // Represent a draw
           console.log(`Game Over! Draw!`);
         }
       }
-      this.gameOver = true;
       return;
     }
 
@@ -265,7 +261,6 @@ class SnakeGame {
   printState() {
     console.log("\nCurrent Game State:");
     console.log("Move:", this.internalMoveCounter);
-    console.log("Game Over:", this.gameOver);
     console.log("Winner:", this.winner);
 
     console.log("\nGame Map:");
