@@ -95,6 +95,8 @@ python agent.py [playerID] [mode]
   - Movement directions: "up", "down", "left", "right"
   - "random": Makes random moves
   - "timeout": Increases delay progressively
+  - "apple": Seeks and moves toward the nearest apple while avoiding obstacles
+  - "survive": Focuses on avoiding collisions and staying alive
 
 ## Game Flow
 
