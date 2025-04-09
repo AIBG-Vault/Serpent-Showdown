@@ -1,9 +1,19 @@
+// Game configuration constants
+/** Number of rows in the game grid. Will be increased to 25 in production. */
+const GAME_ROWS = 5;
+/** Number of columns in the game grid. Will be increased to 35 in production. */
+const GAME_COLUMNS = 15;
+/** Initial length of each player's snake. Will be increased to 5 in production. */
+const PLAYERS_STARTING_LENGTH = 2;
+
 class SnakeGame {
   constructor() {
-    this.rows = 5;
-    this.columns = 15;
-    this.map = Array.from({ length: this.rows }, () =>
-      Array.from({ length: this.columns }, () => null)
+    this.numOfRows = GAME_ROWS;
+    this.numOfColumns = GAME_COLUMNS;
+    this.playersStartingLength = PLAYERS_STARTING_LENGTH;
+
+    this.map = Array.from({ length: this.numOfRows }, () =>
+      Array.from({ length: this.numOfColumns }, () => null)
     );
 
     this.players = [];
@@ -11,47 +21,59 @@ class SnakeGame {
     this.winner = null;
     this.internalMoveCounter = 0;
     this.apples = [];
-    this.generateMirroredApples();
   }
 
   addPlayer(playerId) {
-    const startLength = 2;
     const isFirstPlayer = this.players.length === 0;
-    const startX = Math.floor(this.rows / 2);
-    const startY = isFirstPlayer ? 2 : this.columns - 3;
+
+    const startRowIndex = Math.floor(this.numOfRows / 2);
+    const startColumnIndex = isFirstPlayer
+      ? this.playersStartingLength
+      : this.numOfColumns - (this.playersStartingLength + 1);
 
     const player = {
       id: playerId,
-      body: [
-        { x: startX, y: startY },
-        { x: startX, y: isFirstPlayer ? startY - 1 : startY + 1 },
-      ],
+      body: [],
       score: 0,
     };
+
+    // Add head first
+    player.body.push({ x: startRowIndex, y: startColumnIndex });
+
+    // Add body segments
+    for (let i = 1; i < this.playersStartingLength; i++) {
+      player.body.push({
+        x: startRowIndex,
+        y: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
+      });
+    }
 
     this.players.push(player);
     this.updateMap();
   }
 
   generateMirroredApples() {
-    let appleX, appleY, mirroredY;
     let attempts = 0;
     const maxAttempts = this.columns * this.rows;
 
     while (attempts < maxAttempts) {
-      appleX = Math.floor(Math.random() * this.rows);
-      appleY = Math.floor(Math.random() * Math.floor(this.columns / 2));
-      mirroredY = this.columns - 1 - appleY;
+      const appleX = Math.floor(Math.random() * this.numOfRows);
+      const appleY = Math.floor(
+        Math.random() * Math.floor(this.numOfColumns / 2)
+      );
 
-      const positionFree =
+      const mirroredX = appleX;
+      const mirroredY = this.numOfColumns - 1 - appleY;
+
+      // Check if both positions are free in the current map
+      const isPositionFree =
         this.map[appleX][appleY] === null &&
-        this.map[appleX][mirroredY] === null;
+        this.map[mirroredX][mirroredY] === null;
 
-      if (positionFree) {
-        // console.log("Found valid mirrored apple positions");
+      if (isPositionFree) {
         this.apples.push({ x: appleX, y: appleY });
         this.apples.push({ x: appleX, y: mirroredY });
-        return; // Exit after successfully placing apples
+        return;
       }
 
       attempts++;
@@ -148,8 +170,16 @@ class SnakeGame {
         this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
         console.log(`Game Over! Player ${this.winner} wins!`);
       } else {
-        this.winner = null;
-        console.log(`Game Over! Draw!`);
+        // In case of collision, higher score wins
+        const [player1, player2] = this.players;
+        if (player1.score > player2.score) {
+          this.winner = player1.id;
+        } else if (player2.score > player1.score) {
+          this.winner = player2.id;
+        } else {
+          this.winner = null;
+          console.log(`Game Over! Draw!`);
+        }
       }
       this.gameOver = true;
       return;
@@ -172,9 +202,9 @@ class SnakeGame {
 
       if (
         head.x < 0 ||
-        head.x >= this.rows ||
+        head.x >= this.numOfRows ||
         head.y < 0 ||
-        head.y >= this.columns
+        head.y >= this.numOfColumns
       ) {
         collidedPlayers.add(player.id);
         continue;
@@ -215,8 +245,8 @@ class SnakeGame {
   }
 
   updateMap() {
-    this.map = Array.from({ length: this.rows }, () =>
-      Array.from({ length: this.columns }, () => null)
+    this.map = Array.from({ length: this.numOfRows }, () =>
+      Array.from({ length: this.numOfColumns }, () => null)
     );
 
     this.players.forEach((player) => {
