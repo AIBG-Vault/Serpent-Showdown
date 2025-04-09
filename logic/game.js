@@ -36,33 +36,37 @@ class SnakeGame {
   generateMirroredApples() {
     let appleX, appleY, mirroredY;
     let attempts = 0;
-    const maxAttempts = 50;
+    const maxAttempts = this.columns * this.rows;
 
-    do {
+    while (attempts < maxAttempts) {
       appleX = Math.floor(Math.random() * this.rows);
       appleY = Math.floor(Math.random() * Math.floor(this.columns / 2));
       mirroredY = this.columns - 1 - appleY;
-      
-      const positionFree = this.map[appleX][appleY] === null && 
-                          this.map[appleX][mirroredY] === null;
-      
-      attempts++;
-      if (attempts >= maxAttempts) {
-        console.log("Couldn't find valid mirrored apple positions");
-        return;
-      }
-    } while (!positionFree);
 
-    this.apples.push({ x: appleX, y: appleY });
-    this.apples.push({ x: appleX, y: mirroredY });
+      const positionFree =
+        this.map[appleX][appleY] === null &&
+        this.map[appleX][mirroredY] === null;
+
+      if (positionFree) {
+        // console.log("Found valid mirrored apple positions");
+        this.apples.push({ x: appleX, y: appleY });
+        this.apples.push({ x: appleX, y: mirroredY });
+        return; // Exit after successfully placing apples
+      }
+
+      attempts++;
+    }
+
+    // Only log if we couldn't find positions after max attempts
+    console.log("Couldn't find valid mirrored apple positions");
   }
 
   getCurrentDirection(player) {
     const head = player.body[0];
     const neck = player.body[1];
-    
+
     if (!neck) return null;
-    
+
     if (head.x === neck.x) {
       return head.y > neck.y ? "right" : "left";
     } else {
@@ -75,55 +79,65 @@ class SnakeGame {
       up: "down",
       down: "up",
       left: "right",
-      right: "left"
+      right: "left",
     };
     return opposites[current] === newDirection;
   }
 
-  playMove(playerId, direction) {
-    if (this.gameOver) return;
-
-    const player = this.players.find((p) => p.id === playerId);
-    if (!player) return;
-
-    // Prevent reversing direction
-    const currentDirection = this.getCurrentDirection(player);
-    if (currentDirection && this.isOppositeDirection(currentDirection, direction)) {
-      direction = currentDirection;
-    }
-
-    const head = { ...player.body[0] };
-    switch (direction) {
-      case "up": head.x -= 1; break;
-      case "down": head.x += 1; break;
-      case "left": head.y -= 1; break;
-      case "right": head.y += 1; break;
-      default: return;
-    }
-
-    this.internalMoveCounter++;
-
+  handleAppleCollision(player, head) {
     const appleIndex = this.apples.findIndex(
-      apple => apple.x === head.x && apple.y === head.y
+      (apple) => apple.x === head.x && apple.y === head.y
     );
 
     if (appleIndex !== -1) {
       player.body.unshift(head);
       player.score += 1;
       this.apples.splice(appleIndex, 1);
-    } else {
+      return true;
+    }
+    return false;
+  }
+
+  playMove(playerId, direction) {
+    const player = this.players.find((p) => p.id === playerId);
+    if (!player) return;
+
+    // Prevent reversing direction
+    const currentDirection = this.getCurrentDirection(player);
+    if (
+      currentDirection &&
+      this.isOppositeDirection(currentDirection, direction)
+    ) {
+      direction = currentDirection;
+    }
+
+    const head = { ...player.body[0] };
+    switch (direction) {
+      case "up":
+        head.x -= 1;
+        break;
+      case "down":
+        head.x += 1;
+        break;
+      case "left":
+        head.y -= 1;
+        break;
+      case "right":
+        head.y += 1;
+        break;
+      default:
+        return;
+    }
+
+    if (!this.handleAppleCollision(player, head)) {
       player.body.unshift(head);
       player.body.pop();
     }
-
-    if (this.internalMoveCounter % 5 === 0) {
-      this.generateMirroredApples();
-    }
-
-    this.updateMap();
   }
 
   processMoves(moves) {
+    if (this.gameOver) return;
+
     for (const move of moves) {
       this.playMove(move.playerId, move.direction);
     }
@@ -139,6 +153,12 @@ class SnakeGame {
       }
       this.gameOver = true;
       return;
+    }
+
+    this.internalMoveCounter++;
+
+    if (this.internalMoveCounter % 5 === 0) {
+      this.generateMirroredApples();
     }
 
     this.updateMap();
@@ -199,7 +219,7 @@ class SnakeGame {
       Array.from({ length: this.columns }, () => null)
     );
 
-    this.players.forEach(player => {
+    this.players.forEach((player) => {
       this.map[player.body[0].x][player.body[0].y] = player.id.toUpperCase();
       for (let i = 1; i < player.body.length; i++) {
         const segment = player.body[i];
@@ -207,7 +227,7 @@ class SnakeGame {
       }
     });
 
-    this.apples.forEach(apple => {
+    this.apples.forEach((apple) => {
       this.map[apple.x][apple.y] = "A";
     });
   }
@@ -216,7 +236,7 @@ class SnakeGame {
     console.log("\nCurrent Game State:");
     console.log("Move:", this.internalMoveCounter);
     console.log("Game Over:", this.gameOver);
-    if (this.winner) console.log("Winner:", this.winner);
+    console.log("Winner:", this.winner);
 
     console.log("\nGame Map:");
     this.map.forEach((row) => {
