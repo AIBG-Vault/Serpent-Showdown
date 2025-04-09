@@ -4,7 +4,7 @@ const GAME_ROWS = 5;
 /** Number of columns in the game grid. Will be increased to 35 in production. */
 const GAME_COLUMNS = 15;
 /** Initial length of each player's snake. Will be increased to 5 in production. */
-const PLAYERS_STARTING_LENGTH = 4; // Match the PR title which mentions length 4
+const PLAYERS_STARTING_LENGTH = 2;
 
 class SnakeGame {
   constructor() {
@@ -168,8 +168,16 @@ class SnakeGame {
         this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
         console.log(`Game Over! Player ${this.winner} wins!`);
       } else {
-        this.winner = null;
-        console.log(`Game Over! Draw!`);
+        // In case of collision, higher score wins
+        const [player1, player2] = this.players;
+        if (player1.score > player2.score) {
+          this.winner = player1.id;
+        } else if (player2.score > player1.score) {
+          this.winner = player2.id;
+        } else {
+          this.winner = null;
+          console.log(`Game Over! Draw!`);
+        }
       }
       this.gameOver = true;
       return;
