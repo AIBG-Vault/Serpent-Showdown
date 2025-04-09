@@ -90,7 +90,7 @@ cd clients
 python agent.py [playerID] [mode]
 ```
 
-- playerID: Your unique player ID (default: "A")
+- playerID: Your unique player ID (default: "k")
 - mode: Supports same basic modes as agent.js
   - Movement directions: "up", "down", "left", "right"
   - "random": Makes random moves
