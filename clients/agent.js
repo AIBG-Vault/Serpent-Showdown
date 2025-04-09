@@ -16,7 +16,16 @@ const agentMode = process.argv[3]; // up, down, left, right, random, timeout
 const validDirections = ["up", "down", "left", "right"];
 if (
   !agentMode ||
-  !["up", "down", "left", "right", "random", "timeout"].includes(agentMode)
+  ![
+    "up",
+    "down",
+    "left",
+    "right",
+    "random",
+    "timeout",
+    "apple",
+    "survive",
+  ].includes(agentMode)
 ) {
   console.error("Direction not provided or invalid, using default: up");
   agentMode = "up";
@@ -38,13 +47,52 @@ ws.on("message", (data) => {
     receivedMsg.winner !== null && receivedMsg.winner !== undefined;
 
   // Send a move to the server
-  if (!gameIsOver) {
+  if (!gameIsOver && receivedMsg.map) {
+    let direction = agentMode;
+
+    if (agentMode === "survive") {
+      const playerHead = { x: 0, y: 0 };
+      const playerSymbol = agentId.toUpperCase();
+
+      // Find player head position
+      for (let i = 0; i < receivedMsg.map.length; i++) {
+        for (let j = 0; j < receivedMsg.map[i].length; j++) {
+          if (receivedMsg.map[i][j] === playerSymbol) {
+            playerHead.x = i;
+            playerHead.y = j;
+          }
+        }
+      }
+
+      // Get safe direction
+      direction = findSafeDirection(receivedMsg.map, playerHead);
+    } else if (agentMode === "apple") {
+      // Find player head (uppercase letter matching player ID)
+      const playerHead = { x: 0, y: 0 };
+      const playerSymbol = agentId.toUpperCase();
+
+      for (let i = 0; i < receivedMsg.map.length; i++) {
+        for (let j = 0; j < receivedMsg.map[i].length; j++) {
+          if (receivedMsg.map[i][j] === playerSymbol) {
+            playerHead.x = i;
+            playerHead.y = j;
+          }
+        }
+      }
+
+      const path = findClosestApple(receivedMsg.map, playerHead);
+      direction =
+        path && path.length > 0
+          ? path[0]
+          : validDirections[Math.floor(Math.random() * validDirections.length)];
+    } else if (agentMode === "random") {
+      direction =
+        validDirections[Math.floor(Math.random() * validDirections.length)];
+    }
+
     const move = {
       playerId: agentId,
-      direction:
-        agentMode === "random"
-          ? validDirections[Math.floor(Math.random() * validDirections.length)]
-          : agentMode,
+      direction: direction,
     };
 
     setTimeout(() => {
@@ -63,3 +111,84 @@ ws.on("close", () => {
 ws.on("error", (error) => {
   console.error("WebSocket error:", error);
 });
+
+// Add BFS helper functions
+function findClosestApple(map, playerHead) {
+  const rows = map.length;
+  const cols = map[0].length;
+  const queue = [[playerHead.x, playerHead.y, []]];
+  const visited = new Set();
+
+  while (queue.length > 0) {
+    const [x, y, path] = queue.shift();
+    const key = `${x},${y}`;
+
+    if (visited.has(key)) continue;
+    visited.add(key);
+
+    if (map[x][y] === "A") {
+      return path;
+    }
+
+    const directions = [
+      { dx: -1, dy: 0, move: "up" },
+      { dx: 1, dy: 0, move: "down" },
+      { dx: 0, dy: -1, move: "left" },
+      { dx: 0, dy: 1, move: "right" },
+    ];
+
+    for (const { dx, dy, move } of directions) {
+      const newX = x + dx;
+      const newY = y + dy;
+
+      // Add boundary check first
+      if (newX < 0 || newX >= rows || newY < 0 || newY >= cols) continue;
+
+      // Check for all snake body parts (both uppercase and lowercase)
+      const cell = map[newX][newY];
+      if (
+        cell !== null &&
+        cell !== "A" &&
+        (cell.toLowerCase() === "k" || cell.toLowerCase() === "l")
+      ) {
+        continue;
+      }
+
+      queue.push([newX, newY, [...path, move]]);
+    }
+  }
+
+  return null;
+}
+
+// Add new helper function for survive mode
+function findSafeDirection(map, playerHead) {
+  const directions = [
+    { dx: -1, dy: 0, move: "up" },
+    { dx: 1, dy: 0, move: "down" },
+    { dx: 0, dy: -1, move: "left" },
+    { dx: 0, dy: 1, move: "right" },
+  ];
+
+  // Shuffle directions for random choice among safe directions
+  directions.sort(() => Math.random() - 0.5);
+
+  for (const { dx, dy, move } of directions) {
+    const newX = playerHead.x + dx;
+    const newY = playerHead.y + dy;
+
+    // Check boundaries
+    if (newX < 0 || newX >= map.length || newY < 0 || newY >= map[0].length) {
+      continue;
+    }
+
+    // Check if cell is safe (null or apple)
+    const cell = map[newX][newY];
+    if (cell === null || cell === "A") {
+      return move;
+    }
+  }
+
+  // If no safe direction found, return random direction as fallback
+  return validDirections[Math.floor(Math.random() * validDirections.length)];
+}
