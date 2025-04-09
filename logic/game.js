@@ -1,6 +1,6 @@
 // Game configuration constants
 /** Number of rows in the game grid. Will be increased to 25 in production. */
-const GAME_ROWS = 5;
+const GAME_ROWS = 15;
 /** Number of columns in the game grid. Will be increased to 35 in production. */
 const GAME_COLUMNS = 15;
 /** Initial length of each player's snake. Will be increased to 5 in production. */
@@ -90,13 +90,14 @@ class SnakeGame {
     const player = this.players.find((p) => p.id === playerId);
     if (!player) return;
 
-    // Prevent reversing direction
+    // Prevent reversing direction and penalize the attempt
     const currentDirection = this.getCurrentDirection(player);
     if (
       currentDirection &&
       this.isOppositeDirection(currentDirection, direction)
     ) {
-      direction = currentDirection;
+      player.score = Math.max(0, player.score - 5); // Prevent negative scores
+      return; // Skip the move
     }
 
     const head = { ...player.body[0] };
