@@ -11,14 +11,17 @@ class SnakeGame {
     this.winner = null;
     this.internalMoveCounter = 0;
     this.apples = [];
-    this.generateMirroredApples();
   }
 
   addPlayer(playerId) {
-    const startLength = 4; // Changed from 2 to 4 (or any desired length)
+    const startLength = 4;
+
     const isFirstPlayer = this.players.length === 0;
-    const startX = Math.floor(this.rows / 2);
-    const startY = isFirstPlayer ? 2 : this.columns - 3;
+
+    const startRowIndex = Math.floor(this.rows / 2);
+    const startColumnIndex = isFirstPlayer
+      ? startLength
+      : this.columns - (startLength + 1);
 
     const player = {
       id: playerId,
@@ -27,13 +30,13 @@ class SnakeGame {
     };
 
     // Add head first
-    player.body.push({ x: startX, y: startY });
+    player.body.push({ x: startRowIndex, y: startColumnIndex });
 
     // Add body segments
     for (let i = 1; i < startLength; i++) {
       player.body.push({
-        x: startX,
-        y: isFirstPlayer ? startY - i : startY + i,
+        x: startRowIndex,
+        y: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
       });
     }
 
