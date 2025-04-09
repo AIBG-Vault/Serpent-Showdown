@@ -1,7 +1,14 @@
+// Game configuration constants
+const GAME_ROWS = 5; // to be 25
+const GAME_COLUMNS = 15; // to be 35
+const PLAYERS_STARTING_LENGTH = 3; // to be 5
+
 class SnakeGame {
   constructor() {
-    this.rows = 5;
-    this.columns = 15;
+    this.rows = GAME_ROWS;
+    this.columns = GAME_COLUMNS;
+    this.playersStartingLength = PLAYERS_STARTING_LENGTH;
+
     this.map = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.columns }, () => null)
     );
@@ -14,14 +21,12 @@ class SnakeGame {
   }
 
   addPlayer(playerId) {
-    const startLength = 4;
-
     const isFirstPlayer = this.players.length === 0;
 
     const startRowIndex = Math.floor(this.rows / 2);
     const startColumnIndex = isFirstPlayer
-      ? startLength
-      : this.columns - (startLength + 1);
+      ? this.playersStartingLength
+      : this.columns - (this.playersStartingLength + 1);
 
     const player = {
       id: playerId,
@@ -33,7 +38,7 @@ class SnakeGame {
     player.body.push({ x: startRowIndex, y: startColumnIndex });
 
     // Add body segments
-    for (let i = 1; i < startLength; i++) {
+    for (let i = 1; i < this.playersStartingLength; i++) {
       player.body.push({
         x: startRowIndex,
         y: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
