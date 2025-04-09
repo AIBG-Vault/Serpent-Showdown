@@ -1,10 +1,7 @@
 class SnakeGame {
   constructor() {
-    // Configurable map size
-    this.rows = 5; // 25
-    this.columns = 15; // 35
-
-    // Initialize empty map
+    this.rows = 5;
+    this.columns = 15;
     this.map = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.columns }, () => null)
     );
@@ -12,28 +9,75 @@ class SnakeGame {
     this.players = [];
     this.gameOver = false;
     this.winner = null;
-    this.internalMoveCounter = 0; // Add move counter
+    this.internalMoveCounter = 0;
+    this.apples = [];
+    this.generateMirroredApples();
   }
 
   addPlayer(playerId) {
     const startLength = 2;
     const isFirstPlayer = this.players.length === 0;
-
-    // Calculate starting position
     const startX = Math.floor(this.rows / 2);
     const startY = isFirstPlayer ? 2 : this.columns - 3;
 
-    // Create player with initial snake body
     const player = {
       id: playerId,
       body: [
-        { x: startX, y: startY }, // Head
-        { x: startX, y: isFirstPlayer ? startY - 1 : startY + 1 }, // Tail
+        { x: startX, y: startY },
+        { x: startX, y: isFirstPlayer ? startY - 1 : startY + 1 },
       ],
+      score: 0,
     };
 
     this.players.push(player);
     this.updateMap();
+  }
+
+  generateMirroredApples() {
+    let appleX, appleY, mirroredY;
+    let attempts = 0;
+    const maxAttempts = 50;
+
+    do {
+      appleX = Math.floor(Math.random() * this.rows);
+      appleY = Math.floor(Math.random() * Math.floor(this.columns / 2));
+      mirroredY = this.columns - 1 - appleY;
+      
+      const positionFree = this.map[appleX][appleY] === null && 
+                          this.map[appleX][mirroredY] === null;
+      
+      attempts++;
+      if (attempts >= maxAttempts) {
+        console.log("Couldn't find valid mirrored apple positions");
+        return;
+      }
+    } while (!positionFree);
+
+    this.apples.push({ x: appleX, y: appleY });
+    this.apples.push({ x: appleX, y: mirroredY });
+  }
+
+  getCurrentDirection(player) {
+    const head = player.body[0];
+    const neck = player.body[1];
+    
+    if (!neck) return null;
+    
+    if (head.x === neck.x) {
+      return head.y > neck.y ? "right" : "left";
+    } else {
+      return head.x > neck.x ? "down" : "up";
+    }
+  }
+
+  isOppositeDirection(current, newDirection) {
+    const opposites = {
+      up: "down",
+      down: "up",
+      left: "right",
+      right: "left"
+    };
+    return opposites[current] === newDirection;
   }
 
   playMove(playerId, direction) {
@@ -42,69 +86,70 @@ class SnakeGame {
     const player = this.players.find((p) => p.id === playerId);
     if (!player) return;
 
-    // Calculate new head position
-    const head = { ...player.body[0] };
-    switch (direction) {
-      case "up":
-        head.x -= 1;
-        break;
-      case "down":
-        head.x += 1;
-        break;
-      case "left":
-        head.y -= 1;
-        break;
-      case "right":
-        head.y += 1;
-        break;
-      default:
-        return;
+    // Prevent reversing direction
+    const currentDirection = this.getCurrentDirection(player);
+    if (currentDirection && this.isOppositeDirection(currentDirection, direction)) {
+      direction = currentDirection;
     }
 
-    // Increment move counter
+    const head = { ...player.body[0] };
+    switch (direction) {
+      case "up": head.x -= 1; break;
+      case "down": head.x += 1; break;
+      case "left": head.y -= 1; break;
+      case "right": head.y += 1; break;
+      default: return;
+    }
+
     this.internalMoveCounter++;
 
-    // Move snake: add new head and remove tail
-    player.body.unshift(head);
-    player.body.pop();
+    const appleIndex = this.apples.findIndex(
+      apple => apple.x === head.x && apple.y === head.y
+    );
+
+    if (appleIndex !== -1) {
+      player.body.unshift(head);
+      player.score += 1;
+      this.apples.splice(appleIndex, 1);
+    } else {
+      player.body.unshift(head);
+      player.body.pop();
+    }
+
+    if (this.internalMoveCounter % 5 === 0) {
+      this.generateMirroredApples();
+    }
+
+    this.updateMap();
   }
 
   processMoves(moves) {
-    // Execute all moves first
     for (const move of moves) {
       this.playMove(move.playerId, move.direction);
     }
 
-    // Check collisions
     const collidedPlayers = this.checkCollisionsForBothPlayers();
     if (collidedPlayers) {
-      // Determine the winner
       if (collidedPlayers.length === 1) {
         this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
-
         console.log(`Game Over! Player ${this.winner} wins!`);
       } else {
-        // Both players collided, no winner
         this.winner = null;
         console.log(`Game Over! Draw!`);
       }
       this.gameOver = true;
-
       return;
     }
 
-    // Update the map
     this.updateMap();
   }
 
   checkCollisionsForBothPlayers() {
     let collidedPlayers = new Set();
 
-    // Check wall and self collisions for each player
     for (const player of this.players) {
       const head = player.body[0];
 
-      // Wall collision
       if (
         head.x < 0 ||
         head.x >= this.rows ||
@@ -115,7 +160,6 @@ class SnakeGame {
         continue;
       }
 
-      // Self collision
       if (
         player.body
           .slice(1)
@@ -125,7 +169,6 @@ class SnakeGame {
       }
     }
 
-    // Check head-to-head collision
     const [player1, player2] = this.players;
     const head1 = player1.body[0];
     const head2 = player2.body[0];
@@ -135,7 +178,6 @@ class SnakeGame {
       collidedPlayers.add(player2.id);
     }
 
-    // Check if either player's head hits the other player's body
     for (const player of this.players) {
       const otherPlayer = this.players.find((p) => p.id !== player.id);
       const head = player.body[0];
@@ -153,28 +195,26 @@ class SnakeGame {
   }
 
   updateMap() {
-    // Clear map
     this.map = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.columns }, () => null)
     );
 
-    // Place players on map
-    this.players.forEach((player) => {
-      // Place head (capital letter)
-      const head = player.body[0];
-      this.map[head.x][head.y] = player.id.toUpperCase();
-
-      // Place body segments (lowercase letters)
+    this.players.forEach(player => {
+      this.map[player.body[0].x][player.body[0].y] = player.id.toUpperCase();
       for (let i = 1; i < player.body.length; i++) {
         const segment = player.body[i];
         this.map[segment.x][segment.y] = player.id.toLowerCase();
       }
     });
+
+    this.apples.forEach(apple => {
+      this.map[apple.x][apple.y] = "A";
+    });
   }
 
   printState() {
     console.log("\nCurrent Game State:");
-    console.log("Move:", this.internalMoveCounter); // Add move counter to output
+    console.log("Move:", this.internalMoveCounter);
     console.log("Game Over:", this.gameOver);
     if (this.winner) console.log("Winner:", this.winner);
 
@@ -186,5 +226,4 @@ class SnakeGame {
   }
 }
 
-// Remove all test code and add this export
 module.exports = { SnakeGame };
