@@ -1,7 +1,10 @@
 // Game configuration constants
-const GAME_ROWS = 5; // to be 25
-const GAME_COLUMNS = 15; // to be 35
-const PLAYERS_STARTING_LENGTH = 3; // to be 5
+/** Number of rows in the game grid. Will be increased to 25 in production. */
+const GAME_ROWS = 5;
+/** Number of columns in the game grid. Will be increased to 35 in production. */
+const GAME_COLUMNS = 15;
+/** Initial length of each player's snake. Will be increased to 5 in production. */
+const PLAYERS_STARTING_LENGTH = 4; // Match the PR title which mentions length 4
 
 class SnakeGame {
   constructor() {
