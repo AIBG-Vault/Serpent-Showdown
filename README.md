@@ -35,7 +35,7 @@ pip install black  # for code formatting
 
 1. Create a `players.json` file in the server directory using the example file:
 
-   - Copy `players.json copy.example` to `players.json`
+   - Copy `players.json.example` to `players.json`
    - Modify player IDs and names as needed
 
 2. Start the server (choose one):
@@ -56,7 +56,7 @@ The server will run on port 3000.
 
 ## Running the Visuals
 
-1. Open the project in your IDE
+1. Open the project in your IDE (VS Code or Trae)
 2. Right-click on visuals/index.html and select "Open with Live Server"
    - If you don't see this option, install the "Live Server" extension first
 3. The game visualization will open in your default browser
@@ -73,11 +73,13 @@ cd clients
 node agent.js [playerID] [mode]
 ```
 
-- playerID : Your unique player ID (default: "A")
-- mode : Game mode
+- playerID: Your unique player ID (default: "k")
+- mode: Game mode
   - Movement directions: "up", "down", "left", "right"
   - "random": Makes random moves
   - "timeout": Progressively increases delay between moves
+  - "apple": Seeks and moves toward the nearest apple while avoiding obstacles
+  - "survive": Focuses on avoiding collisions and staying alive
 
 ### Python Client
 
@@ -88,8 +90,8 @@ cd clients
 python agent.py [playerID] [mode]
 ```
 
-- playerID : Your unique player ID (default: "A")
-- mode : Supports same modes as agent.js
+- playerID: Your unique player ID (default: "A")
+- mode: Supports same basic modes as agent.js
   - Movement directions: "up", "down", "left", "right"
   - "random": Makes random moves
   - "timeout": Increases delay progressively
@@ -107,3 +109,8 @@ python agent.py [playerID] [mode]
 - Invalid player IDs will be rejected (must be defined in players.json)
 - The game state is continuously updated and sent to all connected clients
 - The server automatically closes all connections when the game ends
+- The game map is represented as a 2D array with:
+  - Uppercase letters: Snake heads
+  - Lowercase letters: Snake bodies
+  - "A": Apples
+  - null: Empty spaces

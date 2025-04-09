@@ -6,7 +6,7 @@ import random
 import time
 
 # Default values
-DEFAULT_AGENT_ID = "A"
+DEFAULT_AGENT_ID = "k"
 VALID_DIRECTIONS = ["up", "down", "left", "right"]
 VALID_MODES = ["up", "down", "left", "right", "random", "timeout"]
 BASE_DELAY = 0.5  # 500ms
