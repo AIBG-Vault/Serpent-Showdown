@@ -33,7 +33,7 @@ class SnakeGame {
     const player = {
       id: playerId,
       body: [],
-      score: 0,
+      score: 100,
       length: this.playersStartingLength,
     };
 
@@ -55,6 +55,34 @@ class SnakeGame {
   processMoves(moves) {
     for (const move of moves) {
       this.playMove(move.playerId, move.direction);
+    }
+
+    // Check for zero scores
+    const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
+    if (zeroScorePlayers.length > 0) {
+      if (zeroScorePlayers.length === 2) {
+        // Both players reached zero - compare lengths
+        const [player1, player2] = this.players;
+        if (player1.length > player2.length) {
+          this.winner = player1.id;
+        } else if (player2.length > player1.length) {
+          this.winner = player2.id;
+        } else {
+          this.winner = -1; // Draw if lengths are equal
+        }
+        console.log(
+          this.winner === -1
+            ? "Game Over! Draw! Both players reached zero score with equal lengths!"
+            : `Game Over! Both players reached zero score. Player ${this.winner} wins with longer length!`
+        );
+      } else {
+        // Only one player reached zero
+        this.winner = this.players.find((p) => p.score > 0).id;
+        console.log(
+          `Game Over! One player reached zero score. Player ${this.winner} wins!`
+        );
+      }
+      return;
     }
 
     const collidedPlayers = this.checkPlayersCollisions();
