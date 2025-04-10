@@ -5,6 +5,8 @@ const GAME_ROWS = 5;
 const GAME_COLUMNS = 15;
 /** Initial length of each player's snake. Will be increased to 5 in production. */
 const PLAYERS_STARTING_LENGTH = 2;
+/** Initial score for each player. Will be increased to 100 in production. */
+const PLAYERS_STARTING_SCORE = 100;
 
 class SnakeGame {
   constructor() {
@@ -33,7 +35,7 @@ class SnakeGame {
     const player = {
       id: playerId,
       body: [],
-      score: 100,
+      score: PLAYERS_STARTING_SCORE,
       length: this.playersStartingLength,
     };
 
