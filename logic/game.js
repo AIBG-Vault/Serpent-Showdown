@@ -6,7 +6,14 @@ const GAME_COLUMNS = 15;
 /** Initial length of each player's snake. Will be increased to 5 in production. */
 const PLAYERS_STARTING_LENGTH = 2;
 /** Initial score for each player. Will be increased to 100 in production. */
-const PLAYERS_STARTING_SCORE = 100;
+const PLAYERS_STARTING_SCORE = 20;
+
+// Game rewards and penalties
+const APPLE_PICKUP_REWARD = 5; // number of points a player receives for picking up an apple
+const MOVEMENT_CENTER_REWARD = 2; // reward for moving towards the center of the board
+const MOVEMENT_AWAY_FROM_CENTER_REWARD = 1; // reward for moving away from the center
+const ILLEGAL_MOVE_PENALTY = 5; // penalty for making an illegal move (direction), can also be used for timeout
+const REVERSE_DIRECTION_PENALTY = 5; // penalty for making a move that reverses the current direction
 
 class SnakeGame {
   constructor() {
@@ -55,68 +62,18 @@ class SnakeGame {
   }
 
   processMoves(moves) {
-    for (const move of moves) {
-      this.playMove(move.playerId, move.direction);
-    }
+    // Process all moves first
+    moves.forEach((move) => this.playMove(move.playerId, move.direction));
 
-    // Check for zero scores
-    const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
-    if (zeroScorePlayers.length > 0) {
-      if (zeroScorePlayers.length === 2) {
-        // Both players reached zero - compare lengths
-        const [player1, player2] = this.players;
-        if (player1.length > player2.length) {
-          this.winner = player1.id;
-        } else if (player2.length > player1.length) {
-          this.winner = player2.id;
-        } else {
-          this.winner = -1; // Draw if lengths are equal
-        }
-        console.log(
-          this.winner === -1
-            ? "Game Over! Draw! Both players reached zero score with equal lengths!"
-            : `Game Over! Both players reached zero score. Player ${this.winner} wins with longer length!`
-        );
-      } else {
-        // Only one player reached zero
-        this.winner = this.players.find((p) => p.score > 0).id;
-        console.log(
-          `Game Over! One player reached zero score. Player ${this.winner} wins!`
-        );
-      }
-      return;
-    }
-
-    const collidedPlayers = this.checkPlayersCollisions();
-    if (collidedPlayers) {
-      if (collidedPlayers.length === 1) {
-        this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
-        console.log(`Game Over! Player ${this.winner} wins!`);
-      } else {
-        // In case of collision, compare scores first, then lengths
-        const [player1, player2] = this.players;
-        if (player1.score > player2.score) {
-          this.winner = player1.id;
-        } else if (player2.score > player1.score) {
-          this.winner = player2.id;
-        } else if (player1.length > player2.length) {
-          this.winner = player1.id;
-        } else if (player2.length > player1.length) {
-          this.winner = player2.id;
-        } else {
-          this.winner = -1; // Represent a draw when both score and length are equal
-          console.log(`Game Over! Draw! Equal scores and lengths`);
-        }
-      }
+    // Check if game is over and determine winner
+    if (this.checkGameOver()) {
       return;
     }
 
     this.internalMoveCounter++;
-
     if (this.internalMoveCounter % 5 === 0) {
       this.generateMirroredApples();
     }
-
     this.updateMap();
   }
 
@@ -130,13 +87,13 @@ class SnakeGame {
       currentDirection &&
       this.isOppositeDirection(currentDirection, direction)
     ) {
-      player.score = Math.max(0, player.score - 5); // Prevent negative scores
+      player.score = Math.max(0, player.score - REVERSE_DIRECTION_PENALTY); // Prevent negative scores
       return; // Skip the move
     }
 
     // Penalize invalid moves
     if (!["up", "down", "left", "right"].includes(direction)) {
-      player.score = Math.max(0, player.score - 5);
+      player.score = Math.max(0, player.score - ILLEGAL_MOVE_PENALTY);
       return; // Skip the move
     }
 
@@ -187,35 +144,56 @@ class SnakeGame {
     return opposites[current] === newDirection;
   }
 
-  generateMirroredApples() {
-    let attempts = 0;
-    const maxAttempts = this.numOfColumns * this.numOfRows;
+  handleAppleCollision(player, head) {
+    const appleIndex = this.apples.findIndex(
+      (apple) => apple.x === head.x && apple.y === head.y
+    );
 
-    while (attempts < maxAttempts) {
-      const appleX = Math.floor(Math.random() * this.numOfRows);
-      const appleY = Math.floor(
-        Math.random() * Math.floor(this.numOfColumns / 2)
-      );
-
-      const mirroredX = appleX;
-      const mirroredY = this.numOfColumns - 1 - appleY;
-
-      // Check if both positions are free in the current map
-      const isPositionFree =
-        this.map[appleX][appleY] === null &&
-        this.map[mirroredX][mirroredY] === null;
-
-      if (isPositionFree) {
-        this.apples.push({ x: appleX, y: appleY });
-        this.apples.push({ x: appleX, y: mirroredY });
-        return;
-      }
-
-      attempts++;
+    if (appleIndex !== -1) {
+      player.body.unshift(head);
+      player.score += APPLE_PICKUP_REWARD;
+      player.length += 1;
+      this.apples.splice(appleIndex, 1);
+      return true;
     }
+    return false;
+  }
 
-    // Only log if we couldn't find positions after max attempts
-    console.log("Couldn't find valid mirrored apple positions");
+  checkGameOver() {
+    return this.checkZeroScoreWinner() || this.checkCollisionWinner();
+  }
+
+  checkZeroScoreWinner() {
+    const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
+    if (zeroScorePlayers.length === 0) return false;
+
+    if (zeroScorePlayers.length === 2) {
+      this.determineWinnerByLength();
+      console.log(
+        this.winner === -1
+          ? "Game Over! Draw! Both players reached zero score with equal lengths!"
+          : `Game Over! Both players reached zero score. Player ${this.winner} wins with longer length!`
+      );
+    } else {
+      this.winner = this.players.find((p) => p.score > 0).id;
+      console.log(
+        `Game Over! One player reached zero score. Player ${this.winner} wins!`
+      );
+    }
+    return true;
+  }
+
+  checkCollisionWinner() {
+    const collidedPlayers = this.checkPlayersCollisions();
+    if (!collidedPlayers) return false;
+
+    if (collidedPlayers.length === 1) {
+      this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
+      console.log(`Game Over! Player ${this.winner} wins!`);
+    } else {
+      this.determineWinnerByScore();
+    }
+    return true;
   }
 
   checkPlayersCollisions() {
@@ -283,19 +261,58 @@ class SnakeGame {
     return collidedPlayers.size > 0 ? Array.from(collidedPlayers) : null;
   }
 
-  handleAppleCollision(player, head) {
-    const appleIndex = this.apples.findIndex(
-      (apple) => apple.x === head.x && apple.y === head.y
-    );
+  determineWinnerByScore() {
+    const [player1, player2] = this.players;
 
-    if (appleIndex !== -1) {
-      player.body.unshift(head);
-      player.score += 5;
-      player.length += 1;
-      this.apples.splice(appleIndex, 1);
-      return true;
+    if (player1.score !== player2.score) {
+      this.winner = player1.score > player2.score ? player1.id : player2.id;
+      console.log(`Game Over! Player ${this.winner} wins by higher score!`);
+    } else {
+      this.determineWinnerByLength();
     }
-    return false;
+  }
+
+  determineWinnerByLength() {
+    const [player1, player2] = this.players;
+
+    if (player1.length !== player2.length) {
+      this.winner = player1.length > player2.length ? player1.id : player2.id;
+      console.log(`Game Over! Player ${this.winner} wins by longer length!`);
+    } else {
+      this.winner = -1;
+      console.log(`Game Over! Draw! Equal scores and lengths`);
+    }
+  }
+
+  generateMirroredApples() {
+    let attempts = 0;
+    const maxAttempts = this.numOfColumns * this.numOfRows;
+
+    while (attempts < maxAttempts) {
+      const appleX = Math.floor(Math.random() * this.numOfRows);
+      const appleY = Math.floor(
+        Math.random() * Math.floor(this.numOfColumns / 2)
+      );
+
+      const mirroredX = appleX;
+      const mirroredY = this.numOfColumns - 1 - appleY;
+
+      // Check if both positions are free in the current map
+      const isPositionFree =
+        this.map[appleX][appleY] === null &&
+        this.map[mirroredX][mirroredY] === null;
+
+      if (isPositionFree) {
+        this.apples.push({ x: appleX, y: appleY });
+        this.apples.push({ x: appleX, y: mirroredY });
+        return;
+      }
+
+      attempts++;
+    }
+
+    // Only log if we couldn't find positions after max attempts
+    console.log("Couldn't find valid mirrored apple positions");
   }
 
   updateMap() {
