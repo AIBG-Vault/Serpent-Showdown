@@ -143,10 +143,10 @@ Players start with 100 points. Points can be gained or lost through various acti
 
 - **Apple Collection**: +5 points
   - Also increases snake length by 1
-- **Center Movement**: +2 points (not implemented yet)
+- **Towards Center Movement**: +2 points (not implemented yet)
   - For moving towards the center of the board
-- **Edge Movement**: +1 point (not implemented yet)
-  - For moving away from the center
+- **Away From Center Movement**: +1 point (not implemented yet)
+  - For moving away from the center of the board
 
 #### Penalties
 
