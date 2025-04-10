@@ -6,7 +6,7 @@ const GAME_COLUMNS = 15;
 /** Initial length of each player's snake. Will be increased to 5 in production. */
 const PLAYERS_STARTING_LENGTH = 2;
 /** Initial score for each player. Will be increased to 100 in production. */
-const PLAYERS_STARTING_SCORE = 20;
+const PLAYERS_STARTING_SCORE = 15;
 
 // Game rewards and penalties
 const APPLE_PICKUP_REWARD = 5; // number of points a player receives for picking up an apple
@@ -160,7 +160,25 @@ class SnakeGame {
   }
 
   checkGameOver() {
-    return this.checkZeroScoreWinner() || this.checkCollisionWinner();
+    const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
+    const collidedPlayers = this.checkPlayersCollisions();
+
+    if (!zeroScorePlayers.length && !collidedPlayers) return false;
+
+    // If only one condition occurred, handle it normally
+    if (zeroScorePlayers.length && !collidedPlayers) {
+      return this.checkZeroScoreWinner();
+    }
+    if (!zeroScorePlayers.length && collidedPlayers) {
+      return this.checkCollisionWinner();
+    }
+
+    // Both conditions occurred - determine winner by score then length
+    console.log(
+      "Game Over! Multiple loss conditions - determining winner by score and length"
+    );
+    this.determineWinnerByScoreThenLength();
+    return true;
   }
 
   checkZeroScoreWinner() {
@@ -191,7 +209,7 @@ class SnakeGame {
       this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).id;
       console.log(`Game Over! Player ${this.winner} wins!`);
     } else {
-      this.determineWinnerByScore();
+      this.determineWinnerByScoreThenLength();
     }
     return true;
   }
@@ -261,7 +279,7 @@ class SnakeGame {
     return collidedPlayers.size > 0 ? Array.from(collidedPlayers) : null;
   }
 
-  determineWinnerByScore() {
+  determineWinnerByScoreThenLength() {
     const [player1, player2] = this.players;
 
     if (player1.score !== player2.score) {
