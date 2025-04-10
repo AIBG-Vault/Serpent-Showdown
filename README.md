@@ -116,3 +116,42 @@ python agent.py [playerID] [mode]
   - Lowercase letters: Snake bodies
   - "A": Apples
   - null: Empty spaces
+
+## Game Rules
+
+### Win Conditions
+
+1. **Collision Victory**
+
+   - If one player collides with a wall, their own body, or the opponent's body, the other player wins
+   - If both players collide (head-to-head), the winner is determined by:
+     1. Higher score
+     2. If scores are equal, longer snake length
+     3. If both score and length are equal, the game is a draw
+
+2. **Score Victory**
+   - If a player's score reaches 0, the other player wins
+   - If both players reach 0 simultaneously:
+     1. The player with longer snake length wins
+     2. If lengths are equal, the game is a draw
+
+### Scoring System
+
+Players start with 100 points. Points can be gained or lost through various actions:
+
+#### Rewards
+
+- **Apple Collection**: +5 points
+  - Also increases snake length by 1
+- **Center Movement**: +2 points (not implemented yet)
+  - For moving towards the center of the board
+- **Edge Movement**: +1 point (not implemented yet)
+  - For moving away from the center
+
+#### Penalties
+
+- **Illegal Move**: -5 points
+  - Attempting to move in an invalid direction
+  - Invalid move commands
+- **Reverse Direction**: -5 points
+  - Attempting to move in the opposite direction of current movement
