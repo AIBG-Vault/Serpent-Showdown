@@ -9,7 +9,7 @@ import time
 DEFAULT_AGENT_ID = "l"
 VALID_DIRECTIONS = ["up", "down", "left", "right"]
 VALID_MODES = ["up", "down", "left", "right", "random", "timeout", "apple", "survive"]
-BASE_DELAY = 0.5  # 500ms
+BASE_DELAY = 0.2  # 200ms
 
 # Add helper functions for apple and survive modes
 def find_player_head(game_map, player_symbol):
@@ -131,6 +131,8 @@ async def connect_to_game_server(agent_id, mode):
                             direction = find_safe_direction(game_state['map'], player_head)
                     elif mode == "random":
                         direction = random.choice(VALID_DIRECTIONS)
+                    elif mode == "timeout":
+                        direction = random.choice(VALID_DIRECTIONS)
 
                 move = {
                     "playerId": agent_id,
@@ -140,7 +142,7 @@ async def connect_to_game_server(agent_id, mode):
                 # Add delay and increase if in timeout mode
                 await asyncio.sleep(delay)
                 if mode == "timeout":
-                    delay += 0.3  # Add 300ms each move
+                    delay += 0.1  # Add 100ms each move
 
                 # Send move
                 await websocket.send(json.dumps(move))

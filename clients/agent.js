@@ -22,7 +22,7 @@ const CONFIG = {
     "survive",
   ],
   validDirections: ["up", "down", "left", "right"],
-  baseDelay: 500,
+  baseDelay: 200,
   wsUrl: "ws://localhost:3000",
 };
 
@@ -181,6 +181,7 @@ function decideNextMove(map, mode) {
       return strategies.findSafeDirection(map, playerHead);
     }
 
+    case "timeout":
     case "random":
       return CONFIG.validDirections[
         Math.floor(Math.random() * CONFIG.validDirections.length)
