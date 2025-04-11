@@ -7,6 +7,7 @@ const GAME_COLUMNS = 15;
 const PLAYERS_STARTING_LENGTH = 2;
 /** Initial score for each player. Will be increased to 100 in production. */
 const PLAYERS_STARTING_SCORE = 15;
+const MOVE_TIMEOUT = 150; // milliseconds
 
 // Game rewards and penalties
 const APPLE_PICKUP_REWARD = 5; // number of points a player receives for picking up an apple
@@ -28,6 +29,7 @@ class SnakeGame {
     this.players = [];
     this.winner = null;
     this.internalMoveCounter = 0;
+    this.lastMoveTime = {};
     this.apples = [];
   }
 
@@ -56,14 +58,33 @@ class SnakeGame {
         y: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
       });
     }
-
+    
+    this.lastMoveTime[playerId] = Date.now(); 
     this.players.push(player);
     this.updateMap();
   }
 
   processMoves(moves) {
-    // Process all moves first
-    moves.forEach((move) => this.playMove(move.playerId, move.direction));
+    // Check for timeouts and add timeout moves
+    const currentTime = Date.now();
+    const timeoutMoves = [];
+    
+    for (const player of this.players) {
+      if (currentTime - this.lastMoveTime[player.id] > MOVE_TIMEOUT) {
+        timeoutMoves.push({ playerId: player.id, direction: "timeout" });
+      }
+    }
+
+    // Combine timeout moves with regular moves
+    const allMoves = [...moves, ...timeoutMoves];
+
+    // Process all moves
+    allMoves.forEach((move) => this.playMove(move.playerId, move.direction));
+
+    // Update move times for players who submitted moves
+    moves.forEach(move => {
+      this.lastMoveTime[move.playerId] = currentTime;
+    });
 
     // Check if game is over and determine winner
     if (this.checkGameOver()) {
