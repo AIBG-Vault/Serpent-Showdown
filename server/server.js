@@ -170,17 +170,22 @@ function handleMessage(ws, message) {
 
   // Check if both players have moved
   if (pendingMoves.size === 2) {
-    // Process both moves in the game
     game.processMoves(Array.from(pendingMoves.values()));
     pendingMoves.clear();
 
     // Send updated game state to all clients
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
+        // Add player names to the game state
+        const playersWithNames = game.players.map(player => ({
+          ...player,
+          name: playersMap.get(player.id).name
+        }));
+
         const gameState = {
           map: game.map,
-          players: game.players,
-          winner: game.winner,
+          players: playersWithNames,
+          winner: game.winner ? (game.winner === -1 ? -1 : playersMap.get(game.winner).name) : null,
           moveCounter: game.internalMoveCounter,
         };
         client.send(JSON.stringify(gameState));
@@ -189,7 +194,7 @@ function handleMessage(ws, message) {
 
     // Handle game over
     if (game.winner) {
-      console.log(`Game Over! Winner: ${game.winner}`);
+      console.log(`Game Over! Winner: ${game.winner === -1 ? "Draw" : playersMap.get(game.winner).name}`);
       closeConnectionsAndServer();
     }
   }
