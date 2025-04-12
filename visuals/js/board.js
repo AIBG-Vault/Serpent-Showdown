@@ -42,6 +42,5 @@ createGrid();
 
 // Export functions for use in other files
 window.boardUtils = {
-  createGrid,
   updateGrid,
 };

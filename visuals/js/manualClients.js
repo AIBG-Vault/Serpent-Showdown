@@ -30,52 +30,42 @@ function handleKeyPress(event) {
   }
 }
 
-function connectPlayers() {
-  const player1Id = document.getElementById("player1Id").value;
-  const player2Id = document.getElementById("player2Id").value;
-  const modal = document.querySelector(".modal");
-
-  // Remove any existing error message
+function connectPlayer(playerNum) {
+  const playerId = document.getElementById(`player${playerNum}Id`).value;
   const errorMsgElement = document.querySelector(".error-text");
 
-  // Clear existing grid
-  const gameBoard = document.getElementById("gameBoard");
-  gameBoard.innerHTML = "";
+  // Create WebSocket connection
+  const ws = new WebSocket(`ws://localhost:3000?id=${playerId}`);
 
-  ws1 = new WebSocket(`ws://localhost:3000?id=${player1Id}`);
-  ws2 = new WebSocket(`ws://localhost:3000?id=${player2Id}`);
+  if (playerNum === 1) {
+    ws1 = ws;
+  } else {
+    ws2 = ws;
+  }
 
-  let connectedCount = 0;
-
-  [ws1, ws2].forEach((ws) => {
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.error || data.message?.includes("rejected")) {
-        errorText.textContent =
-          "Connection failed: " + (data.error || data.message);
-        modal.appendChild(errorText);
-        return;
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.error || data.message?.includes("rejected")) {
+      errorMsgElement.textContent =
+        "Connection failed: " + (data.error || data.message);
+      return;
+    }
+    if (data.map) {
+      if (!document.getElementById("gameBoard").children.length) {
+        window.boardUtils.createGrid();
       }
-      if (data.map) {
-        connectedCount++;
-        if (connectedCount === 1) {
-          window.boardUtils.createGrid();
-        }
-        window.boardUtils.updateGrid(data.map);
-        if (connectedCount === 2) {
-          document.getElementById("connectionModal").style.display = "none";
-          document.addEventListener("keydown", handleKeyPress);
-        }
-      }
-    };
+      window.boardUtils.updateGrid(data.map);
 
-    ws.onerror = () => {
-      errorMsgElement.textContent = "Connection failed";
-    };
-  });
+      // Check if game has started (2 players in the game)
+      console.log(data.map);
+      if (data.players && data.players.length === 2) {
+        document.getElementById("connectionModal").style.display = "none";
+        document.addEventListener("keydown", handleKeyPress);
+      }
+    }
+  };
+
+  ws.onerror = () => {
+    errorMsgElement.textContent = `Connection failed`;
+  };
 }
-
-// Export functions for use in HTML
-window.clientUtils = {
-  connectPlayers,
-};

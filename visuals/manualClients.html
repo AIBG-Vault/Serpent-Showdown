@@ -12,6 +12,8 @@
     <link href="./css/index.css" rel="stylesheet" />
     <link href="./css/board.css" rel="stylesheet" />
 
+    <link href="./css/manualClients.css" rel="stylesheet" />
+
     <script src="./js/libraries/particles.js" defer></script>
 
     <script src="./js/index.js" defer></script>
@@ -32,23 +34,16 @@
     <div class="modal-overlay" id="connectionModal">
       <div class="modal">
         <h2>Connect Players</h2>
-        <div>
-          <input
-            type="text"
-            id="player1Id"
-            placeholder="Player 1 ID"
-            value="k"
-          />
+        <div class="player-input">
+          <label for="player1Id">Agent ID:</label>
+          <input type="text" id="player1Id" placeholder="k" />
+          <button onclick="connectPlayer(1)">Connect</button>
         </div>
-        <div>
-          <input
-            type="text"
-            id="player2Id"
-            placeholder="Player 2 ID"
-            value="l"
-          />
+        <div class="player-input">
+          <label for="player2Id">Agent ID:</label>
+          <input type="text" id="player2Id" placeholder="l" />
+          <button onclick="connectPlayer(2)">Connect</button>
         </div>
-        <button onclick="connectPlayers()">Connect</button>
         <p class="error-text"></p>
       </div>
     </div>
