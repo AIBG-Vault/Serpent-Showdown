@@ -22,7 +22,7 @@ const CONFIG = {
     "survive",
   ],
   validDirections: ["up", "down", "left", "right"],
-  baseDelay: 500,
+  baseDelay: 100,
   wsUrl: "ws://localhost:3000",
 };
 

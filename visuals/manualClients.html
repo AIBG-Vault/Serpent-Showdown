@@ -12,10 +12,14 @@
     <link href="./css/index.css" rel="stylesheet" />
     <link href="./css/board.css" rel="stylesheet" />
 
+    <link href="./css/manualClients.css" rel="stylesheet" />
+
     <script src="./js/libraries/particles.js" defer></script>
 
     <script src="./js/index.js" defer></script>
     <script src="./js/board.js" defer></script>
+
+    <script src="./js/manualClients.js" defer></script>
   </head>
   <body>
     <div id="particles-js"></div>
@@ -24,6 +28,23 @@
       <div>
         <h2>WINNER</h2>
         <h1>LOREM IPSUM</h1>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="connectionModal">
+      <div class="modal">
+        <h2>Connect Players</h2>
+        <div class="player-input">
+          <label for="player1Id">Agent ID:</label>
+          <input type="text" id="player1Id" placeholder="k" />
+          <button onclick="connectPlayer(1)">Connect</button>
+        </div>
+        <div class="player-input">
+          <label for="player2Id">Agent ID:</label>
+          <input type="text" id="player2Id" placeholder="l" />
+          <button onclick="connectPlayer(2)">Connect</button>
+        </div>
+        <p class="error-text"></p>
       </div>
     </div>
 

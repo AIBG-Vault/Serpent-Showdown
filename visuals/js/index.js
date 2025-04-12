@@ -79,31 +79,29 @@ connectWebSocket();
 // ========================================
 
 function toggleEndScreen(data) {
-  // console.log(data);
-
-  const winnerContainer = $(".winner_container");
-  const winnerNameElem = $(".winner_container h1");
-  const extraInfoElem = $(".winner_container h2").last();
+  const winnerContainer = document.querySelector(".winner_container");
+  const winnerNameElem = document.querySelector(".winner_container h1");
 
   if (data !== null) {
-    if (data.winner == -1) {
-      winnerNameElem.text("Game draw");
-      extraInfoElem.text("");
-    } else if (data.winnerHealth) {
-      winnerNameElem.text(data.winner);
-      extraInfoElem.text("Points: " + data.winnerHealth);
-    } else if (data.message) {
-      winnerNameElem.text(data.winner);
-      extraInfoElem.text(data.message);
+    if (data.winner === -1) {
+      winnerNameElem.textContent = "Game draw";
+    } else {
+      winnerNameElem.textContent = data.winner;
     }
 
-    winnerContainer.css("display", "grid").animate({ opacity: 1 }, 1500);
-  } else if (data === null) {
-    winnerContainer.animate({ opacity: 0 }, 500, function () {
-      winnerContainer.css("display", "none");
-      winnerNameElem.text("");
-      extraInfoElem.text("");
-    });
+    winnerContainer.style.display = "grid";
+    winnerContainer.style.opacity = "0";
+    setTimeout(() => {
+      winnerContainer.style.opacity = "1";
+      winnerContainer.style.transition = "opacity 1.5s";
+    }, 0);
+  } else {
+    winnerContainer.style.opacity = "0";
+    winnerContainer.style.transition = "opacity 0.5s";
+    setTimeout(() => {
+      winnerContainer.style.display = "none";
+      winnerNameElem.textContent = "";
+    }, 500);
   }
 }
 
@@ -145,77 +143,50 @@ function gameLoop() {
 requestAnimationFrame(gameLoop);
 
 function parseData(data) {
-  console.log("Processing game state:", data); // Log when processing
+  console.log("Processing game state:", data);
+
+  // Update move counter
+  moveCounter = data.moveCounter || moveCounter;
+  updateMoveCount(moveCounter);
+
+  // Update player information
+  if (data.players && data.players.length === 2) {
+    const [player1, player2] = data.players;
+
+    // Update player names
+    const teamNameElems = document.querySelectorAll(".team_name");
+    teamNameElems[0].textContent = player1.name || "Team name 1";
+    teamNameElems[1].textContent = player2.name || "Team name 2";
+
+    // Update scores
+    document.querySelector(
+      ".left_container .team_score"
+    ).textContent = `Score: ${player1.score}`;
+    document.querySelector(
+      ".right_container .team_score"
+    ).textContent = `Score: ${player2.score}`;
+
+    // Update lengths
+    document.querySelector(
+      ".left_container .team_length"
+    ).textContent = `Length: ${player1.body?.length}`;
+    document.querySelector(
+      ".right_container .team_length"
+    ).textContent = `Length: ${player2.body?.length}`;
+  }
+
+  // Update board
+  window.boardUtils.updateGrid(data.map);
 
   if (data.winner) {
     toggleEndScreen(data);
     return;
   }
-
-  teamOneName = data.player1;
-  teamTwoName = data.player2;
-
-  moveCounter++;
-  updateMoveCount(moveCounter);
-
-  // ========================================
-  // set players
-
-  const teamNameElems = document.querySelectorAll(".team_name");
-  teamNameElems[0].textContent = teamOneName || "Team name 1";
-  teamNameElems[1].textContent = teamTwoName || "Team name 2";
-
-  // ========================================
-  // set board
-  let field = data.field;
-
-  // Main logic to build the position object for chessboard.js
-  // considering that the first index is for columns and the second is for rows
-
-  let position = {};
-
-  for (let column = 0; column < field[0].length; column++) {
-    for (let row = 0; row < field.length; row++) {
-      let cell = field[row][column];
-      if (cell !== null) {
-        const cellName =
-          String.fromCharCode("a".charCodeAt(0) + column) + (row + 1);
-        position[cellName] = cell === cell.toUpperCase() ? "bH" : "bB"; // Head or Body
-      }
-    }
-  }
-
-  // Update the board with the new position
-  board.position(position);
 }
 
 // ========================================
 // dynamic content loading
 // ========================================
-
-const board = Chessboard("board", {
-  // position: {
-  //   d4: "bArcher",
-  //   e5: "bCavalry",
-  //   f6: "bPeasant",
-  //   g7: "bKnight",
-  //   h8: "bMarksman",
-  //   i9: "bPhoenix",
-  //   j10: "bPikeman",
-  //   d5: "oArcher",
-  //   e6: "oCavalry",
-  //   f7: "oPeasant",
-  //   g8: "oKnight",
-  //   h9: "oMarksman",
-  //   i10: "oPhoenix",
-  //   j11: "oPikeman",
-  // },
-
-  pieceTheme: "img/pieces/{piece}.gif",
-  showNotation: true,
-  orientation: "black",
-});
-$(window).resize(board.resize);
 
 // ========================================
 // particles.js background
