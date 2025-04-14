@@ -63,14 +63,10 @@ body {
   place-items: center;
 }
 
-.winner_container > div {
-  margin: min(6vw, 10rem);
-}
-
 .winner_container h1 {
   text-align: center;
 
-  font-size: min(6vw, 10rem);
+  font-size: clamp(2rem, 6vw, 10rem);
   font-family: inherit;
 
   padding-bottom: 2rem;
@@ -79,7 +75,7 @@ body {
 .winner_container h2 {
   text-align: center;
 
-  font-size: min(3vw, 6rem);
+  font-size: clamp(1rem, 3vw, 6rem);
   font-family: inherit;
 }
 
@@ -103,13 +99,13 @@ body {
 }
 
 .middle_container > h1 {
-  font-size: min(5vw, 8rem);
+  font-size: clamp(2rem, 5vw, 8rem);
   font-family: inherit;
   text-align: center;
 }
 
 .middle_container > h3 {
-  font-size: min(2vw, 3rem);
+  font-size: clamp(0.75rem, 2vw, 3rem);
   font-family: inherit;
   text-align: center;
 
@@ -131,7 +127,7 @@ body {
 }
 
 .team_name {
-  font-size: min(2.5vw, 6rem);
+  font-size: clamp(1rem, 2.5vw, 6rem);
   margin-bottom: 0.5rem;
   word-break: break-all;
   position: relative;
@@ -142,7 +138,7 @@ body {
 
 .team_score,
 .team_length {
-  font-size: min(1.5vw, 4rem);
+  font-size: clamp(0.75rem, 1.5vw, 4rem);
 }
 
 .left_container .team_name::after {
