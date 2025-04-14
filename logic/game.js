@@ -18,7 +18,7 @@ const REVERSE_DIRECTION_PENALTY = 3; // penalty for making a move that reverses 
 // Number of moves after which the map starts shrinking.
 const START_SHRINKING_MAP_AFTER_MOVES = 0;
 // Number of columns left after which the map stops shrinking.
-const MINIMUM_NUM_OF_COLUMNS = 5;
+const MINIMUM_BOARD_SIZE = 5;
 
 class SnakeGame {
   constructor() {
@@ -38,7 +38,7 @@ class SnakeGame {
     this.apples = [];
 
     this.shrinkStartMove = START_SHRINKING_MAP_AFTER_MOVES;
-    this.minColumns = MINIMUM_NUM_OF_COLUMNS;
+    this.minBoardSize = MINIMUM_BOARD_SIZE;
     this.shrinkLevel = -1;
   }
 
@@ -80,7 +80,7 @@ class SnakeGame {
     // Handle map shrinking
     const currentWidth = this.numOfColumns - this.shrinkLevel * 2;
     if (
-      currentWidth > this.minColumns &&
+      currentWidth > this.minBoardSize &&
       this.internalMoveCounter >= this.shrinkStartMove &&
       this.internalMoveCounter % 5 === 0
     ) {
