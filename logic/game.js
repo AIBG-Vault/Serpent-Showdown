@@ -1,8 +1,8 @@
 // Game configuration constants
 /** Number of rows in the game grid. Will be increased to ~25 in production. */
-const GAME_ROWS = 5;
+const GAME_ROWS = 10;
 /** Number of columns in the game grid. Will be increased to ~60 in production. */
-const GAME_COLUMNS = 15;
+const GAME_COLUMNS = 20;
 /** Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production. */
 const PLAYERS_STARTING_LENGTH = 2;
 /** Initial score for each player. Will be increased to 100 in production. */

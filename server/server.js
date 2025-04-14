@@ -64,6 +64,9 @@ server.listen(port, () => {
 
 function handleFrontendConnection(ws) {
   console.log("Frontend connected");
+  if (!game || !game.players) {
+    game = new SnakeGame();  // Ensure game is initialized
+  }
   ws.send(
     JSON.stringify({
       map: game.map,
