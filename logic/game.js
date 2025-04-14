@@ -1,8 +1,8 @@
 // Game configuration constants
 /** Number of rows in the game grid. Will be increased to ~25 in production. */
-const GAME_ROWS = 5;
+const GAME_ROWS = 15;
 /** Number of columns in the game grid. Will be increased to ~60 in production. */
-const GAME_COLUMNS = 15;
+const GAME_COLUMNS = 25;
 /** Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production. */
 const PLAYERS_STARTING_LENGTH = 2;
 /** Initial score for each player. Will be increased to 100 in production. */
@@ -50,11 +50,8 @@ class SnakeGame {
       length: this.playersStartingLength,
     };
 
-    // Add head first
-    player.body.push({ x: startRowIndex, y: startColumnIndex });
-
     // Add body segments
-    for (let i = 1; i < this.playersStartingLength; i++) {
+    for (let i = 0; i < this.playersStartingLength; i++) {
       player.body.push({
         x: startRowIndex,
         y: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
@@ -235,10 +232,13 @@ class SnakeGame {
       const head = player.body[0];
 
       // Wall and border collision checks
-      if (head.x < 0 || head.x >= this.numOfRows || 
-          head.y <= this.currentLeftBorder || 
-          head.y >= this.currentRightBorder ||
-          this.map[head.x][head.y] === "#") {
+      if (
+        head.x < 0 ||
+        head.x >= this.numOfRows ||
+        head.y <= this.currentLeftBorder ||
+        head.y >= this.currentRightBorder ||
+        this.map[head.x][head.y] === "#"
+      ) {
         console.log(`Player ${player.id} died by hitting a wall`);
         collidedPlayers.add(player.id);
       } else if (

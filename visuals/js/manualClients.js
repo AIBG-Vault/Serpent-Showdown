@@ -46,19 +46,13 @@ function connectPlayer(playerNum) {
   ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
     if (data.error || data.message?.includes("rejected")) {
-      errorMsgElement.textContent =
-        "Connection failed: " + (data.error || data.message);
+      errorMsgElement.textContent = "Connection failed: " + (data.error || data.message);
       return;
     }
     if (data.map) {
-      if (!document.getElementById("gameBoard").children.length) {
-        window.boardUtils.createGrid();
-      }
       window.boardUtils.updateGrid(data.map);
-
-      // Check if game has started (2 players in the game)
-      console.log(data.map);
-      if (data.players && data.players.length === 2) {
+      // Only add keypress listener if both players are connected
+      if (ws1?.readyState === WebSocket.OPEN && ws2?.readyState === WebSocket.OPEN) {
         document.getElementById("connectionModal").style.display = "none";
         document.addEventListener("keydown", handleKeyPress);
       }
