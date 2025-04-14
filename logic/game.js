@@ -163,7 +163,12 @@ class SnakeGame {
     const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
     const collidedPlayers = this.checkPlayersCollisions();
 
-    if (!zeroScorePlayers.length && !collidedPlayers) return false;
+    if (
+      !zeroScorePlayers.length &&
+      !collidedPlayers &&
+      this.internalMoveCounter != 300
+    )
+      return false;
 
     // If only one condition occurred, handle it normally
     if (zeroScorePlayers.length && !collidedPlayers) {
@@ -171,6 +176,13 @@ class SnakeGame {
     }
     if (!zeroScorePlayers.length && collidedPlayers) {
       return this.checkCollisionWinner();
+    }
+    if (this.internalMoveCounter >= 300) {
+      console.log(
+        "Game Over! Maximum number of moves exceded - determining winner by score and length"
+      );
+      this.determineWinnerByScoreThenLength();
+      return true;
     }
 
     // Both conditions occurred - determine winner by score then length
