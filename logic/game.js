@@ -281,6 +281,63 @@ class SnakeGame {
       console.log(`Player ${player.name} died by hitting a wall`);
       return true;
     }
+
+    // Check and handle snake segments in new wall positions
+    this.players.forEach((player) => {
+      // Find segments that will be in walls
+      const segmentsInWalls = player.body.filter(
+        (segment) =>
+          segment.column <= this.borders.left ||
+          segment.column >= this.borders.right ||
+          segment.row <= this.borders.top ||
+          segment.row >= this.borders.bottom
+      );
+
+      // Remove segments that will be in walls
+      player.body = player.body.filter(
+        (segment) =>
+          segment.column > this.borders.left &&
+          segment.column < this.borders.right &&
+          segment.row > this.borders.top &&
+          segment.row < this.borders.bottom
+      );
+
+      // Find disconnected segments
+      const disconnectedSegments = [];
+      for (let i = 1; i < player.body.length; i++) {
+        const current = player.body[i];
+        const previous = player.body[i - 1];
+
+        // Check if segment is connected (adjacent in row or column)
+        const isConnected =
+          (Math.abs(current.row - previous.row) === 1 &&
+            current.column === previous.column) ||
+          (Math.abs(current.column - previous.column) === 1 &&
+            current.row === previous.row);
+
+        if (!isConnected) {
+          // Found a gap - add all remaining segments to disconnected array
+          disconnectedSegments.push(...player.body.slice(i));
+          // Remove disconnected segments from body
+          player.body = player.body.slice(0, i);
+          break;
+        }
+      }
+
+      // Convert disconnected segments to apples
+      this.apples.push(
+        ...disconnectedSegments.map((segment) => ({
+          row: segment.row,
+          column: segment.column,
+        }))
+      );
+
+      // Apply penalties
+      const totalLostSegments =
+        segmentsInWalls.length + disconnectedSegments.length;
+      player.score = Math.max(0, player.score - totalLostSegments * 3);
+      player.length -= totalLostSegments;
+    });
   }
 
   checkPlayerCollision(player) {
@@ -355,55 +412,6 @@ class SnakeGame {
         apple.row > this.borders.top &&
         apple.row < this.borders.bottom
     );
-
-    // Check and handle snake segments in new wall positions
-    // this.players.forEach((player) => {
-    //   // Find segments that will be in walls
-    //   const segmentsInWalls = player.body.filter(
-    //     (segment) =>
-    //       segment.column <= leftBorder || segment.column >= rightBorder
-    //   );
-
-    //   // Overwrite map cells with walls
-    //   // segmentsInWalls.forEach((segment) => {
-    //   //   this.map[segment.row][segment.column] = "#";
-    //   // });
-
-    //   // Find disconnected segments
-    //   const disconnectedSegments = [];
-    //   // for (let i = 1; i < player.body.length; i++) {
-    //   //   const current = player.body[i];
-    //   //   const previous = player.body[i - 1];
-
-    //   //   // Check if segment is connected (adjacent in row or column)
-    //   //   const isConnected =
-    //   //     (Math.abs(current.row - previous.row) === 1 &&
-    //   //       current.column === previous.column) ||
-    //   //     (Math.abs(current.column - previous.column) === 1 && current.row === previous.row);
-
-    //   //   if (!isConnected) {
-    //   //     // Found a gap - add all remaining segments to disconnected array
-    //   //     disconnectedSegments.push(...player.body.slice(i));
-    //   //     // Remove disconnected segments from body
-    //   //     player.body = player.body.slice(0, i);
-    //   //     break;
-    //   //   }
-    //   // }
-
-    //   // Apply penalties
-    //   const totalLostSegments =
-    //     segmentsInWalls.length + disconnectedSegments.length;
-    //   player.score = Math.max(0, player.score - totalLostSegments * 3);
-    //   player.length -= totalLostSegments;
-
-    //   // Convert disconnected segments to apples
-    //   // this.apples.push(
-    //   //   ...disconnectedSegments.map((segment) => ({
-    //   //     row: segment.row,
-    //   //     column: segment.column,
-    //   //   }))
-    //   // );
-    // });
   }
 
   findValidSpawningPosition() {
