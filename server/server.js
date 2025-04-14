@@ -141,6 +141,9 @@ function rejectConnection(ws, receivedId) {
   ws.close();
 }
 
+// Add at the top with other variables
+let timeoutId;
+
 function handleMessage(ws, message) {
   console.log(`Received message: ${message}`);
 
@@ -170,10 +173,27 @@ function handleMessage(ws, message) {
   // Store the move
   pendingMoves.set(move.playerId, move);
 
-  // Check if both players have moved
-  if (pendingMoves.size === 2) {
-    game.processMoves(Array.from(pendingMoves.values()));
-    pendingMoves.clear();
+  // Clear existing timeout if any
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+
+  // Set new timeout
+  timeoutId = setTimeout(() => {
+    if (pendingMoves.size > 0) {
+      // Add timeout moves for players who haven't moved
+      currentPlayers.forEach(player => {
+        if (!pendingMoves.has(player.id)) {
+          pendingMoves.set(player.id, {
+            playerId: player.id,
+            direction: "timeout"
+          });
+        }
+      });
+
+      // Process moves and update game state
+      game.processMoves(Array.from(pendingMoves.values()));
+      pendingMoves.clear();
 
     // Send updated game state to all clients
     connections.forEach((client) => {
@@ -184,14 +204,37 @@ function handleMessage(ws, message) {
       }
     });
 
-    // Handle game over
+      // Handle game over
+      if (game.winner !== null) {
+        if (game.winner === -1) {
+          console.log("Game Over! It's a draw.");
+        } else {
+          console.log(`Game Over! Winner: ${game.winner}`);
+        }
+        closeConnectionsAndServer();
+      }
+    }
+  }, 150);
+
+  // Process moves immediately if all players have moved
+  if (pendingMoves.size === 2) {
+    clearTimeout(timeoutId);
+    game.processMoves(Array.from(pendingMoves.values()));
+    pendingMoves.clear();
+
+    connections.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        gameState = reformatGameState(game);
+        client.send(JSON.stringify(gameState));
+      }
+    });
+
     if (game.winner !== null) {
       if (game.winner === -1) {
         console.log("Game Over! It's a draw.");
       } else {
         console.log(`Game Over! Winner: ${game.winner}`);
       }
-
       closeConnectionsAndServer();
     }
   }
