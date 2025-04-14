@@ -1,5 +1,0 @@
-{
-    "terminal.integrated.defaultProfile.windows": "Git Bash",
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-}
