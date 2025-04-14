@@ -36,6 +36,7 @@ fs.readFile("./players.json", "utf8", (err, data) => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 const connections = new Set(); // Track WebSocket connections
+let frontendWs = null;
 
 wss.on("connection", (ws, req) => {
   const url = new URL(req.url, "http://localhost:3000");
@@ -67,14 +68,17 @@ server.listen(port, () => {
 
 function handleFrontendConnection(ws) {
   console.log("Frontend connected");
-  ws.send(
-    JSON.stringify({
-      map: game.map,
-      players: game.players,
-      winner: game.winner,
-      moveCounter: game.internalMoveCounter,
-    })
-  );
+  frontendWs = ws;
+  frontendWs.sendFrontendData = () =>
+    ws.send(
+      JSON.stringify({
+        map: game.map,
+        players: game.players,
+        winner: game.winner,
+        moveCounter: game.internalMoveCounter,
+      })
+    );
+  frontendWs.sendFrontendData();
 }
 
 function handlePlayerConnection(ws, playerId) {
@@ -108,6 +112,8 @@ function handlePlayerConnection(ws, playerId) {
       name: player.name,
     })
   );
+  // notify frontend new player joined
+  frontendWs.sendFrontendData();
 
   if (currentPlayers.length === 2) {
     // If there are already two player connections, start the game

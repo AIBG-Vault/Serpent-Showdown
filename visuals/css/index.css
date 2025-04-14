@@ -159,6 +159,14 @@ body {
   background-color: var(--snake-player2-color);
 }
 
+.debug-only {
+  display: none;
+}
+
+.connection_status {
+  text-align: center;
+}
+
 .connection_fail {
   color: rgb(154, 23, 23);
 }
@@ -169,6 +177,21 @@ body {
 
 .connection_pinging {
   color: rgb(203, 203, 125);
+}
+
+/* Manual connection */
+button {
+  margin: 20px;
+  padding: 0.5rem 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
 }
 
 .board {

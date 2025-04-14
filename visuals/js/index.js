@@ -119,6 +119,7 @@ function updateMoveCount(moveCounter) {
 
 function setConnectionStatus(status) {
   const connectionStatus = document.querySelector(".connection_status");
+  if (!connectionStatus) return;
   const CONNECTION_FAIL = "connection_fail";
   const CONNECTION_SUCCESS = "connection_success";
   const CONNECTION_PING = "connection_pinging";
@@ -127,16 +128,12 @@ function setConnectionStatus(status) {
   if (!status || status === 'connection_fail') {
     connectionStatus.textContent = "Not connected to server";
     connectionStatus.classList.add(CONNECTION_FAIL);
-    connectionStatus.style.display = "block";
   } else if (status === 'connected') {
     connectionStatus.textContent = "Connected to server";
     connectionStatus.classList.add(CONNECTION_SUCCESS);
-    console.log('Here!');
-    connectionStatus.style.display = "block";
   } else if (status === 'connecting') {
     connectionStatus.textContent = "Connecting...";
     connectionStatus.classList.add(CONNECTION_PING);
-    connectionStatus.style.display = "block";
   }
 }
 
@@ -180,29 +177,32 @@ function parseData(data) {
   updateMoveCount(moveCounter);
 
   // Update player information
-  if (data.players && data.players.length === 2) {
-    const [player1, player2] = data.players;
+  if (data.players || data.players?.length) {
+    const player1 = data.players.length > 0 ?
+    data.players[0] : null;
+    const player2 = data.players.length === 2 ?
+    data.players[1] : null;
 
     // Update player names
     const teamNameElems = document.querySelectorAll(".team_name");
-    teamNameElems[0].textContent = player1.name || "Team name 1";
-    teamNameElems[1].textContent = player2.name || "Team name 2";
+    teamNameElems[0].textContent = player1?.name || "Team name 1";
+    teamNameElems[1].textContent = player2?.name || "Team name 2";
 
     // Update scores
     document.querySelector(
       ".left_container .team_score"
-    ).textContent = `Score: ${player1.score}`;
+    ).textContent = `Score: ${player1?.score || "####" }`;
     document.querySelector(
       ".right_container .team_score"
-    ).textContent = `Score: ${player2.score}`;
+    ).textContent = `Score: ${player2?.score || "####" }`;
 
     // Update lengths
     document.querySelector(
       ".left_container .team_length"
-    ).textContent = `Length: ${player1.body?.length}`;
+    ).textContent = `Length: ${player1?.body?.length || "####" }`;
     document.querySelector(
       ".right_container .team_length"
-    ).textContent = `Length: ${player2.body?.length}`;
+    ).textContent = `Length: ${player2?.body?.length || "####" }`;
   }
 
   // Update board

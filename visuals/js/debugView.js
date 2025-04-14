@@ -1,9 +1,10 @@
-let ws1, ws2;
+// functionality related to debug version
+// of frontend
+// enabled with ?debug=1 in URL
 
-// Move closeModal to global scope
-function closeModal() {
-  document.getElementById("connectionModal").style.display = "none";
-}
+let ws1, ws2;
+const ID_MANUAL_1 = "k";
+const ID_MANUAL_2 = "l";
 
 function handleKeyPress(event) {
   const key = event.key.toLowerCase();
@@ -24,10 +25,7 @@ function handleKeyPress(event) {
 
   if (direction && player && player.readyState === WebSocket.OPEN) {
     const move = {
-      playerId:
-        player === ws1
-          ? document.getElementById("player1Id").value
-          : document.getElementById("player2Id").value,
+      playerId: player === ws1 ? ID_MANUAL_1 : ID_MANUAL_2,
       direction: direction,
     };
     player.send(JSON.stringify(move));
@@ -36,10 +34,11 @@ function handleKeyPress(event) {
 }
 
 function connectPlayer(playerNum) {
-  const playerId = document.getElementById(`player${playerNum}Id`).value;
-  const errorMsgElement = document.querySelector(".error-text");
+  let playerId;
+  if (playerNum == 1) playerId = ID_MANUAL_1;
+  else if (playerNum == 2) playerId = ID_MANUAL_2;
 
-  // Create WebSocket connection
+  // Create a new player websocket connection
   const ws = new WebSocket(`ws://localhost:3000?id=${playerId}`);
 
   if (playerNum === 1) {
@@ -48,28 +47,35 @@ function connectPlayer(playerNum) {
     ws2 = ws;
   }
 
+  let activated = false;
   ws.onmessage = (event) => {
+    if (activated) return;
     const data = JSON.parse(event.data);
-    if (data.error || data.message?.includes("rejected")) {
-      errorMsgElement.textContent =
-        "Connection failed: " + (data.error || data.message);
-      return;
-    }
 
-    // console.log(data);
-
-    if (data.map) {
+    if (!activated && data.map) {
       window.boardUtils.updateGrid(data.map);
 
       // Check if game has started (2 players in the game)
       if (data.players && data.players.length === 2) {
-        document.getElementById("connectionModal").style.display = "none";
+        activated = true;
+        //document.getElementById("connectionModal").style.display = "none";
         document.addEventListener("keydown", handleKeyPress);
       }
     }
   };
 
   ws.onerror = () => {
-    errorMsgElement.textContent = `Connection failed`;
+    errorMsgElement.textContent = `Manual player connection failed`;
   };
+}
+
+// Check if ?debug=1 is set in URL
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get("debug") === "1") {
+  console.log("Debug mode is ON");
+
+  // show all debug only
+  document
+    .querySelectorAll(".debug-only")
+    .forEach((elem) => (elem.style.display = "block"));
 }
