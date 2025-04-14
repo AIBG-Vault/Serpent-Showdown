@@ -100,7 +100,7 @@ async def connect_to_game_server(agent_id, mode):
                 # Receive game state
                 message = await websocket.recv()
                 game_state = json.loads(message)
-                print(f"Received game state: {game_state}")
+                # print(f"Received game state: {game_state}")
 
                 # Check if game is over
                 if game_state.get('winner') is not None:
