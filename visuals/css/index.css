@@ -159,6 +159,18 @@ body {
   background-color: var(--snake-player2-color);
 }
 
+.connection_fail {
+  color: rgb(154, 23, 23);
+}
+
+.connection_success {
+  color: rgb(95, 162, 95);
+}
+
+.connection_pinging {
+  color: rgb(203, 203, 125);
+}
+
 .board {
   flex: 1;
   display: grid;

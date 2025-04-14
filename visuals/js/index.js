@@ -24,9 +24,11 @@ function connectWebSocket() {
 
   // Initialize or reinitialize the WebSocket connection
   socket = new WebSocket("ws://localhost:3000?id=frontend");
+  setConnectionStatus('connecting');
 
   socket.addEventListener("open", (event) => {
     console.log("WebSocket connection established");
+    setConnectionStatus('connected');
 
     // reset frontend
     moveCounter = -1; // Reset move counter
@@ -61,15 +63,20 @@ function connectWebSocket() {
     if (!socketConnectingInterval) {
       socketConnectingInterval = setInterval(connectWebSocket, 500);
     }
+    setConnectionStatus('connection_fail');
   });
 
   socket.addEventListener("error", (error) => {
     console.error("WebSocket error:", error);
+    setConnectionStatus('connection_fail');
     // Close the socket if an error occurs to trigger the 'close' event listener
     // and thereby attempt reconnection. This also implicitly handles the 'close' event.
     socket.close();
   });
 }
+
+// Initially it is not connected
+setConnectionStatus('connection_fail');
 
 // Initial connection attempt
 connectWebSocket();
@@ -108,6 +115,29 @@ function toggleEndScreen(data) {
 function updateMoveCount(moveCounter) {
   document.querySelector(".move_number").textContent =
     "Move: " + (moveCounter || "####");
+}
+
+function setConnectionStatus(status) {
+  const connectionStatus = document.querySelector(".connection_status");
+  const CONNECTION_FAIL = "connection_fail";
+  const CONNECTION_SUCCESS = "connection_success";
+  const CONNECTION_PING = "connection_pinging";
+  connectionStatus.classList.remove(...[CONNECTION_FAIL, CONNECTION_SUCCESS, CONNECTION_PING]);
+
+  if (!status || status === 'connection_fail') {
+    connectionStatus.textContent = "Not connected to server";
+    connectionStatus.classList.add(CONNECTION_FAIL);
+    connectionStatus.style.display = "block";
+  } else if (status === 'connected') {
+    connectionStatus.textContent = "Connected to server";
+    connectionStatus.classList.add(CONNECTION_SUCCESS);
+    console.log('Here!');
+    connectionStatus.style.display = "block";
+  } else if (status === 'connecting') {
+    connectionStatus.textContent = "Connecting...";
+    connectionStatus.classList.add(CONNECTION_PING);
+    connectionStatus.style.display = "block";
+  }
 }
 
 // ========================================
