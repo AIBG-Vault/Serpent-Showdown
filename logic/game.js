@@ -1,6 +1,6 @@
 // Game configuration constants
 // Number of rows in the game grid. Will be increased to ~25 in production.
-const BOARD_NUM_OF_ROWS = 10;
+const BOARD_NUM_OF_ROWS = 11;
 // Number of columns in the game grid. Will be increased to ~60 in production.
 const BOARD_NUM_OF_COLUMNS = 15;
 // Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production.
@@ -40,6 +40,14 @@ class SnakeGame {
     this.shrinkStartMove = START_SHRINKING_MAP_AFTER_MOVES;
     this.minBoardSize = MINIMUM_BOARD_SIZE;
     this.shrinkLevel = -1;
+
+    // Add borders object
+    this.borders = {
+      left: 0,
+      right: this.numOfColumns - 1,
+      top: 0,
+      bottom: this.numOfRows - 1,
+    };
   }
 
   addPlayer(player) {
@@ -215,7 +223,7 @@ class SnakeGame {
           : `Game Over! Both players reached zero score. Player ${this.winner} wins with longer length!`
       );
     } else {
-      this.winner = this.players.find((p) => p.score > 0).id;
+      this.winner = this.players.find((p) => p.score > 0).name;
       console.log(
         `Game Over! One player reached zero score. Player ${this.winner} wins!`
       );
@@ -264,15 +272,11 @@ class SnakeGame {
       return true;
     }
 
-    // Wall/Border collision
-    const leftBorder = this.shrinkLevel;
-    const rightBorder = this.numOfColumns - 1 - this.shrinkLevel;
-
     if (
-      head.row < 0 ||
-      head.row >= this.numOfRows ||
-      head.column <= leftBorder ||
-      head.column >= rightBorder
+      head.row <= this.borders.top ||
+      head.row >= this.borders.bottom ||
+      head.column <= this.borders.left ||
+      head.column >= this.borders.right
     ) {
       console.log(`Player ${player.name} died by hitting a wall`);
       return true;
@@ -309,7 +313,7 @@ class SnakeGame {
     const [player1, player2] = this.players;
 
     if (player1.score !== player2.score) {
-      this.winner = player1.score > player2.score ? player1.id : player2.id;
+      this.winner = player1.score > player2.score ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by higher score!`);
     } else {
       this.determineWinnerByLength();
@@ -320,7 +324,8 @@ class SnakeGame {
     const [player1, player2] = this.players;
 
     if (player1.length !== player2.length) {
-      this.winner = player1.length > player2.length ? player1.id : player2.id;
+      this.winner =
+        player1.length > player2.length ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by longer length!`);
     } else {
       this.winner = -1;
@@ -331,12 +336,24 @@ class SnakeGame {
   shrinkMap() {
     this.shrinkLevel++;
 
-    const leftBorder = this.shrinkLevel;
-    const rightBorder = this.numOfColumns - 1 - this.shrinkLevel;
+    this.borders.left = this.shrinkLevel;
+    this.borders.right = this.numOfColumns - 1 - this.shrinkLevel;
+
+    // Calculate how much extra shrinking is needed after 1:1 ratio is reached
+    const extraShrink = Math.max(
+      this.shrinkLevel - Math.floor((this.numOfColumns - this.numOfRows) / 2),
+      0
+    );
+    this.borders.top = extraShrink;
+    this.borders.bottom = this.numOfRows - 1 - extraShrink;
 
     // Remove existing apples in wall positions
     this.apples = this.apples.filter(
-      (apple) => apple.column > leftBorder && apple.column < rightBorder
+      (apple) =>
+        apple.column > this.borders.left &&
+        apple.column < this.borders.right &&
+        apple.row > this.borders.top &&
+        apple.row < this.borders.bottom
     );
 
     // Check and handle snake segments in new wall positions
@@ -434,12 +451,14 @@ class SnakeGame {
   }
 
   updateMap() {
-    const leftBorder = this.shrinkLevel;
-    const rightBorder = this.numOfColumns - 1 - this.shrinkLevel;
-
-    this.map = Array.from({ length: this.numOfRows }, () =>
+    this.map = Array.from({ length: this.numOfRows }, (_, rowIndex) =>
       Array.from({ length: this.numOfColumns }, (_, colIndex) =>
-        colIndex <= leftBorder || colIndex >= rightBorder ? "#" : null
+        colIndex <= this.borders.left ||
+        colIndex >= this.borders.right ||
+        rowIndex <= this.borders.top ||
+        rowIndex >= this.borders.bottom
+          ? "#"
+          : null
       )
     );
 
