@@ -20,6 +20,7 @@ function updateGrid(map) {
     for (let j = 0; j < GRID_COLS; j++) {
       const cell = document.getElementById(`cell-${i}-${j}`);
       cell.className = "cell";
+      cell.textContent = ""; // Clear any previous content
 
       const value = map[i][j];
       if (value === "K") {
@@ -32,6 +33,9 @@ function updateGrid(map) {
         cell.classList.add("snake-player2-body");
       } else if (value === "A") {
         cell.classList.add("apple");
+      } else if (value === "#") {
+        cell.classList.add("wall");
+        cell.textContent = "#";
       }
     }
   }

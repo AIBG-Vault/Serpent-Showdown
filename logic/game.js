@@ -29,6 +29,10 @@ class SnakeGame {
     this.winner = null;
     this.internalMoveCounter = 0;
     this.apples = [];
+    this.shrinkStartMove = 0; // Move number when shrinking starts
+    this.minColumns = 5; // Minimum columns before stopping shrink
+    this.currentLeftBorder = 0;
+    this.currentRightBorder = this.numOfColumns - 1;
   }
 
   addPlayer(playerId) {
@@ -71,6 +75,16 @@ class SnakeGame {
     }
 
     this.internalMoveCounter++;
+
+    // Handle map shrinking
+    if (
+      this.internalMoveCounter >= this.shrinkStartMove &&
+      this.internalMoveCounter % 5 === 0
+    ) {
+      this.shrinkMap();
+    }
+
+    // Generate apples
     if (this.internalMoveCounter % 5 === 0) {
       this.generateMirroredApples();
     }
@@ -220,18 +234,12 @@ class SnakeGame {
     for (const player of this.players) {
       const head = player.body[0];
 
-      // Wall collision checks
-      if (head.x < 0) {
-        console.log(`Player ${player.id} died by hitting the top wall`);
-        collidedPlayers.add(player.id);
-      } else if (head.x >= this.numOfRows) {
-        console.log(`Player ${player.id} died by hitting the bottom wall`);
-        collidedPlayers.add(player.id);
-      } else if (head.y < 0) {
-        console.log(`Player ${player.id} died by hitting the left wall`);
-        collidedPlayers.add(player.id);
-      } else if (head.y >= this.numOfColumns) {
-        console.log(`Player ${player.id} died by hitting the right wall`);
+      // Wall and border collision checks
+      if (head.x < 0 || head.x >= this.numOfRows || 
+          head.y <= this.currentLeftBorder || 
+          head.y >= this.currentRightBorder ||
+          this.map[head.x][head.y] === "#") {
+        console.log(`Player ${player.id} died by hitting a wall`);
         collidedPlayers.add(player.id);
       } else if (
         // Self collision
@@ -302,6 +310,20 @@ class SnakeGame {
     }
   }
 
+  shrinkMap() {
+    const currentWidth = this.currentRightBorder - this.currentLeftBorder + 1;
+    if (currentWidth <= this.minColumns) return;
+
+    // Remove apples from the columns that will become walls
+    this.apples = this.apples.filter(
+      (apple) =>
+        apple.y > this.currentLeftBorder && apple.y < this.currentRightBorder
+    );
+
+    this.currentLeftBorder++;
+    this.currentRightBorder--;
+  }
+
   generateMirroredApples() {
     let attempts = 0;
     const maxAttempts = this.numOfColumns * this.numOfRows;
@@ -335,7 +357,12 @@ class SnakeGame {
 
   updateMap() {
     this.map = Array.from({ length: this.numOfRows }, () =>
-      Array.from({ length: this.numOfColumns }, () => null)
+      Array.from({ length: this.numOfColumns }, (_, colIndex) =>
+        colIndex <= this.currentLeftBorder ||
+        colIndex >= this.currentRightBorder
+          ? "#"
+          : null
+      )
     );
 
     this.players.forEach((player) => {

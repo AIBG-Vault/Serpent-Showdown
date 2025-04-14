@@ -25,6 +25,12 @@
   color: #fff;
 }
 
+.wall {
+  background: #666;
+  color: #fff;
+  font-weight: bold;
+}
+
 .player-head {
   background: #4caf50;
 }
