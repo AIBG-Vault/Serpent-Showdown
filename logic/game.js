@@ -4,7 +4,7 @@ const GAME_ROWS = 15;
 /** Number of columns in the game grid. Will be increased to ~60 in production. */
 const GAME_COLUMNS = 25;
 /** Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production. */
-const PLAYERS_STARTING_LENGTH = 2;
+const PLAYERS_STARTING_LENGTH = 4;
 /** Initial score for each player. Will be increased to 100 in production. */
 const PLAYERS_STARTING_SCORE = 15;
 
@@ -13,7 +13,7 @@ const APPLE_PICKUP_REWARD = 5; // number of points a player receives for picking
 const MOVEMENT_CENTER_REWARD = 2; // reward for moving towards the center of the board
 const MOVEMENT_AWAY_FROM_CENTER_REWARD = 1; // reward for moving away from the center
 const ILLEGAL_MOVE_PENALTY = 5; // penalty for making an illegal move (direction), can also be used for timeout
-const REVERSE_DIRECTION_PENALTY = 5; // penalty for making a move that reverses the current direction
+const REVERSE_DIRECTION_PENALTY = 3; // penalty for making a move that reverses the current direction
 
 class SnakeGame {
   constructor() {
@@ -29,10 +29,9 @@ class SnakeGame {
     this.winner = null;
     this.internalMoveCounter = 0;
     this.apples = [];
-    this.shrinkStartMove = 0; // Move number when shrinking starts
+    this.shrinkStartMove = 5; // Move number when shrinking starts
     this.minColumns = 5; // Minimum columns before stopping shrink
-    this.currentLeftBorder = 0;
-    this.currentRightBorder = this.numOfColumns - 1;
+    this.shrinkLevel = 0; // Track map shrinkage
   }
 
   addPlayer(playerId) {
@@ -73,6 +72,8 @@ class SnakeGame {
 
     this.internalMoveCounter++;
 
+    this.updateMap();
+
     // Handle map shrinking
     if (
       this.internalMoveCounter >= this.shrinkStartMove &&
@@ -81,11 +82,10 @@ class SnakeGame {
       this.shrinkMap();
     }
 
-    // Generate apples
+    // Generate apples after shrinking
     if (this.internalMoveCounter % 5 === 0) {
       this.generateMirroredApples();
     }
-    this.updateMap();
   }
 
   playMove(playerId, direction) {
@@ -235,8 +235,8 @@ class SnakeGame {
       if (
         head.x < 0 ||
         head.x >= this.numOfRows ||
-        head.y <= this.currentLeftBorder ||
-        head.y >= this.currentRightBorder ||
+        head.y <= this.shrinkLevel ||
+        head.y >= this.numOfColumns - 1 - this.shrinkLevel ||
         this.map[head.x][head.y] === "#"
       ) {
         console.log(`Player ${player.id} died by hitting a wall`);
@@ -311,17 +311,38 @@ class SnakeGame {
   }
 
   shrinkMap() {
-    const currentWidth = this.currentRightBorder - this.currentLeftBorder + 1;
+    const currentWidth = this.numOfColumns - this.shrinkLevel * 2;
     if (currentWidth <= this.minColumns) return;
 
-    // Remove apples from the columns that will become walls
+    this.shrinkLevel++;
+
+    // Remove apples after increasing shrink level but before next map update
     this.apples = this.apples.filter(
       (apple) =>
-        apple.y > this.currentLeftBorder && apple.y < this.currentRightBorder
+        apple.y > this.shrinkLevel &&
+        apple.y < this.numOfColumns - 1 - this.shrinkLevel
     );
 
-    this.currentLeftBorder++;
-    this.currentRightBorder--;
+    this.updateMap();
+  }
+
+  findValidSpawningPosition() {
+    const originalX = Math.floor(Math.random() * this.numOfRows);
+    const originalY = Math.floor(
+      Math.random() * Math.floor(this.numOfColumns / 2)
+    );
+
+    const mirroredX = originalX;
+    const mirroredY = this.numOfColumns - 1 - originalY;
+
+    // Only check if cells are available (not wall, not snake)
+    const isValidPosition =
+      this.map[originalX][originalY] === null &&
+      this.map[mirroredX][mirroredY] === null;
+
+    return isValidPosition
+      ? { originalX, originalY, mirroredX, mirroredY }
+      : null;
   }
 
   generateMirroredApples() {
@@ -329,37 +350,29 @@ class SnakeGame {
     const maxAttempts = this.numOfColumns * this.numOfRows;
 
     while (attempts < maxAttempts) {
-      const appleX = Math.floor(Math.random() * this.numOfRows);
-      const appleY = Math.floor(
-        Math.random() * Math.floor(this.numOfColumns / 2)
-      );
+      const position = this.findValidSpawningPosition();
 
-      const mirroredX = appleX;
-      const mirroredY = this.numOfColumns - 1 - appleY;
+      if (position) {
+        const { originalX, originalY, mirroredX, mirroredY } = position;
+        this.apples.push({ x: originalX, y: originalY });
+        this.apples.push({ x: mirroredX, y: mirroredY });
 
-      // Check if both positions are free in the current map
-      const isPositionFree =
-        this.map[appleX][appleY] === null &&
-        this.map[mirroredX][mirroredY] === null;
+        this.updateMap();
 
-      if (isPositionFree) {
-        this.apples.push({ x: appleX, y: appleY });
-        this.apples.push({ x: appleX, y: mirroredY });
         return;
       }
 
       attempts++;
     }
 
-    // Only log if we couldn't find positions after max attempts
     console.log("Couldn't find valid mirrored apple positions");
   }
 
   updateMap() {
     this.map = Array.from({ length: this.numOfRows }, () =>
       Array.from({ length: this.numOfColumns }, (_, colIndex) =>
-        colIndex <= this.currentLeftBorder ||
-        colIndex >= this.currentRightBorder
+        colIndex <= this.shrinkLevel ||
+        colIndex >= this.numOfColumns - 1 - this.shrinkLevel
           ? "#"
           : null
       )

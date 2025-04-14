@@ -49,7 +49,7 @@ function connectWebSocket() {
 
   socket.addEventListener("message", (message) => {
     const data = JSON.parse(message.data);
-    console.log("Received from server:", data); // Add immediate logging
+    // console.log("Received from server:", data);
     dataList.push(data);
   });
 
@@ -183,10 +183,6 @@ function parseData(data) {
     return;
   }
 }
-
-// ========================================
-// dynamic content loading
-// ========================================
 
 // ========================================
 // particles.js background

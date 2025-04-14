@@ -1,5 +1,10 @@
 let ws1, ws2;
 
+// Move closeModal to global scope
+function closeModal() {
+  document.getElementById("connectionModal").style.display = "none";
+}
+
 function handleKeyPress(event) {
   const key = event.key.toLowerCase();
   let direction = "";
@@ -46,13 +51,18 @@ function connectPlayer(playerNum) {
   ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
     if (data.error || data.message?.includes("rejected")) {
-      errorMsgElement.textContent = "Connection failed: " + (data.error || data.message);
+      errorMsgElement.textContent =
+        "Connection failed: " + (data.error || data.message);
       return;
     }
+
+    // console.log(data);
+
     if (data.map) {
       window.boardUtils.updateGrid(data.map);
-      // Only add keypress listener if both players are connected
-      if (ws1?.readyState === WebSocket.OPEN && ws2?.readyState === WebSocket.OPEN) {
+
+      // Check if game has started (2 players in the game)
+      if (data.players && data.players.length === 2) {
         document.getElementById("connectionModal").style.display = "none";
         document.addEventListener("keydown", handleKeyPress);
       }

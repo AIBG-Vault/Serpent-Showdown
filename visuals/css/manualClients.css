@@ -16,6 +16,25 @@
   padding: 1.5rem;
   border-radius: 0.5rem;
   text-align: center;
+  position: relative;  /* Added for absolute positioning of close button */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #ff4444;
 }
 
 .modal > h2 {
