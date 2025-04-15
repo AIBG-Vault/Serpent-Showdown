@@ -4,6 +4,8 @@ const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 const { SnakeGame } = require("../logic/game");
 const fs = require("fs");
+const { reformatGameState } = require("./utility");
+
 let pendingMoves = new Map(); // Store moves until both players have moved
 
 const app = express();
@@ -13,9 +15,7 @@ app.use(bodyParser.json());
 
 let playersMap = new Map(); // This will store player data with ID as key
 let game;
-let currentPlayers;
-let timeoutId;
-let playerTimedOut = false;
+let currentPlayers = [];
 
 // Load players.json and initialize gameObject
 fs.readFile("./players.json", "utf8", (err, data) => {
@@ -82,12 +82,7 @@ function handlePlayerConnection(ws, playerId) {
   console.log(`${player.name} connected with ID: ${playerId}`);
 
   // Filter connections to exclude the frontend and count only player connections
-  currentPlayers = Array.from(connections)
-    .filter((conn) => conn.id !== "frontend")
-    .map((conn) => {
-      const player = playersMap.get(conn.id);
-      return { id: conn.id, name: player.name }; // Construct and return the player object
-    });
+  currentPlayers.push(player);
 
   // console.log(playerConnections.length);
 
@@ -103,7 +98,7 @@ function handlePlayerConnection(ws, playerId) {
     return;
   }
 
-  game.addPlayer(playerId);
+  game.addPlayer(player);
 
   // If not exceeding the player limit, acknowledge the connection
   ws.send(
@@ -165,7 +160,11 @@ function handleMessage(ws, message) {
   // Validate move format
   if (!move.playerId || !move.direction) {
     ws.send(JSON.stringify({ error: "Invalid move format" }));
-    return;
+
+    move = {
+      playerId: move.playerId,
+      direction: "invalid",
+    };
   }
 
   // Store the move
@@ -179,33 +178,29 @@ function handleMessage(ws, message) {
     // Send updated game state to all clients
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        // Add player names to the game state
-        const playersWithNames = game.players.map((player) => ({
-          ...player,
-          name: playersMap.get(player.id).name,
-        }));
-
-        const gameState = {
+        const message = JSON.stringify({
           map: game.map,
-          players: playersWithNames,
-          winner: game.winner
-            ? game.winner === -1
-              ? -1
-              : playersMap.get(game.winner).name
-            : null,
+          players: game.players,
+          winner: game.winner,
           moveCounter: game.internalMoveCounter,
-        };
-        client.send(JSON.stringify(gameState));
+        });
+
+        client.send(message, (error) => {
+          if (error) {
+            console.error("Error sending message:", error);
+          }
+        });
       }
     });
 
     // Handle game over
-    if (game.winner) {
-      console.log(
-        `Game Over! Winner: ${
-          game.winner === -1 ? "Draw" : playersMap.get(game.winner).name
-        }`
-      );
+    if (game.winner !== null) {
+      if (game.winner === -1) {
+        console.log("Game Over! It's a draw.");
+      } else {
+        console.log(`Game Over! Winner: ${game.winner}`);
+      }
+
       closeConnectionsAndServer();
     }
   }
@@ -231,7 +226,7 @@ function closeConnectionsAndServer() {
 
   server.close(function (err) {
     if (err) {
-      console.log("Error while closing server:", err);
+      console.error("Error while closing server:", err);
     } else {
       console.log("WebSocket server closed successfully.");
     }

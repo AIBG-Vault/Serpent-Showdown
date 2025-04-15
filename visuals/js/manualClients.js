@@ -1,5 +1,10 @@
 let ws1, ws2;
 
+// Move closeModal to global scope
+function closeModal() {
+  document.getElementById("connectionModal").style.display = "none";
+}
+
 function handleKeyPress(event) {
   const key = event.key.toLowerCase();
   let direction = "";
@@ -50,14 +55,13 @@ function connectPlayer(playerNum) {
         "Connection failed: " + (data.error || data.message);
       return;
     }
+
+    // console.log(data);
+
     if (data.map) {
-      if (!document.getElementById("gameBoard").children.length) {
-        window.boardUtils.createGrid();
-      }
       window.boardUtils.updateGrid(data.map);
 
       // Check if game has started (2 players in the game)
-      console.log(data.map);
       if (data.players && data.players.length === 2) {
         document.getElementById("connectionModal").style.display = "none";
         document.addEventListener("keydown", handleKeyPress);

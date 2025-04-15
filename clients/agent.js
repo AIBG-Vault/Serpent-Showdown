@@ -200,7 +200,7 @@ ws.on("close", () => console.log("Disconnected from WebSocket by server"));
 
 ws.on("message", (data) => {
   const receivedMsg = JSON.parse(data.toString("utf-8"));
-  console.log("Received message:", receivedMsg);
+  // console.log("Received message:", receivedMsg);
 
   const gameIsOver =
     receivedMsg.winner !== null && receivedMsg.winner !== undefined;

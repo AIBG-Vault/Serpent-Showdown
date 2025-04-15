@@ -49,7 +49,7 @@ function connectWebSocket() {
 
   socket.addEventListener("message", (message) => {
     const data = JSON.parse(message.data);
-    console.log("Received from server:", data); // Add immediate logging
+    // console.log("Received from server:", data);
     dataList.push(data);
   });
 
@@ -81,10 +81,12 @@ connectWebSocket();
 function toggleEndScreen(data) {
   const winnerContainer = document.querySelector(".winner_container");
   const winnerNameElem = document.querySelector(".winner_container h1");
+  const winnerTopTextElem = document.querySelector(".winner_container h2");
 
   if (data !== null) {
     if (data.winner === -1) {
-      winnerNameElem.textContent = "Game draw";
+      winnerTopTextElem.style.display = "none";
+      winnerNameElem.textContent = "GAME DRAW";
     } else {
       winnerNameElem.textContent = data.winner;
     }
@@ -183,10 +185,6 @@ function parseData(data) {
     return;
   }
 }
-
-// ========================================
-// dynamic content loading
-// ========================================
 
 // ========================================
 // particles.js background
