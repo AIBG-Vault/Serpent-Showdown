@@ -178,9 +178,18 @@ function handleMessage(ws, message) {
     // Send updated game state to all clients
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        gameState = reformatGameState(game);
+        const message = JSON.stringify({
+          map: game.map,
+          players: game.players,
+          winner: game.winner,
+          moveCounter: game.internalMoveCounter,
+        });
 
-        client.send(JSON.stringify(gameState));
+        client.send(message, (error) => {
+          if (error) {
+            console.error("Error sending message:", error);
+          }
+        });
       }
     });
 
