@@ -4,7 +4,8 @@ const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 const { SnakeGame } = require("../logic/game");
 const fs = require("fs");
-const { reformatGameState } = require("./utility");
+
+const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
 
 let pendingMoves = new Map(); // Store moves until both players have moved
 
@@ -16,6 +17,8 @@ app.use(bodyParser.json());
 let playersMap = new Map(); // This will store player data with ID as key
 let game;
 let currentPlayers = [];
+
+let timeoutId;
 
 // Load players.json and initialize gameObject
 fs.readFile("./players.json", "utf8", (err, data) => {
@@ -160,22 +163,21 @@ function handleMessage(ws, message) {
   // Validate move format
   if (!move.playerId || !move.direction) {
     ws.send(JSON.stringify({ error: "Invalid move format" }));
-
-    move = {
-      playerId: move.playerId,
-      direction: "invalid",
-    };
+    move = { playerId: move.playerId, direction: "invalid" };
   }
 
   // Store the move
   pendingMoves.set(move.playerId, move);
 
-  // Check if both players have moved
-  if (pendingMoves.size === 2) {
+  // Clear existing timeout if any
+  if (timeoutId) clearTimeout(timeoutId);
+
+  // Process moves function
+  const processPendingMoves = () => {
     game.processMoves(Array.from(pendingMoves.values()));
     pendingMoves.clear();
 
-    // Send updated game state to all clients
+    // Send game state to all connections
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         const message = JSON.stringify({
@@ -193,16 +195,38 @@ function handleMessage(ws, message) {
       }
     });
 
-    // Handle game over
+    // Check for game over
     if (game.winner !== null) {
-      if (game.winner === -1) {
-        console.log("Game Over! It's a draw.");
-      } else {
-        console.log(`Game Over! Winner: ${game.winner}`);
-      }
-
+      console.log(
+        game.winner === -1
+          ? "Game Over! It's a draw."
+          : `Game Over! Winner: ${game.winner}`
+      );
       closeConnectionsAndServer();
     }
+  };
+
+  // Set new timeout
+  timeoutId = setTimeout(() => {
+    if (pendingMoves.size > 0) {
+      // Add timeout moves for players who haven't moved
+      currentPlayers.forEach((player) => {
+        if (!pendingMoves.has(player.id)) {
+          pendingMoves.set(player.id, {
+            playerId: player.id,
+            direction: "timeout",
+          });
+        }
+      });
+      processPendingMoves();
+    }
+  }, MOVE_TIMEOUT);
+
+  // Process moves immediately if all players sent their moves
+  if (pendingMoves.size === 2) {
+    clearTimeout(timeoutId);
+
+    processPendingMoves();
   }
 }
 
