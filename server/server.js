@@ -182,11 +182,11 @@ function handleMessage(ws, message) {
   timeoutId = setTimeout(() => {
     if (pendingMoves.size > 0) {
       // Add timeout moves for players who haven't moved
-      currentPlayers.forEach(player => {
+      currentPlayers.forEach((player) => {
         if (!pendingMoves.has(player.id)) {
           pendingMoves.set(player.id, {
             playerId: player.id,
-            direction: "timeout"
+            direction: "timeout",
           });
         }
       });
@@ -195,14 +195,14 @@ function handleMessage(ws, message) {
       game.processMoves(Array.from(pendingMoves.values()));
       pendingMoves.clear();
 
-    // Send updated game state to all clients
-    connections.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        gameState = reformatGameState(game);
+      // Send updated game state to all clients
+      connections.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          gameState = reformatGameState(game);
 
-        client.send(JSON.stringify(gameState));
-      }
-    });
+          client.send(JSON.stringify(gameState));
+        }
+      });
 
       // Handle game over
       if (game.winner !== null) {
@@ -224,8 +224,18 @@ function handleMessage(ws, message) {
 
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        gameState = reformatGameState(game);
-        client.send(JSON.stringify(gameState));
+        const message = JSON.stringify({
+          map: game.map,
+          players: game.players,
+          winner: game.winner,
+          moveCounter: game.internalMoveCounter,
+        });
+
+        client.send(message, (error) => {
+          if (error) {
+            console.error("Error sending message:", error);
+          }
+        });
       }
     });
 
