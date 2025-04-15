@@ -4,7 +4,8 @@ const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 const { SnakeGame } = require("../logic/game");
 const fs = require("fs");
-const { reformatGameState } = require("./utility");
+
+const MOVE_TIMEOUT = 500; // Time to wait for both players' moves in milliseconds
 
 let pendingMoves = new Map(); // Store moves until both players have moved
 
@@ -16,6 +17,8 @@ app.use(bodyParser.json());
 let playersMap = new Map(); // This will store player data with ID as key
 let game;
 let currentPlayers = [];
+
+let timeoutId;
 
 // Load players.json and initialize gameObject
 fs.readFile("./players.json", "utf8", (err, data) => {
@@ -141,9 +144,6 @@ function rejectConnection(ws, receivedId) {
   ws.close();
 }
 
-// Add at the top with other variables
-let timeoutId;
-
 function handleMessage(ws, message) {
   console.log(`Received message: ${message}`);
 
@@ -160,68 +160,35 @@ function handleMessage(ws, message) {
     return;
   }
 
-  // Validate move format
+  // Validate and store move
   if (!move.playerId || !move.direction) {
     ws.send(JSON.stringify({ error: "Invalid move format" }));
-
-    move = {
-      playerId: move.playerId,
-      direction: "invalid",
-    };
+    move = { playerId: move.playerId, direction: "invalid" };
   }
 
   // Store the move
   pendingMoves.set(move.playerId, move);
 
-  // Clear existing timeout if any
-  if (timeoutId) {
-    clearTimeout(timeoutId);
-  }
+  // Reset timeout
+  if (timeoutId) clearTimeout(timeoutId);
 
-  // Set new timeout
-  timeoutId = setTimeout(() => {
-    if (pendingMoves.size > 0) {
-      // Add timeout moves for players who haven't moved
-      currentPlayers.forEach((player) => {
-        if (!pendingMoves.has(player.id)) {
-          pendingMoves.set(player.id, {
-            playerId: player.id,
-            direction: "timeout",
-          });
-        }
-      });
-
-      // Process moves and update game state
-      game.processMoves(Array.from(pendingMoves.values()));
-      pendingMoves.clear();
-
-      // Send updated game state to all clients
-      connections.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          gameState = reformatGameState(game);
-
-          client.send(JSON.stringify(gameState));
-        }
-      });
-
-      // Handle game over
-      if (game.winner !== null) {
-        if (game.winner === -1) {
-          console.log("Game Over! It's a draw.");
-        } else {
-          console.log(`Game Over! Winner: ${game.winner}`);
-        }
-        closeConnectionsAndServer();
+  // Function to process and broadcast game state
+  const processAndBroadcast = () => {
+    // Add timeout moves for non-responding players
+    currentPlayers.forEach((player) => {
+      if (!pendingMoves.has(player.id)) {
+        pendingMoves.set(player.id, {
+          playerId: player.id,
+          direction: "timeout",
+        });
       }
-    }
-  }, 150);
+    });
 
-  // Process moves immediately if all players have moved
-  if (pendingMoves.size === 2) {
-    clearTimeout(timeoutId);
+    // Process moves and update game
     game.processMoves(Array.from(pendingMoves.values()));
     pendingMoves.clear();
 
+    // Broadcast updated state
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         const message = JSON.stringify({
@@ -239,14 +206,24 @@ function handleMessage(ws, message) {
       }
     });
 
+    // Check for game over
     if (game.winner !== null) {
-      if (game.winner === -1) {
-        console.log("Game Over! It's a draw.");
-      } else {
-        console.log(`Game Over! Winner: ${game.winner}`);
-      }
+      console.log(
+        game.winner === -1
+          ? "Game Over! It's a draw."
+          : `Game Over! Winner: ${game.winner}`
+      );
       closeConnectionsAndServer();
     }
+  };
+
+  // Set timeout for waiting on other player's move
+  timeoutId = setTimeout(processAndBroadcast, MOVE_TIMEOUT);
+
+  // Process immediately if both players moved
+  if (pendingMoves.size === 2) {
+    clearTimeout(timeoutId);
+    processAndBroadcast();
   }
 }
 
