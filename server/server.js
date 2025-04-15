@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const { SnakeGame } = require("../logic/game");
 const fs = require("fs");
 
-const MOVE_TIMEOUT = 500; // Time to wait for both players' moves in milliseconds
+const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
 
 let pendingMoves = new Map(); // Store moves until both players have moved
 
@@ -160,7 +160,7 @@ function handleMessage(ws, message) {
     return;
   }
 
-  // Validate and store move
+  // Validate move format
   if (!move.playerId || !move.direction) {
     ws.send(JSON.stringify({ error: "Invalid move format" }));
     move = { playerId: move.playerId, direction: "invalid" };
@@ -169,26 +169,15 @@ function handleMessage(ws, message) {
   // Store the move
   pendingMoves.set(move.playerId, move);
 
-  // Reset timeout
+  // Clear existing timeout if any
   if (timeoutId) clearTimeout(timeoutId);
 
-  // Function to process and broadcast game state
-  const processAndBroadcast = () => {
-    // Add timeout moves for non-responding players
-    currentPlayers.forEach((player) => {
-      if (!pendingMoves.has(player.id)) {
-        pendingMoves.set(player.id, {
-          playerId: player.id,
-          direction: "timeout",
-        });
-      }
-    });
-
-    // Process moves and update game
+  // Process moves function
+  const processPendingMoves = () => {
     game.processMoves(Array.from(pendingMoves.values()));
     pendingMoves.clear();
 
-    // Broadcast updated state
+    // Send game state to all connections
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         const message = JSON.stringify({
@@ -217,13 +206,27 @@ function handleMessage(ws, message) {
     }
   };
 
-  // Set timeout for waiting on other player's move
-  timeoutId = setTimeout(processAndBroadcast, MOVE_TIMEOUT);
+  // Set new timeout
+  timeoutId = setTimeout(() => {
+    if (pendingMoves.size > 0) {
+      // Add timeout moves for players who haven't moved
+      currentPlayers.forEach((player) => {
+        if (!pendingMoves.has(player.id)) {
+          pendingMoves.set(player.id, {
+            playerId: player.id,
+            direction: "timeout",
+          });
+        }
+      });
+      processPendingMoves();
+    }
+  }, MOVE_TIMEOUT);
 
-  // Process immediately if both players moved
+  // Process moves immediately if all players sent their moves
   if (pendingMoves.size === 2) {
     clearTimeout(timeoutId);
-    processAndBroadcast();
+
+    processPendingMoves();
   }
 }
 
