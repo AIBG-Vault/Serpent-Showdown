@@ -2,11 +2,11 @@
 // Number of rows in the game grid. Will be increased to ~25 in production.
 const BOARD_NUM_OF_ROWS = 11;
 // Number of columns in the game grid. Will be increased to ~60 in production.
-const BOARD_NUM_OF_COLUMNS = 15;
+const BOARD_NUM_OF_COLUMNS = 25;
 // Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production.
-const PLAYERS_STARTING_LENGTH = 4;
+const PLAYERS_STARTING_LENGTH = 9;
 // Initial score for each player. Will be increased to 100 in production.
-const PLAYERS_STARTING_SCORE = 15;
+const PLAYERS_STARTING_SCORE = 100;
 
 // Game rewards and penalties
 const APPLE_PICKUP_REWARD = 5; // number of points a player receives for picking up an apple
@@ -14,10 +14,11 @@ const MOVEMENT_CENTER_REWARD = 2; // reward for moving towards the center of the
 const MOVEMENT_AWAY_FROM_CENTER_REWARD = 1; // reward for moving away from the center
 const ILLEGAL_MOVE_PENALTY = 5; // penalty for making an illegal move (direction), can also be used for timeout
 const REVERSE_DIRECTION_PENALTY = 3; // penalty for making a move that reverses the current direction
+const BODY_SEGMENT_LOSS_PENALTY = 3; // penalty per segment lost to border shrinkage
 
 // Number of moves after which the map starts shrinking.
 const START_SHRINKING_MAP_AFTER_MOVES = 0;
-// Number of columns left after which the map stops shrinking.
+// Number of columns left after which the map stops shrinking. Will be increased to 9 (as in AIBG 9.0) in production.
 const MINIMUM_BOARD_SIZE = 5;
 
 class SnakeGame {
@@ -25,10 +26,6 @@ class SnakeGame {
     this.numOfRows = BOARD_NUM_OF_ROWS;
     this.numOfColumns = BOARD_NUM_OF_COLUMNS;
     this.playersStartingLength = PLAYERS_STARTING_LENGTH;
-
-    this.map = Array.from({ length: this.numOfRows }, () =>
-      Array.from({ length: this.numOfColumns }, () => null)
-    );
 
     this.players = [];
     this.winner = null;
@@ -43,11 +40,13 @@ class SnakeGame {
 
     // Add borders object
     this.borders = {
-      left: 0,
-      right: this.numOfColumns - 1,
-      top: 0,
-      bottom: this.numOfRows - 1,
+      left: this.shrinkLevel,
+      right: this.numOfColumns - this.shrinkLevel - 1,
+      top: this.shrinkLevel,
+      bottom: this.numOfRows - this.shrinkLevel - 1,
     };
+
+    this.updateMap();
   }
 
   addPlayer(player) {
@@ -86,9 +85,9 @@ class SnakeGame {
     moves.forEach((move) => this.playMove(move.playerId, move.direction));
 
     // Handle map shrinking
-    const currentWidth = this.numOfColumns - this.shrinkLevel * 2;
+    const currentBoardWidth = this.borders.right - this.borders.left - 1;
     if (
-      currentWidth > this.minBoardSize &&
+      currentBoardWidth > this.minBoardSize &&
       this.internalMoveCounter >= this.shrinkStartMove &&
       this.internalMoveCounter % 5 === 0
     ) {
@@ -101,12 +100,12 @@ class SnakeGame {
       return;
     }
 
-    this.updateMap();
-
     // Generate apples after shrinking
     if (this.internalMoveCounter % 5 === 0) {
       this.generateMirroredApples();
     }
+
+    this.updateMap();
   }
 
   playMove(playerId, moveDirection) {
@@ -190,88 +189,30 @@ class SnakeGame {
   }
 
   checkGameOver() {
-    const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
-    const collidedPlayers = this.checkForCollisions();
+    const deadPlayers = this.players
+      .filter(
+        (player) =>
+          player.score <= 0 ||
+          this.checkWallCollision(player) ||
+          this.checkPlayerCollision(player)
+      )
+      .map((player) => player.id);
 
-    if (!zeroScorePlayers.length && !collidedPlayers) return false;
+    if (!deadPlayers.length) return false;
 
-    // If only one condition occurred, handle it normally
-    if (zeroScorePlayers.length && !collidedPlayers) {
-      return this.checkZeroScoreWinner();
-    }
-    if (!zeroScorePlayers.length && collidedPlayers) {
-      return this.checkCollisionWinner();
-    }
-
-    // Both conditions occurred - determine winner by score then length
-    console.log(
-      "Game Over! Multiple loss conditions - determining winner by score and length"
-    );
-    this.determineWinnerByScoreThenLength();
-    return true;
-  }
-
-  checkZeroScoreWinner() {
-    const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
-    if (zeroScorePlayers.length === 0) return false;
-
-    if (zeroScorePlayers.length === 2) {
-      this.determineWinnerByLength();
-      console.log(
-        this.winner === -1
-          ? "Game Over! Draw! Both players reached zero score with equal lengths!"
-          : `Game Over! Both players reached zero score. Player ${this.winner} wins with longer length!`
-      );
-    } else {
-      this.winner = this.players.find((p) => p.score > 0).name;
-      console.log(
-        `Game Over! One player reached zero score. Player ${this.winner} wins!`
-      );
-    }
-    return true;
-  }
-
-  checkCollisionWinner() {
-    const collidedPlayers = this.checkForCollisions();
-    if (!collidedPlayers) return false;
-
-    if (collidedPlayers.length === 1) {
-      this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).name;
+    if (deadPlayers.length === 1) {
+      this.winner = this.players.find((p) => p.id !== deadPlayers[0]).name;
+      console.log(`Game Over! Player ${this.winner} wins!`);
     } else {
       this.determineWinnerByScoreThenLength();
     }
     return true;
   }
 
-  checkForCollisions() {
-    let collidedPlayers = new Set();
-
-    for (const player of this.players) {
-      const wallCollision = this.checkWallCollision(player);
-      if (wallCollision) {
-        collidedPlayers.add(player.id);
-        continue;
-      }
-
-      const bodyCollision = this.checkPlayerCollision(player);
-      if (bodyCollision) {
-        collidedPlayers.add(player.id);
-        continue;
-      }
-    }
-
-    return collidedPlayers.size > 0 ? Array.from(collidedPlayers) : null;
-  }
-
   checkWallCollision(player) {
     const head = player.body[0];
 
-    // Border shrinkage
-    if (!head) {
-      console.log(`Player ${player.name} died by border shrinkage`);
-      return true;
-    }
-
+    // Check head collision with walls
     if (
       head.row <= this.borders.top ||
       head.row >= this.borders.bottom ||
@@ -282,66 +223,59 @@ class SnakeGame {
       return true;
     }
 
-    // Check and handle snake segments in new wall positions
-    this.players.forEach((player) => {
-      // Find segments that will be in walls
-      const segmentsInWalls = player.body.filter(
-        (segment) =>
-          segment.column <= this.borders.left ||
-          segment.column >= this.borders.right ||
-          segment.row <= this.borders.top ||
-          segment.row >= this.borders.bottom
-      );
+    // Find the first wall segment index
+    const firstWallIndex = player.body.findIndex(
+      (segment) =>
+        segment.column <= this.borders.left ||
+        segment.column >= this.borders.right ||
+        segment.row <= this.borders.top ||
+        segment.row >= this.borders.bottom
+    );
 
-      // Remove segments that will be in walls
-      player.body = player.body.filter(
-        (segment) =>
-          segment.column > this.borders.left &&
-          segment.column < this.borders.right &&
-          segment.row > this.borders.top &&
-          segment.row < this.borders.bottom
-      );
+    // If no wall segments, return false
+    if (firstWallIndex === -1) return false;
 
-      // Find disconnected segments
-      const disconnectedSegments = [];
-      for (let i = 1; i < player.body.length; i++) {
-        const current = player.body[i];
-        const previous = player.body[i - 1];
+    // Get disconnected segments and update body
+    const disconnectedSegments = player.body.slice(firstWallIndex);
+    player.body = player.body.slice(0, firstWallIndex);
 
-        // Check if segment is connected (adjacent in row or column)
-        const isConnected =
-          (Math.abs(current.row - previous.row) === 1 &&
-            current.column === previous.column) ||
-          (Math.abs(current.column - previous.column) === 1 &&
-            current.row === previous.row);
-
-        if (!isConnected) {
-          // Found a gap - add all remaining segments to disconnected array
-          disconnectedSegments.push(...player.body.slice(i));
-          // Remove disconnected segments from body
-          player.body = player.body.slice(0, i);
-          break;
-        }
-      }
-
-      // Convert disconnected segments to apples
-      this.apples.push(
-        ...disconnectedSegments.map((segment) => ({
+    // Convert valid segments to apples
+    this.apples.push(
+      ...disconnectedSegments
+        .filter(
+          (segment) =>
+            segment.column > this.borders.left &&
+            segment.column < this.borders.right &&
+            segment.row > this.borders.top &&
+            segment.row < this.borders.bottom
+        )
+        .map((segment) => ({
           row: segment.row,
           column: segment.column,
         }))
-      );
+    );
 
-      // Apply penalties
-      const totalLostSegments =
-        segmentsInWalls.length + disconnectedSegments.length;
-      player.score = Math.max(0, player.score - totalLostSegments * 3);
-      player.length -= totalLostSegments;
-    });
+    // Apply penalties first
+    player.score = Math.max(
+      0,
+      player.score - disconnectedSegments.length * BODY_SEGMENT_LOSS_PENALTY
+    );
+    player.length -= disconnectedSegments.length;
+
+    // Check if player died from score loss
+    if (player.score <= 0) {
+      console.log(
+        `Player ${player.name} died from score reaching zero due to wall penalties`
+      );
+      return true;
+    }
+
+    return false;
   }
 
   checkPlayerCollision(player) {
     const head = player.body[0];
+    if (!head) return false; // Return false if player has no body
 
     // Self collision
     const playerCollidedWithSelf = player.body
@@ -357,6 +291,8 @@ class SnakeGame {
 
     // Other player collision (both head and body)
     const otherPlayer = this.players.find((p) => p.id !== player.id);
+    if (!otherPlayer.body.length) return false; // Return false if other player has no body
+
     const playerCollidedWithOtherPlayer = otherPlayer.body.some(
       (segment) => segment.row === head.row && segment.column === head.column
     );
@@ -372,15 +308,7 @@ class SnakeGame {
     if (player1.score !== player2.score) {
       this.winner = player1.score > player2.score ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by higher score!`);
-    } else {
-      this.determineWinnerByLength();
-    }
-  }
-
-  determineWinnerByLength() {
-    const [player1, player2] = this.players;
-
-    if (player1.length !== player2.length) {
+    } else if (player1.length !== player2.length) {
       this.winner =
         player1.length > player2.length ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by longer length!`);
@@ -399,7 +327,7 @@ class SnakeGame {
     // Calculate how much extra shrinking is needed after 1:1 ratio is reached
     const extraShrink = Math.max(
       this.shrinkLevel - Math.floor((this.numOfColumns - this.numOfRows) / 2),
-      0
+      -1
     );
     this.borders.top = extraShrink;
     this.borders.bottom = this.numOfRows - 1 - extraShrink;
