@@ -141,21 +141,21 @@ body {
   font-size: clamp(0.75rem, 1.5vw, 4rem);
 }
 
-.left_container .team_name::after {
+.left_container .team_name::after,
+.right_container .team_name::before {
   content: "";
   position: static;
-  width: 0.5em;
-  height: 0.5em;
+  width: clamp(1rem, 1.5vw, 4rem);
+  height: clamp(1rem, 1.5vw, 4rem);
   border-radius: 50%;
+  background-color: white;
+}
+
+.left_container .team_name::after {
   background-color: var(--snake-player1-color);
 }
 
 .right_container .team_name::before {
-  content: "";
-  position: static;
-  width: 0.5em;
-  height: 0.5em;
-  border-radius: 50%;
   background-color: var(--snake-player2-color);
 }
 

@@ -166,6 +166,9 @@ function decideNextMove(map, mode) {
   );
 
   switch (mode) {
+    case "timeout":
+      return strategies.findSafeDirection(map, playerHead);
+
     case "survive":
       return strategies.findSafeDirection(map, playerHead);
 
