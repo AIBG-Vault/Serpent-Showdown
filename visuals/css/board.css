@@ -25,18 +25,32 @@
   color: #fff;
 }
 
+.cell.snake-player1-body {
+  background-color: var(--snake-player1-color) !important;
+}
+
+.cell.snake-player1-head {
+  background-color: var(--snake-player1-head-color) !important;
+}
+
+.cell.snake-player2-body {
+  background-color: var(--snake-player2-color) !important;
+}
+
+.cell.snake-player2-head {
+  background-color: var(--snake-player2-head-color)!important;
+}
+
 .wall {
   background: #666;
   color: #fff;
   font-weight: bold;
 }
 
-.player-head {
-  background: #4caf50;
-}
-.player-body {
-  background: #45a049;
-}
 .apple {
   background: #ff4444;
+}
+
+.undefined-cell {
+  background: #4caf50;
 }

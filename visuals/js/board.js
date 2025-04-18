@@ -18,7 +18,7 @@ function createGrid(rows = 25, cols = 60) {
   }
 }
 
-function updateGrid(map) {
+function updateGrid(map, players) {
   if (!map) return;
 
   const rows = map.length;
@@ -31,6 +31,9 @@ function updateGrid(map) {
     createGrid(rows, cols);
   }
 
+  const player1Id = players?.length > 0 ? players[0].id : "undefined";
+  const player2Id = players?.length > 1 ? players[1].id : "undefined";
+
   // Update cells
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
@@ -40,19 +43,22 @@ function updateGrid(map) {
 
       if (map) {
         const value = map[i][j];
-        if (value === "K") {
+        if (value === player1Id.toUpperCase()) {
           cell.classList.add("snake-player1-head");
-        } else if (value === "k") {
+        } else if (value === player1Id) {
           cell.classList.add("snake-player1-body");
-        } else if (value === "L") {
+        } else if (value === player2Id.toUpperCase()) {
           cell.classList.add("snake-player2-head");
-        } else if (value === "l") {
+        } else if (value === player2Id) {
           cell.classList.add("snake-player2-body");
         } else if (value === "A") {
           cell.classList.add("apple");
         } else if (value === "#") {
           cell.classList.add("wall");
           cell.textContent = "#";
+        } else if (value && value.length > 0) {
+          cell.classList.add("undefined-cell");
+          cell.textContent = "?";
         }
       }
     }

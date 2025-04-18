@@ -208,7 +208,7 @@ function parseData(data) {
   }
 
   // Update board
-  window.boardUtils.updateGrid(data.map);
+  window.boardUtils.updateGrid(data.map, data.players || []);
 
   if (data.winner) {
     toggleEndScreen(data);

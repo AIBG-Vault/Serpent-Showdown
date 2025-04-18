@@ -447,12 +447,12 @@ class SnakeGame {
           head.column >= 0 &&
           head.column < this.numOfColumns
         ) {
-          this.map[head.row][head.column] = player.id[0].toUpperCase();
+          this.map[head.row][head.column] = player.id.toUpperCase();
 
           for (let i = 1; i < player.body.length; i++) {
             const segment = player.body[i];
 
-            this.map[segment.row][segment.column] = player.id[0];
+            this.map[segment.row][segment.column] = player.id;
           }
         }
       }
