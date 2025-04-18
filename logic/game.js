@@ -110,13 +110,14 @@ class SnakeGame {
     this.updateMap();
   }
 
-  playMove(playerId, direction) { 
+  // Modify playMove to use the new function
+  playMove(playerId, direction) {
     const player = this.players.find((p) => p.id === playerId);
     if (!player) return;
 
     // Prevent reversing direction and penalize the attempt
-    if (this.isOppositeDirection(player, direction)) {
-      player.score = Math.max(0, player.score - ILLEGAL_MOVE_PENALTY); // -5 points for reversing
+    if (this.isReverseDirection(player, direction)) {
+      player.score = Math.max(0, player.score - REVERSE_DIRECTION_PENALTY); // -5 points for reversing
       return;
     }
 
@@ -126,49 +127,35 @@ class SnakeGame {
       return;
     }
 
-    const head = { ...player.body[0] };
-    const centerRow = Math.floor(this.numOfRows / 2);
-    const centerCol = Math.floor(this.numOfColumns / 2);
-    const oldDistanceToCenter = Math.abs(head.row - centerRow) + Math.abs(head.column - centerCol);
-
-    // Store initial score for debugging
-    const initialScore = player.score;
+    const oldHead = { ...player.body[0] };
+    const newHead = { ...oldHead };
 
     switch (direction) {
-      case "up": head.row -= 1; break;
-      case "down": head.row += 1; break;
-      case "left": head.column -= 1; break;
-      case "right": head.column += 1; break;
-      default: return;
+      case "up":
+        newHead.row -= 1;
+        break;
+      case "down":
+        newHead.row += 1;
+        break;
+      case "left":
+        newHead.column -= 1;
+        break;
+      case "right":
+        newHead.column += 1;
+        break;
+      default:
+        return;
     }
 
-    // Calculate new distance to center
-    const newDistanceToCenter = Math.abs(head.row - centerRow) + Math.abs(head.column - centerCol);
-    
-    // Add debug logging for movement scoring
-    console.log(`Player ${player.name} movement:
-      - Direction: ${direction}
-      - Old distance to center: ${oldDistanceToCenter}
-      - New distance to center: ${newDistanceToCenter}
-      - Score before: ${initialScore}`);
-    
-    // Award points based on movement relative to center
-    if (newDistanceToCenter < oldDistanceToCenter) {
-      player.score += MOVEMENT_CENTER_REWARD;
-      console.log(`  - Moving towards center: +${MOVEMENT_CENTER_REWARD} points`);
-    } else {
-      player.score += MOVEMENT_AWAY_FROM_CENTER_REWARD;
-      console.log(`  - Moving away/parallel: +${MOVEMENT_AWAY_FROM_CENTER_REWARD} point`);
-    }
-    console.log(`  - Final score: ${player.score}`);
+    this.calculateMovementScore(player, oldHead, newHead);
 
-    if (!this.handleAppleCollision(player, head)) {
-      player.body.unshift(head);
+    if (!this.handleAppleCollision(player, newHead)) {
+      player.body.unshift(newHead);
       player.body.pop();
     }
   }
 
-  isOppositeDirection(player, incomingMoveDirection) {
+  isReverseDirection(player, incomingMoveDirection) {
     const head = player.body[0];
     const neck = player.body[1];
 
@@ -191,6 +178,31 @@ class SnakeGame {
       right: "left",
     };
     return opposites[currentDirection] === incomingMoveDirection;
+  }
+
+  calculateMovementScore(player, oldHead, newHead) {
+    const centerRow = Math.floor(this.numOfRows / 2);
+    const centerCol = Math.floor(this.numOfColumns / 2);
+
+    const oldDistanceToCenter =
+      Math.abs(oldHead.row - centerRow) + Math.abs(oldHead.column - centerCol);
+    const newDistanceToCenter =
+      Math.abs(newHead.row - centerRow) + Math.abs(newHead.column - centerCol);
+
+    // Store initial score for debugging
+    const initialScore = player.score;
+
+    // Award points based on movement relative to center
+    if (newDistanceToCenter < oldDistanceToCenter) {
+      player.score += MOVEMENT_CENTER_REWARD;
+    } else {
+      player.score += MOVEMENT_AWAY_FROM_CENTER_REWARD;
+    }
+
+    // console.log(`Player ${player.name} movement:
+    //   - Old distance to center: ${oldDistanceToCenter}
+    //   - New distance to center: ${newDistanceToCenter}
+    //   - Score: ${initialScore} -> ${player.score}`);
   }
 
   handleAppleCollision(player, head) {
@@ -283,7 +295,10 @@ class SnakeGame {
     );
 
     // Apply penalties
-    player.score += disconnectedSegments.length * BODY_SEGMENT_LOSS_PENALTY;  // Changed from -= to +=
+    player.score = Math.max(
+      0,
+      player.score - disconnectedSegments.length * BODY_SEGMENT_LOSS_PENALTY
+    );
     player.length -= disconnectedSegments.length;
 
     // Check if player died from score loss
