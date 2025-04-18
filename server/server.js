@@ -157,16 +157,27 @@ function handleMessage(ws, message) {
     move = JSON.parse(message);
   } catch (error) {
     console.error("Cannot parse message:", message);
-    return;
+    // Ignore unparseable messages
+    return; 
   }
 
-  // Validate move format
-  if (!move.playerId || !move.direction) {
-    ws.send(JSON.stringify({ error: "Invalid move format" }));
-    move = { playerId: move.playerId, direction: "invalid" };
+  // 1. Check if playerId is missing or invalid
+  if (!move.playerId || !currentPlayers.some(p => p.id === move.playerId)) {
+    console.log(`Ignoring move due to missing or invalid playerId: ${message}`);
+    ws.send(JSON.stringify({ error: "Invalid or missing playerId. Move ignored." }));
+    // Ignore the move completely
+    return; 
   }
 
-  // Store the move
+  // 2. Check if direction is missing (but playerId is valid)
+  if (!move.direction) {
+    console.log(`Received move with missing direction from ${move.playerId}. Setting direction to 'invalid'.`);
+    ws.send(JSON.stringify({ warning: "Missing direction in move. Treating as invalid." }));
+    // Set direction to invalid so game logic can handle it (e.g., apply penalty)
+    move.direction = "invalid"; 
+  }
+
+  // Store the move (it's either valid or has direction set to 'invalid')
   pendingMoves.set(move.playerId, move);
 
   // Clear existing timeout if any
