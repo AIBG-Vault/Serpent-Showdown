@@ -110,47 +110,52 @@ class SnakeGame {
     this.updateMap();
   }
 
-  playMove(playerId, moveDirection) {
+  // Modify playMove to use the new function
+  playMove(playerId, direction) {
     const player = this.players.find((p) => p.id === playerId);
     if (!player) return;
 
     // Prevent reversing direction and penalize the attempt
-    if (this.isOppositeDirection(player, moveDirection)) {
-      player.score = Math.max(0, player.score - REVERSE_DIRECTION_PENALTY); // Prevent negative scores
-      return; // Skip the move
+    if (this.isReverseDirection(player, direction)) {
+      player.score = Math.max(0, player.score - REVERSE_DIRECTION_PENALTY); // -5 points for reversing
+      return;
     }
 
-    // Penalize invalid moves
-    if (!["up", "down", "left", "right"].includes(moveDirection)) {
-      player.score = Math.max(0, player.score - ILLEGAL_MOVE_PENALTY);
-      return; // Skip the move
+    // Penalize invalid moves (including timeout)
+    if (!["up", "down", "left", "right"].includes(direction)) {
+      player.score = Math.max(0, player.score - ILLEGAL_MOVE_PENALTY); // -5 points for invalid/timeout
+      return;
     }
 
-    const head = { ...player.body[0] };
-    switch (moveDirection) {
+    const oldHead = { ...player.body[0] };
+    const newHead = { ...oldHead };
+
+    switch (direction) {
       case "up":
-        head.row -= 1;
+        newHead.row -= 1;
         break;
       case "down":
-        head.row += 1;
+        newHead.row += 1;
         break;
       case "left":
-        head.column -= 1;
+        newHead.column -= 1;
         break;
       case "right":
-        head.column += 1;
+        newHead.column += 1;
         break;
       default:
         return;
     }
 
-    if (!this.handleAppleCollision(player, head)) {
-      player.body.unshift(head);
+    this.calculateMovementScore(player, oldHead, newHead);
+
+    if (!this.handleAppleCollision(player, newHead)) {
+      player.body.unshift(newHead);
       player.body.pop();
     }
   }
 
-  isOppositeDirection(player, incomingMoveDirection) {
+  isReverseDirection(player, incomingMoveDirection) {
     const head = player.body[0];
     const neck = player.body[1];
 
@@ -173,6 +178,31 @@ class SnakeGame {
       right: "left",
     };
     return opposites[currentDirection] === incomingMoveDirection;
+  }
+
+  calculateMovementScore(player, oldHead, newHead) {
+    const centerRow = Math.floor(this.numOfRows / 2);
+    const centerCol = Math.floor(this.numOfColumns / 2);
+
+    const oldDistanceToCenter =
+      Math.abs(oldHead.row - centerRow) + Math.abs(oldHead.column - centerCol);
+    const newDistanceToCenter =
+      Math.abs(newHead.row - centerRow) + Math.abs(newHead.column - centerCol);
+
+    // Store initial score for debugging
+    const initialScore = player.score;
+
+    // Award points based on movement relative to center
+    if (newDistanceToCenter < oldDistanceToCenter) {
+      player.score += MOVEMENT_CENTER_REWARD;
+    } else {
+      player.score += MOVEMENT_AWAY_FROM_CENTER_REWARD;
+    }
+
+    // console.log(`Player ${player.name} movement:
+    //   - Old distance to center: ${oldDistanceToCenter}
+    //   - New distance to center: ${newDistanceToCenter}
+    //   - Score: ${initialScore} -> ${player.score}`);
   }
 
   handleAppleCollision(player, head) {
@@ -264,7 +294,7 @@ class SnakeGame {
         }))
     );
 
-    // Apply penalties first
+    // Apply penalties
     player.score = Math.max(
       0,
       player.score - disconnectedSegments.length * BODY_SEGMENT_LOSS_PENALTY
