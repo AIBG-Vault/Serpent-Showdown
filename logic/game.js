@@ -87,6 +87,11 @@ class SnakeGame {
     // Process all moves
     moves.forEach((move) => this.playMove(move.playerId, move.direction));
 
+    // Check if game is over and determine winner
+    if (this.checkGameOver()) {
+      return;
+    }
+
     // Handle map shrinking
     const currentBoardWidth = this.borders.right - this.borders.left - 1;
     if (
@@ -96,11 +101,6 @@ class SnakeGame {
     ) {
       this.shrinkMap();
       this.updateMap();
-    }
-
-    // Check if game is over and determine winner
-    if (this.checkGameOver()) {
-      return;
     }
 
     // Generate apples after shrinking
