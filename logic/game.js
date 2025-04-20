@@ -92,6 +92,7 @@ class SnakeGame {
       const eaten = this.eatenApples.pop();
       console.log("removed", eaten);
       this.apples.splice(eaten, 1);
+      console.log(this.apples);
     }
 
     // Handle map shrinking
