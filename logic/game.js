@@ -87,6 +87,12 @@ class SnakeGame {
     // Process all moves
     moves.forEach((move) => this.playMove(move.playerId, move.direction));
 
+    const numApplesEaten = this.eatenApples.length;
+    for (let i = 0; i < numApplesEaten; i++){
+      const eaten = this.eatenApples.pop();
+      this.apples.splice(eaten, 1);
+    }
+
     // Check if game is over and determine winner
     if (this.checkGameOver()) {
       return;
@@ -223,11 +229,7 @@ class SnakeGame {
 
   checkGameOver() {
     //Remove eaten apples
-    const numApplesEaten = this.eatenApples.length;
-    for (let i = 0; i < numApplesEaten; i++){
-      const eaten = this.eatenApples.pop();
-      this.apples.splice(eaten, 1);
-    }
+    
 
     // Check for move limit
     if (this.internalMoveCounter >= GAME_MAX_MOVES) {
