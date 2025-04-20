@@ -90,9 +90,9 @@ class SnakeGame {
     const numApplesEaten = this.eatenApples.length;
     for (let i = 0; i < numApplesEaten; i++){
       const eaten = this.eatenApples.pop();
-      console.log("removed", eaten);
-      this.apples.splice(eaten, 1);
-      console.log(this.apples);
+      console.log(apples)
+      console.log(eaten)
+      this.apples.splice(this.apples.indexOf(eaten), 1);
     }
 
     // Handle map shrinking
