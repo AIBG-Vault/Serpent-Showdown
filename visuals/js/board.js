@@ -1,12 +1,12 @@
 // Initialize grid on page load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   createGrid();
 });
 
 function createGrid(rows = 25, cols = 60) {
   const board = document.getElementById("gameBoard");
   board.style.gridTemplateColumns = `repeat(${cols}, 1.75rem)`;
-  board.innerHTML = ''; // Clear existing grid
+  board.innerHTML = ""; // Clear existing grid
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
@@ -24,7 +24,8 @@ function updateGrid(map) {
   const rows = map.length;
   const cols = map[0].length;
   const board = document.getElementById("gameBoard");
-  const currentCols = board.style.gridTemplateColumns.match(/repeat\((\d+)/)?.[1];
+  const currentCols =
+    board.style.gridTemplateColumns.match(/repeat\((\d+)/)?.[1];
 
   // Only recreate grid if dimensions changed
   if (currentCols != cols) {
