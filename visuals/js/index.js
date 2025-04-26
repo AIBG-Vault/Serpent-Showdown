@@ -186,9 +186,9 @@ function parseData(data) {
 
     // Update scores
     document.querySelector(".left_container .team_score").textContent =
-      player1?.score > 0 ? `Score: ${player1?.score}` : `Score: ####`;
+      player1?.score >= 0 ? `Score: ${player1?.score}` : `Score: ####`;
     document.querySelector(".right_container .team_score").textContent =
-      player2?.score > 0 ? `Score: ${player2?.score}` : `Score: ####`;
+      player2?.score >= 0 ? `Score: ${player2?.score}` : `Score: ####`;
 
     // Update lengths
     document.querySelector(

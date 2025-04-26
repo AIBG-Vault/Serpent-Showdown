@@ -6,7 +6,7 @@ const { SnakeGame } = require("../logic/game");
 const fs = require("fs");
 
 // Configuration
-const ENABLE_MOVE_TIMEOUT = false; // Switch to enable/disable move timeout
+const ENABLE_MOVE_TIMEOUT = true; // Switch to enable/disable move timeout
 const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
 
 let pendingMoves = new Map(); // Store moves until both players have moved
