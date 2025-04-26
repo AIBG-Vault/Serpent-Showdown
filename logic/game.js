@@ -98,7 +98,6 @@ class SnakeGame {
       this.internalMoveCounter % 5 === 0
     ) {
       this.shrinkMap();
-      this.updateMap();
     }
 
     // Check if game is over and determine winner
@@ -108,12 +107,12 @@ class SnakeGame {
 
     // Generate apples after shrinking
     if (this.internalMoveCounter % 5 === 0) {
-      this.generateMirroredApples();
+      this.spawnMirroredApples();
     }
 
     // try to spawn a modifier by 10% chance
     if (Math.random() < 0.1) {
-      this.spawnModifier();
+      this.spawnMirroredModifiers();
     }
 
     this.updateMap();
@@ -159,8 +158,8 @@ class SnakeGame {
     this.calculateMovementScore(player, oldHead, newHead);
 
     if (
-      !this.handleAppleCollision(player, newHead) &&
-      !this.handleModifierCollision(player, newHead)
+      !this.checkForAppleCollision(player, newHead) &&
+      !this.checkForModifierCollision(player, newHead)
     ) {
       player.body.unshift(newHead);
 
@@ -229,7 +228,7 @@ class SnakeGame {
     //   - Score: ${initialScore} -> ${player.score}`);
   }
 
-  handleAppleCollision(player, head) {
+  checkForAppleCollision(player, head) {
     const appleIndex = this.apples.findIndex(
       (apple) => apple.row === head.row && apple.column === head.column
     );
@@ -245,7 +244,7 @@ class SnakeGame {
     return false;
   }
 
-  handleModifierCollision(player, head) {
+  checkForModifierCollision(player, head) {
     const modifierIndex = this.modifiers.findIndex(
       (modifier) => modifier.row === head.row && modifier.column === head.column
     );
@@ -444,6 +443,7 @@ class SnakeGame {
   findValidSpawningPosition() {
     let attempts = 0;
     const maxAttempts = this.numOfColumns * this.numOfRows;
+    const MIN_DISTANCE = 1.5; // This ensures at least 1 cell distance diagonally
 
     while (attempts < maxAttempts) {
       const originalRow = Math.floor(Math.random() * this.numOfRows);
@@ -454,21 +454,95 @@ class SnakeGame {
       const mirroredRow = originalRow;
       const mirroredColumn = this.numOfColumns - 1 - originalColumn;
 
-      // Only check if cells are available (not wall, not snake)
+      // Check if position is within valid borders
       if (
-        this.map[originalRow][originalColumn] === null &&
-        this.map[mirroredRow][mirroredColumn] === null
+        originalRow <= this.borders.top ||
+        originalRow >= this.borders.bottom ||
+        originalColumn <= this.borders.left ||
+        originalColumn >= this.borders.right ||
+        mirroredRow <= this.borders.top ||
+        mirroredRow >= this.borders.bottom ||
+        mirroredColumn <= this.borders.left ||
+        mirroredColumn >= this.borders.right
       ) {
-        return { originalRow, originalColumn, mirroredRow, mirroredColumn };
+        attempts++;
+        continue;
       }
 
-      attempts++;
+      // Check if position is too close to any player's head using Euclidean distance
+      const isTooCloseToHead = this.players.some((player) => {
+        if (player.body.length === 0) return false;
+        const head = player.body[0];
+
+        // Calculate distances for both original and mirrored positions
+        const distanceToOriginal = Math.sqrt(
+          Math.pow(head.row - originalRow, 2) +
+            Math.pow(head.column - originalColumn, 2)
+        );
+
+        const distanceToMirrored = Math.sqrt(
+          Math.pow(head.row - mirroredRow, 2) +
+            Math.pow(head.column - mirroredColumn, 2)
+        );
+
+        return (
+          distanceToOriginal <= MIN_DISTANCE ||
+          distanceToMirrored <= MIN_DISTANCE
+        );
+      });
+
+      if (isTooCloseToHead) {
+        attempts++;
+        continue;
+      }
+
+      // Check collision with snake bodies
+      const collidesWithSnake = this.players.some((player) =>
+        player.body.some(
+          (segment) =>
+            (segment.row === originalRow &&
+              segment.column === originalColumn) ||
+            (segment.row === mirroredRow && segment.column === mirroredColumn)
+        )
+      );
+
+      if (collidesWithSnake) {
+        attempts++;
+        continue;
+      }
+
+      // Check collision with apples
+      const collidesWithApple = this.apples.some(
+        (apple) =>
+          (apple.row === originalRow && apple.column === originalColumn) ||
+          (apple.row === mirroredRow && apple.column === mirroredColumn)
+      );
+
+      if (collidesWithApple) {
+        attempts++;
+        continue;
+      }
+
+      // Check collision with modifiers
+      const collidesWithModifier = this.modifiers.some(
+        (modifier) =>
+          (modifier.row === originalRow &&
+            modifier.column === originalColumn) ||
+          (modifier.row === mirroredRow && modifier.column === mirroredColumn)
+      );
+
+      if (collidesWithModifier) {
+        attempts++;
+        continue;
+      }
+
+      return { originalRow, originalColumn, mirroredRow, mirroredColumn };
     }
 
     return null;
   }
 
-  generateMirroredApples() {
+  spawnMirroredApples() {
     const position = this.findValidSpawningPosition();
 
     if (position) {
@@ -476,16 +550,13 @@ class SnakeGame {
         position;
       this.apples.push({ row: originalRow, column: originalColumn });
       this.apples.push({ row: mirroredRow, column: mirroredColumn });
-
-      this.updateMap();
-
       return;
     }
 
     console.log("Couldn't find valid mirrored positions to spawn apples");
   }
 
-  spawnModifier() {
+  spawnMirroredModifiers() {
     const position = this.findValidSpawningPosition();
     if (position) {
       const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
@@ -502,8 +573,6 @@ class SnakeGame {
         column: mirroredColumn,
         type: modifierType.type,
       });
-
-      this.updateMap();
     }
   }
 
