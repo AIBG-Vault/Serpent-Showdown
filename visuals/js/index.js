@@ -8,9 +8,6 @@ let moveCounter = -1;
 let dataList = [];
 let lastFrameTime = Date.now();
 
-let teamOneName = null;
-let teamTwoName = null;
-
 // ========================================
 // websockets
 // ========================================
@@ -24,19 +21,16 @@ function connectWebSocket() {
 
   // Initialize or reinitialize the WebSocket connection
   socket = new WebSocket("ws://localhost:3000?id=frontend");
-  setConnectionStatus('connecting');
+  setConnectionStatus("connecting");
 
   socket.addEventListener("open", (event) => {
     console.log("WebSocket connection established");
-    setConnectionStatus('connected');
+    setConnectionStatus("connected");
 
     // reset frontend
     moveCounter = -1; // Reset move counter
     dataList = [];
     lastFrameTime = Date.now();
-
-    teamOneName = null;
-    teamTwoName = null;
 
     updateMoveCount(moveCounter); // Update UI with the reset move counter
     toggleEndScreen(null); // Hide the winner upon reconnection
@@ -63,12 +57,12 @@ function connectWebSocket() {
     if (!socketConnectingInterval) {
       socketConnectingInterval = setInterval(connectWebSocket, 500);
     }
-    setConnectionStatus('connection_fail');
+    setConnectionStatus("connection_fail");
   });
 
   socket.addEventListener("error", (error) => {
     console.error("WebSocket error:", error);
-    setConnectionStatus('connection_fail');
+    setConnectionStatus("connection_fail");
     // Close the socket if an error occurs to trigger the 'close' event listener
     // and thereby attempt reconnection. This also implicitly handles the 'close' event.
     socket.close();
@@ -76,7 +70,7 @@ function connectWebSocket() {
 }
 
 // Initially it is not connected
-setConnectionStatus('connection_fail');
+setConnectionStatus("connection_fail");
 
 // Initial connection attempt
 connectWebSocket();
@@ -125,15 +119,17 @@ function setConnectionStatus(status) {
   const CONNECTION_FAIL = "connection_fail";
   const CONNECTION_SUCCESS = "connection_success";
   const CONNECTION_PING = "connection_pinging";
-  connectionStatus.classList.remove(...[CONNECTION_FAIL, CONNECTION_SUCCESS, CONNECTION_PING]);
+  connectionStatus.classList.remove(
+    ...[CONNECTION_FAIL, CONNECTION_SUCCESS, CONNECTION_PING]
+  );
 
-  if (!status || status === 'connection_fail') {
+  if (!status || status === "connection_fail") {
     connectionStatus.textContent = "Not connected to server";
     connectionStatus.classList.add(CONNECTION_FAIL);
-  } else if (status === 'connected') {
+  } else if (status === "connected") {
     connectionStatus.textContent = "Connected to server";
     connectionStatus.classList.add(CONNECTION_SUCCESS);
-  } else if (status === 'connecting') {
+  } else if (status === "connecting") {
     connectionStatus.textContent = "Connecting...";
     connectionStatus.classList.add(CONNECTION_PING);
   }
@@ -180,10 +176,8 @@ function parseData(data) {
 
   // Update player information
   if (data.players || data.players?.length) {
-    const player1 = data.players.length > 0 ?
-    data.players[0] : null;
-    const player2 = data.players.length === 2 ?
-    data.players[1] : null;
+    const player1 = data.players.length > 0 ? data.players[0] : null;
+    const player2 = data.players.length === 2 ? data.players[1] : null;
 
     // Update player names
     const teamNameElems = document.querySelectorAll(".team_name");
@@ -191,20 +185,18 @@ function parseData(data) {
     teamNameElems[1].textContent = player2?.name || "Team name 2";
 
     // Update scores
-    document.querySelector(
-      ".left_container .team_score"
-    ).textContent = `Score: ${player1?.score || "####" }`;
-    document.querySelector(
-      ".right_container .team_score"
-    ).textContent = `Score: ${player2?.score || "####" }`;
+    document.querySelector(".left_container .team_score").textContent =
+      player1?.score > 0 ? `Score: ${player1?.score}` : `Score: ####`;
+    document.querySelector(".right_container .team_score").textContent =
+      player2?.score > 0 ? `Score: ${player2?.score}` : `Score: ####`;
 
     // Update lengths
     document.querySelector(
       ".left_container .team_length"
-    ).textContent = `Length: ${player1?.body?.length || "####" }`;
+    ).textContent = `Length: ${player1?.body?.length || "####"}`;
     document.querySelector(
       ".right_container .team_length"
-    ).textContent = `Length: ${player2?.body?.length || "####" }`;
+    ).textContent = `Length: ${player2?.body?.length || "####"}`;
   }
 
   // Update board

@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const { SnakeGame } = require("../logic/game");
 const fs = require("fs");
 
+// Configuration
+const ENABLE_MOVE_TIMEOUT = false; // Switch to enable/disable move timeout
 const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
 
 let pendingMoves = new Map(); // Store moves until both players have moved
@@ -241,26 +243,27 @@ function handleMessage(ws, message) {
     }
   };
 
-  // Set new timeout
-  timeoutId = setTimeout(() => {
-    if (pendingMoves.size > 0) {
-      // Add timeout moves for players who haven't moved
-      currentPlayers.forEach((player) => {
-        if (!pendingMoves.has(player.id)) {
-          pendingMoves.set(player.id, {
-            playerId: player.id,
-            direction: "timeout",
-          });
-        }
-      });
-      processPendingMoves();
-    }
-  }, MOVE_TIMEOUT);
+  // Set new timeout only if enabled
+  if (ENABLE_MOVE_TIMEOUT) {
+    timeoutId = setTimeout(() => {
+      if (pendingMoves.size > 0) {
+        // Add timeout moves for players who haven't moved
+        currentPlayers.forEach((player) => {
+          if (!pendingMoves.has(player.id)) {
+            pendingMoves.set(player.id, {
+              playerId: player.id,
+              direction: "timeout",
+            });
+          }
+        });
+        processPendingMoves();
+      }
+    }, MOVE_TIMEOUT);
+  }
 
   // Process moves immediately if all players sent their moves
   if (pendingMoves.size === 2) {
-    clearTimeout(timeoutId);
-
+    if (timeoutId) clearTimeout(timeoutId);
     processPendingMoves();
   }
 }
