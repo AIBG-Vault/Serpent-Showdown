@@ -1,6 +1,6 @@
 // Game configuration constants
-// Maximum number of moves before forcing game end
-const GAME_MAX_MOVES = 10;
+// Maximum number of moves before forcing game end. Will be increased to ~300 in production.
+const GAME_MAX_MOVES = 300;
 // Number of rows in the game grid. Will be increased to ~25 in production.
 const BOARD_NUM_OF_ROWS = 11;
 // Number of columns in the game grid. Will be increased to ~60 in production.
@@ -23,7 +23,25 @@ const START_SHRINKING_MAP_AFTER_MOVES = 0;
 // Number of columns left after which the map stops shrinking. Will be increased to 9 (as in AIBG 9.0) in production.
 const MINIMUM_BOARD_SIZE = 5;
 
-const modifierTypes = [{ type: "golden apple", pickUpReward: 10, duration: 3 }];
+// Spawn a modifier approximately 1 in 10 moves
+const MODIFIER_SPAWN_CHANCE = 1 / 10;
+
+const modifiers = [
+  {
+    type: "golden apple",
+    affect: "self",
+    pickUpReward: 10,
+    duration: 3,
+    weight: 6,
+  },
+  {
+    type: "tron",
+    affect: "random",
+    pickUpReward: 5,
+    duration: 10,
+    weight: 3,
+  },
+];
 
 class SnakeGame {
   constructor() {
@@ -105,13 +123,13 @@ class SnakeGame {
       return;
     }
 
-    // Generate apples after shrinking
+    // Spawn apples every 5 moves
     if (this.internalMoveCounter % 5 === 0) {
       this.spawnMirroredApples();
     }
 
-    // try to spawn a modifier by 10% chance
-    if (Math.random() < 0.1) {
+    // Spawn modifiers based on a chance
+    if (Math.random() < MODIFIER_SPAWN_CHANCE) {
       this.spawnMirroredModifiers();
     }
 
@@ -163,18 +181,37 @@ class SnakeGame {
     ) {
       player.body.unshift(newHead);
 
-      // Check for active golden apple modifier
-      const goldenAppleModifier = player.activeModifiers.find(
-        (p) => p.type === "golden apple"
-      );
-      if (!goldenAppleModifier) {
+      // Check for active modifiers that prevent tail removal
+      const shouldKeepTail = player.activeModifiers.some((activeModifier) => {
+        return (
+          activeModifier.type === "golden apple" ||
+          activeModifier.type === "tron"
+        );
+      });
+
+      if (!shouldKeepTail) {
         player.body.pop();
       }
     }
 
-    // Update modifier durations
+    // Update modifier durations and handle expiring effects
     player.activeModifiers = player.activeModifiers
-      .map((modifier) => ({ ...modifier, duration: modifier.duration - 1 }))
+      .map((activeModifier) => {
+        const newDuration = activeModifier.duration - 1;
+
+        if (activeModifier.type === "tron") {
+          activeModifier.temporarySegments += 1;
+        }
+
+        // Handle Tron modifier expiration
+        if (activeModifier.type === "tron" && newDuration === 0) {
+          // Remove temporary segments
+          player.body = player.body.slice(0, -activeModifier.temporarySegments);
+          player.length -= activeModifier.temporarySegments;
+        }
+
+        return { ...activeModifier, duration: newDuration };
+      })
       .filter((modifier) => modifier.duration > 0);
   }
 
@@ -250,18 +287,53 @@ class SnakeGame {
     );
 
     if (modifierIndex !== -1) {
-      const modifier = this.modifiers[modifierIndex];
-      const modifierType = modifierTypes.find((p) => p.type === modifier.type);
+      const modifierFromMap = this.modifiers[modifierIndex];
+      const modifier = modifiers.find((m) => m.type === modifierFromMap.type);
 
+      // Add the new head position BEFORE handling the modifier effects
       player.body.unshift(head);
-      player.score += modifierType.pickUpReward;
+      player.score += modifier.pickUpReward;
       player.length += 1;
 
-      // Add modifier to player's active modifiers
-      player.activeModifiers.push({
+      // Create a new modifier object
+      const newModifier = {
         type: modifier.type,
-        duration: modifierType.duration,
-      });
+        duration: modifier.duration,
+      };
+
+      if (modifier.type === "tron") {
+        newModifier.temporarySegments = 0;
+      }
+
+      // Handle modifier application based on affect type
+      if (
+        modifierFromMap.affect === "self" ||
+        modifierFromMap.affect === "both"
+      ) {
+        const existingModifier = player.activeModifiers.find(
+          (mod) => mod.type === modifier.type
+        );
+        if (existingModifier) {
+          existingModifier.duration = modifier.duration;
+        } else {
+          player.activeModifiers.push({ ...newModifier });
+        }
+      }
+
+      if (
+        modifierFromMap.affect === "enemy" ||
+        modifierFromMap.affect === "both"
+      ) {
+        const otherPlayer = this.players.find((p) => p.id !== player.id);
+        const existingModifier = otherPlayer.activeModifiers.find(
+          (mod) => mod.type === modifier.type
+        );
+        if (existingModifier) {
+          existingModifier.duration = modifier.duration;
+        } else {
+          otherPlayer.activeModifiers.push({ ...newModifier });
+        }
+      }
 
       this.modifiers.splice(modifierIndex, 1);
       return true;
@@ -301,6 +373,11 @@ class SnakeGame {
   }
 
   checkWallCollision(player) {
+    // First check if player has a head
+    if (!player.body.length || !player.body[0]) {
+      return true; // Consider it a collision if there's no head
+    }
+
     const head = player.body[0];
 
     // Check head collision with walls
@@ -563,19 +640,52 @@ class SnakeGame {
     if (position) {
       const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
         position;
-      const modifierType = modifierTypes[0]; // Currently only golden apple
 
+      // Calculate total weight
+      const totalWeight = modifiers.reduce((sum, type) => sum + type.weight, 0);
+
+      // Random number between 0 and total weight
+      const random = Math.random() * totalWeight;
+
+      // Select modifier type based on weight
+      let currentWeight = 0;
+      const selectedModifier = modifiers.find((type) => {
+        currentWeight += type.weight;
+        return random <= currentWeight;
+      });
+
+      // Determine affect for Tron modifier with 40/40/20 split
+      let affect = selectedModifier.affect;
+      if (selectedModifier.affect === "random") {
+        const affectRoll = Math.random();
+        if (affectRoll < 0.4) {
+          affect = "self";
+        } else if (affectRoll < 0.8) {
+          affect = "enemy";
+        } else {
+          affect = "both";
+        }
+      }
+
+      // Add the selected modifier to both positions with the determined affect
       this.modifiers.push({
+        type: selectedModifier.type,
+        affect: affect,
         row: originalRow,
         column: originalColumn,
-        type: modifierType.type,
       });
+
       this.modifiers.push({
+        type: selectedModifier.type,
+        affect: affect,
         row: mirroredRow,
         column: mirroredColumn,
-        type: modifierType.type,
       });
+
+      return;
     }
+
+    console.log("Couldn't find valid mirrored positions to spawn modifiers");
   }
 
   updateMap() {
@@ -600,23 +710,45 @@ class SnakeGame {
           head.column >= 0 &&
           head.column < this.numOfColumns
         ) {
-          this.map[head.row][head.column] = player.id[0].toUpperCase();
+          this.map[head.row][head.column] = {
+            type: "snake-head",
+            player: player.id[0].toLowerCase(),
+          };
 
           for (let i = 1; i < player.body.length; i++) {
             const segment = player.body[i];
-
-            this.map[segment.row][segment.column] = player.id[0];
+            this.map[segment.row][segment.column] = {
+              type: "snake-body",
+              player: player.id[0].toLowerCase(),
+            };
           }
         }
       }
     });
 
     this.apples.forEach((apple) => {
-      this.map[apple.row][apple.column] = "A";
+      this.map[apple.row][apple.column] = {
+        type: "apple",
+      };
     });
 
     this.modifiers.forEach((modifier) => {
-      this.map[modifier.row][modifier.column] = "G"; // G for Golden Apple
+      switch (modifier.type) {
+        case "golden apple":
+          this.map[modifier.row][modifier.column] = {
+            type: "golden-apple",
+            affect: modifier.affect,
+          };
+          break;
+        case "tron":
+          this.map[modifier.row][modifier.column] = {
+            type: "tron",
+            affect: modifier.affect,
+          };
+          break;
+        default:
+          break;
+      }
     });
   }
 }
