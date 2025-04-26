@@ -205,9 +205,12 @@ class SnakeGame {
 
         // Handle Tron modifier expiration
         if (activeModifier.type === "tron" && newDuration === 0) {
-          // Remove temporary segments
-          player.body = player.body.slice(0, -activeModifier.temporarySegments);
-          player.length -= activeModifier.temporarySegments;
+          // Remove temporary segments, but not less than 0
+          const segmentsToRemove = Math.max(0, activeModifier.temporarySegments);
+          if (segmentsToRemove > 0) {
+            player.body = player.body.slice(0, -segmentsToRemove);
+            player.length -= segmentsToRemove;
+          }
         }
 
         return { ...activeModifier, duration: newDuration };
@@ -406,6 +409,14 @@ class SnakeGame {
     // Get disconnected segments and update body
     const disconnectedSegments = player.body.slice(firstWallIndex);
     player.body = player.body.slice(0, firstWallIndex);
+
+    // Update tron modifier temporary segments if active
+    const activeTronModifier = player.activeModifiers.find(
+      (activeModifier) => activeModifier.type === "tron"
+    );
+    if (activeTronModifier) {
+      activeTronModifier.temporarySegments -= disconnectedSegments.length;
+    }
 
     // Convert valid segments to apples
     this.apples.push(
