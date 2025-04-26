@@ -42,5 +42,21 @@
 }
 
 .golden-apple {
-  background: #FFD700;
+  background: #ffd700;
+}
+
+.tron {
+  background: #00ffff;
+}
+
+.affect-self {
+  border: 3px solid #4caf50; /* green border */
+}
+
+.affect-enemy {
+  border: 3px solid #ff0000; /* red border */
+}
+
+.affect-both {
+  border: 3px solid #4169e1; /* royal blue border */
 }
