@@ -50,6 +50,8 @@ function updateGrid(map) {
           cell.classList.add("snake-player2-body");
         } else if (value === "A") {
           cell.classList.add("apple");
+        } else if (value === "G") {
+          cell.classList.add("golden-apple");
         } else if (value === "#") {
           cell.classList.add("wall");
           cell.textContent = "#";

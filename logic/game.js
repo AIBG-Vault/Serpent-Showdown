@@ -23,6 +23,8 @@ const START_SHRINKING_MAP_AFTER_MOVES = 0;
 // Number of columns left after which the map stops shrinking. Will be increased to 9 (as in AIBG 9.0) in production.
 const MINIMUM_BOARD_SIZE = 5;
 
+const modifierTypes = [{ type: "golden apple", pickUpReward: 10, duration: 3 }];
+
 class SnakeGame {
   constructor() {
     this.numOfRows = BOARD_NUM_OF_ROWS;
@@ -35,6 +37,7 @@ class SnakeGame {
     this.internalMoveCounter = 0;
 
     this.apples = [];
+    this.modifiers = [];
 
     this.shrinkStartMove = START_SHRINKING_MAP_AFTER_MOVES;
     this.minBoardSize = MINIMUM_BOARD_SIZE;
@@ -63,6 +66,7 @@ class SnakeGame {
       id: player.id,
       name: player.name,
       body: [],
+      activeModifiers: [],
       score: PLAYERS_STARTING_SCORE,
       length: this.playersStartingLength,
     };
@@ -107,6 +111,11 @@ class SnakeGame {
       this.generateMirroredApples();
     }
 
+    // try to spawn a modifier by 10% chance
+    if (Math.random() < 0.1) {
+      this.spawnModifier();
+    }
+
     this.updateMap();
   }
 
@@ -149,10 +158,25 @@ class SnakeGame {
 
     this.calculateMovementScore(player, oldHead, newHead);
 
-    if (!this.handleAppleCollision(player, newHead)) {
+    if (
+      !this.handleAppleCollision(player, newHead) &&
+      !this.handleModifierCollision(player, newHead)
+    ) {
       player.body.unshift(newHead);
-      player.body.pop();
+
+      // Check for active golden apple modifier
+      const goldenAppleModifier = player.activeModifiers.find(
+        (p) => p.type === "golden apple"
+      );
+      if (!goldenAppleModifier) {
+        player.body.pop();
+      }
     }
+
+    // Update modifier durations
+    player.activeModifiers = player.activeModifiers
+      .map((modifier) => ({ ...modifier, duration: modifier.duration - 1 }))
+      .filter((modifier) => modifier.duration > 0);
   }
 
   isReverseDirection(player, incomingMoveDirection) {
@@ -217,6 +241,33 @@ class SnakeGame {
       this.apples.splice(appleIndex, 1);
       return true;
     }
+
+    return false;
+  }
+
+  handleModifierCollision(player, head) {
+    const modifierIndex = this.modifiers.findIndex(
+      (modifier) => modifier.row === head.row && modifier.column === head.column
+    );
+
+    if (modifierIndex !== -1) {
+      const modifier = this.modifiers[modifierIndex];
+      const modifierType = modifierTypes.find((p) => p.type === modifier.type);
+
+      player.body.unshift(head);
+      player.score += modifierType.pickUpReward;
+      player.length += 1;
+
+      // Add modifier to player's active modifiers
+      player.activeModifiers.push({
+        type: modifier.type,
+        duration: modifierType.duration,
+      });
+
+      this.modifiers.splice(modifierIndex, 1);
+      return true;
+    }
+
     return false;
   }
 
@@ -379,6 +430,15 @@ class SnakeGame {
         apple.row > this.borders.top &&
         apple.row < this.borders.bottom
     );
+
+    // Remove modifier in wall positions
+    this.modifiers = this.modifiers.filter(
+      (modifier) =>
+        modifier.column > this.borders.left &&
+        modifier.column < this.borders.right &&
+        modifier.row > this.borders.top &&
+        modifier.row < this.borders.bottom
+    );
   }
 
   findValidSpawningPosition() {
@@ -425,6 +485,28 @@ class SnakeGame {
     console.log("Couldn't find valid mirrored positions to spawn apples");
   }
 
+  spawnModifier() {
+    const position = this.findValidSpawningPosition();
+    if (position) {
+      const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
+        position;
+      const modifierType = modifierTypes[0]; // Currently only golden apple
+
+      this.modifiers.push({
+        row: originalRow,
+        column: originalColumn,
+        type: modifierType.type,
+      });
+      this.modifiers.push({
+        row: mirroredRow,
+        column: mirroredColumn,
+        type: modifierType.type,
+      });
+
+      this.updateMap();
+    }
+  }
+
   updateMap() {
     this.map = Array.from({ length: this.numOfRows }, (_, rowIndex) =>
       Array.from({ length: this.numOfColumns }, (_, colIndex) =>
@@ -460,6 +542,10 @@ class SnakeGame {
 
     this.apples.forEach((apple) => {
       this.map[apple.row][apple.column] = "A";
+    });
+
+    this.modifiers.forEach((modifier) => {
+      this.map[modifier.row][modifier.column] = "G"; // G for Golden Apple
     });
   }
 }
