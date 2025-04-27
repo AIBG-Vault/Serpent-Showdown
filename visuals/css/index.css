@@ -7,7 +7,7 @@
 
 :root {
   --snake-player1-color: #ff7b00;
-  --snake-player2-color: #00a2ff;
+  --snake-player2-color: hsl(202, 100%, 50%);
 }
 
 html {
@@ -200,12 +200,29 @@ button:hover {
   place-items: center;
 }
 
-.cell.snake-player1-head,
-.cell.snake-player1-body {
+.cell.snake-player1-head {
   background-color: var(--snake-player1-color) !important;
 }
 
-.cell.snake-player2-head,
-.cell.snake-player2-body {
+.cell.snake-player1-body {
+  background-color: color-mix(
+    in srgb,
+    var(--snake-player1-color) 80%,
+    black
+  ) !important;
+  transform: scale(0.85);
+}
+
+.cell.snake-player2-head {
   background-color: var(--snake-player2-color) !important;
+}
+
+.cell.snake-player2-body {
+  background-color: color-mix(
+    in srgb,
+    var(--snake-player2-color) 80%,
+    black
+  ) !important;
+
+  transform: scale(0.85);
 }
