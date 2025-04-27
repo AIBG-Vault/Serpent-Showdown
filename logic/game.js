@@ -1,10 +1,16 @@
 const config = require("./gameConfig");
 const Player = require("./player");
 const Spawner = require("./spawner");
-const modifiersList = require("./modifiers");
 const Board = require("./board");
+const CollisionHandler = require("./collisionHandler");
 
+/**
+ * Main game class that handles the snake game logic
+ */
 class SnakeGame {
+  /**
+   * Creates a new SnakeGame instance and initializes game components
+   */
   constructor() {
     this.numOfRows = config.BOARD_NUM_OF_ROWS;
     this.numOfColumns = config.BOARD_NUM_OF_COLUMNS;
@@ -22,8 +28,15 @@ class SnakeGame {
     this.spawner = new Spawner(this);
 
     this.board.updateMap();
+    this.collisionHandler = new CollisionHandler(this);
   }
 
+  /**
+   * Adds a new player to the game
+   * @param {Object} playerData - Data for the new player
+   * @param {string} playerData.id - Unique identifier for the player
+   * @param {string} playerData.name - Display name for the player
+   */
   addPlayer(playerData) {
     const isFirstPlayer = this.players.length === 0;
     const player = new Player(
@@ -37,6 +50,12 @@ class SnakeGame {
     this.board.updateMap();
   }
 
+  /**
+   * Processes a batch of moves from all players
+   * @param {Array<Object>} moves - Array of move objects
+   * @param {string} moves[].playerId - ID of the player making the move
+   * @param {string} moves[].direction - Direction of the move ('up', 'down', 'left', 'right')
+   */
   processMoves(moves) {
     this.internalMoveCounter++;
 
@@ -72,6 +91,11 @@ class SnakeGame {
   }
 
   // Modify playMove to use the new function
+  /**
+   * Processes a single move for a specific player
+   * @param {string} playerId - ID of the player making the move
+   * @param {string} direction - Direction of movement ('up', 'down', 'left', 'right')
+   */
   playMove(playerId, direction) {
     const player = this.players.find((p) => p.id === playerId);
     if (!player) return;
@@ -111,8 +135,8 @@ class SnakeGame {
     this.updateScoreByMovementDirection(player, oldHead, newHead);
 
     if (
-      !this.checkForAppleCollision(player, newHead) &&
-      !this.checkForModifierCollision(player, newHead)
+      !this.collisionHandler.checkForAppleCollision(player, newHead) &&
+      !this.collisionHandler.checkForModifierCollision(player, newHead)
     ) {
       player.addSegment(newHead);
       player.removeTail();
@@ -122,6 +146,16 @@ class SnakeGame {
     player.updateModifiers();
   }
 
+  /**
+   * Updates player score based on movement relative to board center
+   * @param {Player} player - The player whose score is being updated
+   * @param {Object} oldHead - Previous position of player's head
+   * @param {number} oldHead.row - Row coordinate of old head position
+   * @param {number} oldHead.column - Column coordinate of old head position
+   * @param {Object} newHead - New position of player's head
+   * @param {number} newHead.row - Row coordinate of new head position
+   * @param {number} newHead.column - Column coordinate of new head position
+   */
   updateScoreByMovementDirection(player, oldHead, newHead) {
     const centerRow = Math.floor(this.numOfRows / 2);
     const centerCol = Math.floor(this.numOfColumns / 2);
@@ -147,75 +181,17 @@ class SnakeGame {
     //   - Score: ${initialScore} -> ${player.score}`);
   }
 
-  checkForAppleCollision(player, head) {
-    const appleIndex = this.apples.findIndex(
-      (apple) => apple.row === head.row && apple.column === head.column
-    );
-
-    if (appleIndex !== -1) {
-      player.addSegment(head);
-      player.addScore(config.APPLE_PICKUP_REWARD);
-      this.apples.splice(appleIndex, 1);
-      return true;
-    }
-
-    return false;
-  }
-
-  checkForModifierCollision(player, head) {
-    const modifierIndex = this.modifiers.findIndex(
-      (modifier) => modifier.row === head.row && modifier.column === head.column
-    );
-
-    if (modifierIndex !== -1) {
-      const modifierFromMap = this.modifiers[modifierIndex];
-      const modifierData = modifiersList.find(
-        (m) => m.type === modifierFromMap.type
-      );
-
-      player.addSegment(head);
-      player.addScore(modifierData.pickUpReward);
-
-      // Create a new modifier object
-      const newModifier = {
-        type: modifierFromMap.type,
-        duration: modifierData.duration,
-      };
-
-      if (modifierFromMap.type === "tron") {
-        newModifier.temporarySegments = 0;
-      }
-
-      // Handle modifier application based on affect type
-      if (
-        modifierFromMap.affect === "self" ||
-        modifierFromMap.affect === "both"
-      ) {
-        player.addModifier(newModifier);
-      }
-
-      if (
-        modifierFromMap.affect === "enemy" ||
-        modifierFromMap.affect === "both"
-      ) {
-        const otherPlayer = this.players.find((p) => p.id !== player.id);
-        otherPlayer.addModifier(newModifier);
-      }
-
-      this.modifiers.splice(modifierIndex, 1);
-      return true;
-    }
-
-    return false;
-  }
-
+  /**
+   * Checks if the game is over based on player deaths or move limit
+   * @returns {boolean} True if game is over, false otherwise
+   */
   checkGameOver() {
     const deadPlayers = this.players
       .filter(
         (player) =>
           player.score <= 0 ||
-          this.checkForWallCollision(player) ||
-          this.checkForPlayerCollision(player)
+          this.collisionHandler.checkForWallCollision(player) ||
+          this.collisionHandler.checkForPlayerCollision(player)
       )
       .map((player) => player.id);
 
@@ -239,98 +215,10 @@ class SnakeGame {
     return false;
   }
 
-  checkForWallCollision(player) {
-    // First check if player has a head
-    if (!player.body.length || !player.body[0]) {
-      return true; // Consider it a collision if there's no head
-    }
-
-    const head = player.body[0];
-
-    // Check head collision with walls using board methods
-    if (!this.board.isWithinBorders(head)) {
-      console.log(`Player ${player.name} died by hitting a wall`);
-      return true;
-    }
-
-    // Find the first wall segment index
-    const firstWallIndex = player.body.findIndex(
-      (segment) => !this.board.isWithinBorders(segment)
-    );
-
-    // If no wall segments, return false
-    if (firstWallIndex === -1) return false;
-
-    // Get disconnected segments and update body
-    const disconnectedSegments = player.body.slice(firstWallIndex);
-    player.body = player.body.slice(0, firstWallIndex);
-
-    // Update tron modifier temporary segments if active
-    const activeTronModifier = player.activeModifiers.find(
-      (activeModifier) => activeModifier.type === "tron"
-    );
-    if (activeTronModifier) {
-      activeTronModifier.temporarySegments -= disconnectedSegments.length;
-    }
-
-    // Convert valid segments to apples
-    this.apples.push(
-      ...disconnectedSegments
-        .filter((segment) => this.board.isWithinBorders(segment))
-        .map((segment) => ({
-          row: segment.row,
-          column: segment.column,
-        }))
-    );
-
-    // Apply penalties
-    player.score = Math.max(
-      0,
-      player.score -
-        disconnectedSegments.length * config.BODY_SEGMENT_LOSS_PENALTY
-    );
-    player.length -= disconnectedSegments.length;
-
-    // Check if player died from score loss
-    if (player.score <= 0) {
-      console.log(
-        `Player ${player.name} died from score reaching zero due to wall penalties`
-      );
-      return true;
-    }
-
-    return false;
-  }
-
-  checkForPlayerCollision(player) {
-    const head = player.body[0];
-    if (!head) return false; // Return false if player has no body
-
-    // Self collision
-    const playerCollidedWithSelf = player.body
-      .slice(1)
-      .some(
-        (bodySegment) =>
-          bodySegment.row === head.row && bodySegment.column === head.column
-      );
-    if (playerCollidedWithSelf) {
-      console.log(`Player ${player.name} died by colliding with self`);
-      return true;
-    }
-
-    // Other player collision (both head and body)
-    const otherPlayer = this.players.find((p) => p.id !== player.id);
-    if (!otherPlayer.body.length) return false; // Return false if other player has no body
-
-    const playerCollidedWithOtherPlayer = otherPlayer.body.some(
-      (segment) => segment.row === head.row && segment.column === head.column
-    );
-    if (playerCollidedWithOtherPlayer) {
-      console.log(`Player ${player.name} died by colliding with other player`);
-      return true;
-    }
-  }
-
+  /**
+   * Determines the winner based on score and snake length when game ends in a tie
+   * Sets the winner property to the winning player's name or -1 for a draw
+   */
   determineWinnerByScoreThenLength() {
     const [player1, player2] = this.players;
 
