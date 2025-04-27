@@ -89,6 +89,7 @@ function toggleEndScreen(data) {
       winnerTopTextElem.style.display = "none";
       winnerNameElem.textContent = "GAME DRAW";
     } else {
+      winnerTopTextElem.style.display = "block";
       winnerNameElem.textContent = data.winner;
     }
 
