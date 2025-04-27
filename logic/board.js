@@ -221,8 +221,6 @@ class Board {
       top: this.horizontalShrinkLevel,
       bottom: this.game.numOfRows - this.horizontalShrinkLevel - 1,
     };
-
-    this.updateMap();
   }
 }
 

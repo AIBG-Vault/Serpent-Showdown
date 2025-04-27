@@ -19,7 +19,7 @@ const REVERSE_DIRECTION_PENALTY = 3; // penalty for making a move that reverses 
 const BODY_SEGMENT_LOSS_PENALTY = 3; // penalty per segment lost to border shrinkage
 
 // Number of moves after which the map starts shrinking.
-const START_SHRINKING_MAP_AFTER_MOVES = 0;
+const START_SHRINKING_MAP_AFTER_MOVES = 50;
 // Number of columns left after which the map stops shrinking. Will be increased to 9 (as in AIBG 9.0) in production.
 const MINIMUM_BOARD_SIZE = 5;
 
