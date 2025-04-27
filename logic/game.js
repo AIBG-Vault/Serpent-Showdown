@@ -1,53 +1,12 @@
-// Game configuration constants
-// Maximum number of moves before forcing game end. Will be increased to ~300 in production.
-const GAME_MAX_MOVES = 300;
-// Number of rows in the game grid. Will be increased to ~25 in production.
-const BOARD_NUM_OF_ROWS = 11;
-// Number of columns in the game grid. Will be increased to ~60 in production.
-const BOARD_NUM_OF_COLUMNS = 25;
-// Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production.
-const PLAYERS_STARTING_LENGTH = 9;
-// Initial score for each player. Will be increased to 100 in production.
-const PLAYERS_STARTING_SCORE = 100;
-
-// Game rewards and penalties
-const APPLE_PICKUP_REWARD = 5; // number of points a player receives for picking up an apple
-const MOVEMENT_CENTER_REWARD = 2; // reward for moving towards the center of the board
-const MOVEMENT_AWAY_FROM_CENTER_REWARD = 1; // reward for moving away from the center
-const ILLEGAL_MOVE_PENALTY = 5; // penalty for making an illegal move (direction), can also be used for timeout
-const REVERSE_DIRECTION_PENALTY = 3; // penalty for making a move that reverses the current direction
-const BODY_SEGMENT_LOSS_PENALTY = 3; // penalty per segment lost to border shrinkage
-
-// Number of moves after which the map starts shrinking.
-const START_SHRINKING_MAP_AFTER_MOVES = 0;
-// Number of columns left after which the map stops shrinking. Will be increased to 9 (as in AIBG 9.0) in production.
-const MINIMUM_BOARD_SIZE = 5;
-
-// Spawn a modifier approximately 1 in 10 moves
-const MODIFIER_SPAWN_CHANCE = 1 / 10;
-
-const modifiers = [
-  {
-    type: "golden apple",
-    affect: "self",
-    pickUpReward: 10,
-    duration: 3,
-    weight: 6,
-  },
-  {
-    type: "tron",
-    affect: "random",
-    pickUpReward: 5,
-    duration: 10,
-    weight: 3,
-  },
-];
+const config = require("./gameConfig");
+const Spawner = require("./spawners");
+const modifiersList = require("./modifiers");
 
 class SnakeGame {
   constructor() {
-    this.numOfRows = BOARD_NUM_OF_ROWS;
-    this.numOfColumns = BOARD_NUM_OF_COLUMNS;
-    this.playersStartingLength = PLAYERS_STARTING_LENGTH;
+    this.numOfRows = config.BOARD_NUM_OF_ROWS;
+    this.numOfColumns = config.BOARD_NUM_OF_COLUMNS;
+    this.playersStartingLength = config.PLAYERS_STARTING_LENGTH;
 
     this.players = [];
     this.winner = null;
@@ -57,8 +16,8 @@ class SnakeGame {
     this.apples = [];
     this.modifiers = [];
 
-    this.shrinkStartMove = START_SHRINKING_MAP_AFTER_MOVES;
-    this.minBoardSize = MINIMUM_BOARD_SIZE;
+    this.shrinkStartMove = config.START_SHRINKING_MAP_AFTER_MOVES;
+    this.minBoardSize = config.MINIMUM_BOARD_SIZE;
     this.shrinkLevel = -1;
 
     // Add borders object
@@ -70,6 +29,7 @@ class SnakeGame {
     };
 
     this.updateMap();
+    this.spawner = new Spawner(this);
   }
 
   addPlayer(player) {
@@ -85,7 +45,7 @@ class SnakeGame {
       name: player.name,
       body: [],
       activeModifiers: [],
-      score: PLAYERS_STARTING_SCORE,
+      score: config.PLAYERS_STARTING_SCORE,
       length: this.playersStartingLength,
     };
 
@@ -125,12 +85,12 @@ class SnakeGame {
 
     // Spawn apples every 5 moves
     if (this.internalMoveCounter % 5 === 0) {
-      this.spawnMirroredApples();
+      this.spawner.spawnMirroredApples();
     }
 
     // Spawn modifiers based on a chance
-    if (Math.random() < MODIFIER_SPAWN_CHANCE) {
-      this.spawnMirroredModifiers();
+    if (Math.random() < config.MODIFIER_SPAWN_CHANCE) {
+      this.spawner.spawnMirroredModifiers();
     }
 
     this.updateMap();
@@ -143,13 +103,16 @@ class SnakeGame {
 
     // Prevent reversing direction and penalize the attempt
     if (this.isReverseDirection(player, direction)) {
-      player.score = Math.max(0, player.score - REVERSE_DIRECTION_PENALTY); // -5 points for reversing
+      player.score = Math.max(
+        0,
+        player.score - config.REVERSE_DIRECTION_PENALTY
+      ); // -5 points for reversing
       return;
     }
 
     // Penalize invalid moves (including timeout)
     if (!["up", "down", "left", "right"].includes(direction)) {
-      player.score = Math.max(0, player.score - ILLEGAL_MOVE_PENALTY); // -5 points for invalid/timeout
+      player.score = Math.max(0, player.score - config.ILLEGAL_MOVE_PENALTY); // -5 points for invalid/timeout
       return;
     }
 
@@ -206,7 +169,10 @@ class SnakeGame {
         // Handle Tron modifier expiration
         if (activeModifier.type === "tron" && newDuration === 0) {
           // Remove temporary segments, but not less than 0
-          const segmentsToRemove = Math.max(0, activeModifier.temporarySegments);
+          const segmentsToRemove = Math.max(
+            0,
+            activeModifier.temporarySegments
+          );
           if (segmentsToRemove > 0) {
             player.body = player.body.slice(0, -segmentsToRemove);
             player.length -= segmentsToRemove;
@@ -257,9 +223,9 @@ class SnakeGame {
 
     // Award points based on movement relative to center
     if (newDistanceToCenter < oldDistanceToCenter) {
-      player.score += MOVEMENT_CENTER_REWARD;
+      player.score += config.MOVEMENT_TOWARDS_CENTER_REWARD;
     } else {
-      player.score += MOVEMENT_AWAY_FROM_CENTER_REWARD;
+      player.score += config.MOVEMENT_AWAY_FROM_CENTER_REWARD;
     }
 
     // console.log(`Player ${player.name} movement:
@@ -275,7 +241,7 @@ class SnakeGame {
 
     if (appleIndex !== -1) {
       player.body.unshift(head);
-      player.score += APPLE_PICKUP_REWARD;
+      player.score += config.APPLE_PICKUP_REWARD;
       player.length += 1;
       this.apples.splice(appleIndex, 1);
       return true;
@@ -291,20 +257,22 @@ class SnakeGame {
 
     if (modifierIndex !== -1) {
       const modifierFromMap = this.modifiers[modifierIndex];
-      const modifier = modifiers.find((m) => m.type === modifierFromMap.type);
+      const modifierData = modifiersList.find(
+        (m) => m.type === modifierFromMap.type
+      );
 
       // Add the new head position BEFORE handling the modifier effects
       player.body.unshift(head);
-      player.score += modifier.pickUpReward;
+      player.score += modifierData.pickUpReward;
       player.length += 1;
 
       // Create a new modifier object
       const newModifier = {
-        type: modifier.type,
-        duration: modifier.duration,
+        type: modifierFromMap.type,
+        duration: modifierData.duration,
       };
 
-      if (modifier.type === "tron") {
+      if (modifierFromMap.type === "tron") {
         newModifier.temporarySegments = 0;
       }
 
@@ -314,10 +282,10 @@ class SnakeGame {
         modifierFromMap.affect === "both"
       ) {
         const existingModifier = player.activeModifiers.find(
-          (mod) => mod.type === modifier.type
+          (mod) => mod.type === modifierFromMap.type
         );
         if (existingModifier) {
-          existingModifier.duration = modifier.duration;
+          existingModifier.duration = modifierData.duration;
         } else {
           player.activeModifiers.push({ ...newModifier });
         }
@@ -329,10 +297,10 @@ class SnakeGame {
       ) {
         const otherPlayer = this.players.find((p) => p.id !== player.id);
         const existingModifier = otherPlayer.activeModifiers.find(
-          (mod) => mod.type === modifier.type
+          (mod) => mod.type === modifierFromMap.type
         );
         if (existingModifier) {
-          existingModifier.duration = modifier.duration;
+          existingModifier.duration = modifierData.duration;
         } else {
           otherPlayer.activeModifiers.push({ ...newModifier });
         }
@@ -366,7 +334,7 @@ class SnakeGame {
     }
 
     // Check for move limit only if no players died
-    if (this.internalMoveCounter >= GAME_MAX_MOVES) {
+    if (this.internalMoveCounter >= config.GAME_MAX_MOVES) {
       console.log("Maximum number of game moves exceeded.");
       this.determineWinnerByScoreThenLength();
       return true;
@@ -437,7 +405,8 @@ class SnakeGame {
     // Apply penalties
     player.score = Math.max(
       0,
-      player.score - disconnectedSegments.length * BODY_SEGMENT_LOSS_PENALTY
+      player.score -
+        disconnectedSegments.length * config.BODY_SEGMENT_LOSS_PENALTY
     );
     player.length -= disconnectedSegments.length;
 
@@ -530,175 +499,6 @@ class SnakeGame {
     );
   }
 
-  findValidSpawningPosition() {
-    let attempts = 0;
-    const maxAttempts = this.numOfColumns * this.numOfRows;
-    const MIN_DISTANCE = 1.5; // This ensures at least 1 cell distance diagonally
-
-    while (attempts < maxAttempts) {
-      const originalRow = Math.floor(Math.random() * this.numOfRows);
-      const originalColumn = Math.floor(
-        Math.random() * Math.floor(this.numOfColumns / 2)
-      );
-
-      const mirroredRow = originalRow;
-      const mirroredColumn = this.numOfColumns - 1 - originalColumn;
-
-      // Check if position is within valid borders
-      if (
-        originalRow <= this.borders.top ||
-        originalRow >= this.borders.bottom ||
-        originalColumn <= this.borders.left ||
-        originalColumn >= this.borders.right ||
-        mirroredRow <= this.borders.top ||
-        mirroredRow >= this.borders.bottom ||
-        mirroredColumn <= this.borders.left ||
-        mirroredColumn >= this.borders.right
-      ) {
-        attempts++;
-        continue;
-      }
-
-      // Check if position is too close to any player's head using Euclidean distance
-      const isTooCloseToHead = this.players.some((player) => {
-        if (player.body.length === 0) return false;
-        const head = player.body[0];
-
-        // Calculate distances for both original and mirrored positions
-        const distanceToOriginal = Math.sqrt(
-          Math.pow(head.row - originalRow, 2) +
-            Math.pow(head.column - originalColumn, 2)
-        );
-
-        const distanceToMirrored = Math.sqrt(
-          Math.pow(head.row - mirroredRow, 2) +
-            Math.pow(head.column - mirroredColumn, 2)
-        );
-
-        return (
-          distanceToOriginal <= MIN_DISTANCE ||
-          distanceToMirrored <= MIN_DISTANCE
-        );
-      });
-
-      if (isTooCloseToHead) {
-        attempts++;
-        continue;
-      }
-
-      // Check collision with snake bodies
-      const collidesWithSnake = this.players.some((player) =>
-        player.body.some(
-          (segment) =>
-            (segment.row === originalRow &&
-              segment.column === originalColumn) ||
-            (segment.row === mirroredRow && segment.column === mirroredColumn)
-        )
-      );
-
-      if (collidesWithSnake) {
-        attempts++;
-        continue;
-      }
-
-      // Check collision with apples
-      const collidesWithApple = this.apples.some(
-        (apple) =>
-          (apple.row === originalRow && apple.column === originalColumn) ||
-          (apple.row === mirroredRow && apple.column === mirroredColumn)
-      );
-
-      if (collidesWithApple) {
-        attempts++;
-        continue;
-      }
-
-      // Check collision with modifiers
-      const collidesWithModifier = this.modifiers.some(
-        (modifier) =>
-          (modifier.row === originalRow &&
-            modifier.column === originalColumn) ||
-          (modifier.row === mirroredRow && modifier.column === mirroredColumn)
-      );
-
-      if (collidesWithModifier) {
-        attempts++;
-        continue;
-      }
-
-      return { originalRow, originalColumn, mirroredRow, mirroredColumn };
-    }
-
-    return null;
-  }
-
-  spawnMirroredApples() {
-    const position = this.findValidSpawningPosition();
-
-    if (position) {
-      const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
-        position;
-      this.apples.push({ row: originalRow, column: originalColumn });
-      this.apples.push({ row: mirroredRow, column: mirroredColumn });
-      return;
-    }
-
-    console.log("Couldn't find valid mirrored positions to spawn apples");
-  }
-
-  spawnMirroredModifiers() {
-    const position = this.findValidSpawningPosition();
-    if (position) {
-      const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
-        position;
-
-      // Calculate total weight
-      const totalWeight = modifiers.reduce((sum, type) => sum + type.weight, 0);
-
-      // Random number between 0 and total weight
-      const random = Math.random() * totalWeight;
-
-      // Select modifier type based on weight
-      let currentWeight = 0;
-      const selectedModifier = modifiers.find((type) => {
-        currentWeight += type.weight;
-        return random <= currentWeight;
-      });
-
-      // Determine affect for Tron modifier with 40/40/20 split
-      let affect = selectedModifier.affect;
-      if (selectedModifier.affect === "random") {
-        const affectRoll = Math.random();
-        if (affectRoll < 0.4) {
-          affect = "self";
-        } else if (affectRoll < 0.8) {
-          affect = "enemy";
-        } else {
-          affect = "both";
-        }
-      }
-
-      // Add the selected modifier to both positions with the determined affect
-      this.modifiers.push({
-        type: selectedModifier.type,
-        affect: affect,
-        row: originalRow,
-        column: originalColumn,
-      });
-
-      this.modifiers.push({
-        type: selectedModifier.type,
-        affect: affect,
-        row: mirroredRow,
-        column: mirroredColumn,
-      });
-
-      return;
-    }
-
-    console.log("Couldn't find valid mirrored positions to spawn modifiers");
-  }
-
   updateMap() {
     this.map = Array.from({ length: this.numOfRows }, (_, rowIndex) =>
       Array.from({ length: this.numOfColumns }, (_, colIndex) =>
@@ -764,4 +564,6 @@ class SnakeGame {
   }
 }
 
-module.exports = { SnakeGame };
+module.exports = {
+  SnakeGame,
+};
