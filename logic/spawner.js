@@ -1,10 +1,25 @@
 const modifiersList = require("./modifiers");
 
+/**
+ * Class responsible for spawning game elements (apples and modifiers) in mirrored positions
+ */
 class Spawner {
+  /**
+   * Creates a new Spawner instance
+   * @param {SnakeGame} game - Reference to the main game instance
+   */
   constructor(game) {
     this.game = game;
   }
 
+  /**
+   * Finds valid positions for spawning mirrored elements while avoiding collisions
+   * @returns {Object|null} Object containing original and mirrored positions, or null if no valid position found
+   * @property {number} originalRow - Row index for the original position
+   * @property {number} originalColumn - Column index for the original position
+   * @property {number} mirroredRow - Row index for the mirrored position
+   * @property {number} mirroredColumn - Column index for the mirrored position
+   */
   findValidSpawningPosition() {
     let attempts = 0;
     const maxAttempts = this.game.numOfColumns * this.game.numOfRows;
@@ -107,6 +122,11 @@ class Spawner {
     return null;
   }
 
+  /**
+   * Spawns two apples in mirrored positions on the game board
+   * Uses findValidSpawningPosition to ensure apples are placed in valid locations
+   * If no valid positions are found, logs an error message
+   */
   spawnMirroredApples() {
     const position = this.findValidSpawningPosition();
 
@@ -121,6 +141,12 @@ class Spawner {
     console.log("Couldn't find valid mirrored positions to spawn apples");
   }
 
+  /**
+   * Spawns two modifiers in mirrored positions on the game board
+   * Selects modifier type based on weighted probability and determines affect type
+   * For Tron modifiers, affect is randomly chosen with 40% self, 40% enemy, 20% both
+   * If no valid positions are found, logs an error message
+   */
   spawnMirroredModifiers() {
     const position = this.findValidSpawningPosition();
     if (position) {

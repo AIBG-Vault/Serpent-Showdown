@@ -1,5 +1,6 @@
 const config = require("./gameConfig");
-const Spawner = require("./spawners");
+const Player = require("./player");
+const Spawner = require("./spawner");
 const modifiersList = require("./modifiers");
 
 class SnakeGame {
@@ -32,33 +33,15 @@ class SnakeGame {
     this.spawner = new Spawner(this);
   }
 
-  addPlayer(player) {
+  addPlayer(playerData) {
     const isFirstPlayer = this.players.length === 0;
-
-    const startRowIndex = Math.floor(this.numOfRows / 2);
-    const startColumnIndex = isFirstPlayer
-      ? this.playersStartingLength
-      : this.numOfColumns - (this.playersStartingLength + 1);
-
-    const gamePlayer = {
-      id: player.id,
-      name: player.name,
-      body: [],
-      activeModifiers: [],
-      score: config.PLAYERS_STARTING_SCORE,
-      length: this.playersStartingLength,
-    };
-
-    // Add body segments
-    for (let i = 0; i < this.playersStartingLength; i++) {
-      gamePlayer.body.push({
-        row: startRowIndex,
-        column: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
-      });
-    }
-
-    this.players.push(gamePlayer);
-
+    const player = new Player(
+      playerData,
+      isFirstPlayer,
+      this.numOfRows,
+      this.numOfColumns
+    );
+    this.players.push(player);
     this.updateMap();
   }
 
@@ -101,22 +84,19 @@ class SnakeGame {
     const player = this.players.find((p) => p.id === playerId);
     if (!player) return;
 
-    // Prevent reversing direction and penalize the attempt
-    if (this.isReverseDirection(player, direction)) {
-      player.score = Math.max(
-        0,
-        player.score - config.REVERSE_DIRECTION_PENALTY
-      ); // -5 points for reversing
+    // Use player's isReverseDirection method
+    if (player.isReverseDirection(direction)) {
+      player.addScore(-config.REVERSE_DIRECTION_PENALTY);
       return;
     }
 
     // Penalize invalid moves (including timeout)
     if (!["up", "down", "left", "right"].includes(direction)) {
-      player.score = Math.max(0, player.score - config.ILLEGAL_MOVE_PENALTY); // -5 points for invalid/timeout
+      player.addScore(-config.ILLEGAL_MOVE_PENALTY);
       return;
     }
 
-    const oldHead = { ...player.body[0] };
+    const oldHead = { ...player.getHead() };
     const newHead = { ...oldHead };
 
     switch (direction) {
@@ -136,80 +116,21 @@ class SnakeGame {
         return;
     }
 
-    this.calculateMovementScore(player, oldHead, newHead);
+    this.updateScoreByMovementDirection(player, oldHead, newHead);
 
     if (
       !this.checkForAppleCollision(player, newHead) &&
       !this.checkForModifierCollision(player, newHead)
     ) {
-      player.body.unshift(newHead);
-
-      // Check for active modifiers that prevent tail removal
-      const shouldKeepTail = player.activeModifiers.some((activeModifier) => {
-        return (
-          activeModifier.type === "golden apple" ||
-          activeModifier.type === "tron"
-        );
-      });
-
-      if (!shouldKeepTail) {
-        player.body.pop();
-      }
+      player.addSegment(newHead);
+      player.removeTail();
     }
 
-    // Update modifier durations and handle expiring effects
-    player.activeModifiers = player.activeModifiers
-      .map((activeModifier) => {
-        const newDuration = activeModifier.duration - 1;
-
-        if (activeModifier.type === "tron") {
-          activeModifier.temporarySegments += 1;
-        }
-
-        // Handle Tron modifier expiration
-        if (activeModifier.type === "tron" && newDuration === 0) {
-          // Remove temporary segments, but not less than 0
-          const segmentsToRemove = Math.max(
-            0,
-            activeModifier.temporarySegments
-          );
-          if (segmentsToRemove > 0) {
-            player.body = player.body.slice(0, -segmentsToRemove);
-            player.length -= segmentsToRemove;
-          }
-        }
-
-        return { ...activeModifier, duration: newDuration };
-      })
-      .filter((modifier) => modifier.duration > 0);
+    // Use player's updateModifiers method
+    player.updateModifiers();
   }
 
-  isReverseDirection(player, incomingMoveDirection) {
-    const head = player.body[0];
-    const neck = player.body[1];
-
-    if (!neck) {
-      return false;
-    }
-
-    let currentDirection;
-
-    if (head.row === neck.row) {
-      currentDirection = head.column > neck.column ? "right" : "left";
-    } else {
-      currentDirection = head.row > neck.row ? "down" : "up";
-    }
-
-    const opposites = {
-      up: "down",
-      down: "up",
-      left: "right",
-      right: "left",
-    };
-    return opposites[currentDirection] === incomingMoveDirection;
-  }
-
-  calculateMovementScore(player, oldHead, newHead) {
+  updateScoreByMovementDirection(player, oldHead, newHead) {
     const centerRow = Math.floor(this.numOfRows / 2);
     const centerCol = Math.floor(this.numOfColumns / 2);
 
@@ -223,9 +144,9 @@ class SnakeGame {
 
     // Award points based on movement relative to center
     if (newDistanceToCenter < oldDistanceToCenter) {
-      player.score += config.MOVEMENT_TOWARDS_CENTER_REWARD;
+      player.addScore(config.MOVEMENT_TOWARDS_CENTER_REWARD);
     } else {
-      player.score += config.MOVEMENT_AWAY_FROM_CENTER_REWARD;
+      player.addScore(config.MOVEMENT_AWAY_FROM_CENTER_REWARD);
     }
 
     // console.log(`Player ${player.name} movement:
@@ -240,9 +161,8 @@ class SnakeGame {
     );
 
     if (appleIndex !== -1) {
-      player.body.unshift(head);
-      player.score += config.APPLE_PICKUP_REWARD;
-      player.length += 1;
+      player.addSegment(head);
+      player.addScore(config.APPLE_PICKUP_REWARD);
       this.apples.splice(appleIndex, 1);
       return true;
     }
@@ -261,10 +181,8 @@ class SnakeGame {
         (m) => m.type === modifierFromMap.type
       );
 
-      // Add the new head position BEFORE handling the modifier effects
-      player.body.unshift(head);
-      player.score += modifierData.pickUpReward;
-      player.length += 1;
+      player.addSegment(head);
+      player.addScore(modifierData.pickUpReward);
 
       // Create a new modifier object
       const newModifier = {
@@ -281,14 +199,7 @@ class SnakeGame {
         modifierFromMap.affect === "self" ||
         modifierFromMap.affect === "both"
       ) {
-        const existingModifier = player.activeModifiers.find(
-          (mod) => mod.type === modifierFromMap.type
-        );
-        if (existingModifier) {
-          existingModifier.duration = modifierData.duration;
-        } else {
-          player.activeModifiers.push({ ...newModifier });
-        }
+        player.addModifier(newModifier);
       }
 
       if (
@@ -296,14 +207,7 @@ class SnakeGame {
         modifierFromMap.affect === "both"
       ) {
         const otherPlayer = this.players.find((p) => p.id !== player.id);
-        const existingModifier = otherPlayer.activeModifiers.find(
-          (mod) => mod.type === modifierFromMap.type
-        );
-        if (existingModifier) {
-          existingModifier.duration = modifierData.duration;
-        } else {
-          otherPlayer.activeModifiers.push({ ...newModifier });
-        }
+        otherPlayer.addModifier(newModifier);
       }
 
       this.modifiers.splice(modifierIndex, 1);
