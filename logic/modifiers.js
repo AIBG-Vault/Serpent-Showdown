@@ -13,6 +13,11 @@ const modifiersList = [
     duration: 10,
     weight: 3,
   },
+  {
+    type: "reset borders",
+    weight: 1,
+    pickUpReward: 20,
+  },
 ];
 
 module.exports = modifiersList;

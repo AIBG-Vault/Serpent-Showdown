@@ -182,6 +182,11 @@ class Board {
               affect: modifier.affect,
             });
             break;
+          case "reset borders":
+            this.setCell(modifier.row, modifier.column, {
+              type: "reset-borders",
+            });
+            break;
         }
       });
     }
@@ -202,6 +207,22 @@ class Board {
       position.column >= 0 &&
       position.column < this.game.numOfColumns
     );
+  }
+
+  /**
+   * Resets the shrinkage level and borders to their initial values
+   */
+  resetShrinkage() {
+    this.horizontalShrinkLevel = -1;
+
+    this.borders = {
+      left: this.horizontalShrinkLevel,
+      right: this.game.numOfColumns - this.horizontalShrinkLevel - 1,
+      top: this.horizontalShrinkLevel,
+      bottom: this.game.numOfRows - this.horizontalShrinkLevel - 1,
+    };
+
+    this.updateMap();
   }
 }
 

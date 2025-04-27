@@ -182,6 +182,10 @@ class Spawner {
         }
       }
 
+      console.log(
+        `Selected modifier: ${selectedModifier.type}, affect: ${affect}`
+      ); // Debugging print for selected modifier and affect
+
       // Add the selected modifier to both positions with the determined affect
       this.game.modifiers.push({
         type: selectedModifier.type,

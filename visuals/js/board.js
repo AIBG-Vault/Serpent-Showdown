@@ -53,6 +53,8 @@ function updateGrid(map) {
             );
           } else if (value.type === "apple") {
             cell.classList.add("apple");
+          } else if (value.type === "reset-borders") {
+            cell.classList.add("reset-borders");
           } else if (value.type === "golden-apple") {
             cell.classList.add("golden-apple");
             if (value.affect === "self") cell.classList.add("affect-self");

@@ -58,6 +58,11 @@ class CollisionHandler {
       player.addSegment(head);
       player.addScore(modifierData.pickUpReward);
 
+      // Handle reset map modifier
+      if (modifierFromMap.type === "reset borders") {
+        this.game.board.resetShrinkage();
+      }
+
       const newModifier = {
         type: modifierFromMap.type,
         duration: modifierData.duration,

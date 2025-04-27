@@ -51,6 +51,10 @@
   background: #00ffff;
 }
 
+.reset-borders {
+  background: #ccc;
+}
+
 .affect-self {
   border: 3px solid #4caf50; /* green border */
 }
