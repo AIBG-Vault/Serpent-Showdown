@@ -36,14 +36,14 @@ class Spawner {
 
       // Check if position is within valid borders
       if (
-        originalRow <= this.game.borders.top ||
-        originalRow >= this.game.borders.bottom ||
-        originalColumn <= this.game.borders.left ||
-        originalColumn >= this.game.borders.right ||
-        mirroredRow <= this.game.borders.top ||
-        mirroredRow >= this.game.borders.bottom ||
-        mirroredColumn <= this.game.borders.left ||
-        mirroredColumn >= this.game.borders.right
+        !this.game.board.isWithinBorders({
+          row: originalRow,
+          column: originalColumn,
+        }) ||
+        !this.game.board.isWithinBorders({
+          row: mirroredRow,
+          column: mirroredColumn,
+        })
       ) {
         attempts++;
         continue;

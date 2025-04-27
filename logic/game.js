@@ -2,35 +2,26 @@ const config = require("./gameConfig");
 const Player = require("./player");
 const Spawner = require("./spawner");
 const modifiersList = require("./modifiers");
+const Board = require("./board");
 
 class SnakeGame {
   constructor() {
     this.numOfRows = config.BOARD_NUM_OF_ROWS;
     this.numOfColumns = config.BOARD_NUM_OF_COLUMNS;
-    this.playersStartingLength = config.PLAYERS_STARTING_LENGTH;
+
+    this.board = new Board(this);
+
+    this.internalMoveCounter = 0;
 
     this.players = [];
     this.winner = null;
 
-    this.internalMoveCounter = 0;
-
     this.apples = [];
     this.modifiers = [];
 
-    this.shrinkStartMove = config.START_SHRINKING_MAP_AFTER_MOVES;
-    this.minBoardSize = config.MINIMUM_BOARD_SIZE;
-    this.shrinkLevel = -1;
-
-    // Add borders object
-    this.borders = {
-      left: this.shrinkLevel,
-      right: this.numOfColumns - this.shrinkLevel - 1,
-      top: this.shrinkLevel,
-      bottom: this.numOfRows - this.shrinkLevel - 1,
-    };
-
-    this.updateMap();
     this.spawner = new Spawner(this);
+
+    this.board.updateMap();
   }
 
   addPlayer(playerData) {
@@ -42,7 +33,8 @@ class SnakeGame {
       this.numOfColumns
     );
     this.players.push(player);
-    this.updateMap();
+
+    this.board.updateMap();
   }
 
   processMoves(moves) {
@@ -52,13 +44,13 @@ class SnakeGame {
     moves.forEach((move) => this.playMove(move.playerId, move.direction));
 
     // Handle map shrinking
-    const currentBoardWidth = this.borders.right - this.borders.left - 1;
+    const currentBoardWidth = this.board.getCurrentBoardWidth();
     if (
-      currentBoardWidth > this.minBoardSize &&
-      this.internalMoveCounter >= this.shrinkStartMove &&
+      currentBoardWidth > config.MINIMUM_BOARD_SIZE &&
+      this.internalMoveCounter >= config.START_SHRINKING_MAP_AFTER_MOVES &&
       this.internalMoveCounter % 5 === 0
     ) {
-      this.shrinkMap();
+      this.board.shrinkMap();
     }
 
     // Check if game is over and determine winner
@@ -76,7 +68,7 @@ class SnakeGame {
       this.spawner.spawnMirroredModifiers();
     }
 
-    this.updateMap();
+    this.board.updateMap();
   }
 
   // Modify playMove to use the new function
@@ -222,8 +214,8 @@ class SnakeGame {
       .filter(
         (player) =>
           player.score <= 0 ||
-          this.checkWallCollision(player) ||
-          this.checkPlayerCollision(player)
+          this.checkForWallCollision(player) ||
+          this.checkForPlayerCollision(player)
       )
       .map((player) => player.id);
 
@@ -247,7 +239,7 @@ class SnakeGame {
     return false;
   }
 
-  checkWallCollision(player) {
+  checkForWallCollision(player) {
     // First check if player has a head
     if (!player.body.length || !player.body[0]) {
       return true; // Consider it a collision if there's no head
@@ -255,24 +247,15 @@ class SnakeGame {
 
     const head = player.body[0];
 
-    // Check head collision with walls
-    if (
-      head.row <= this.borders.top ||
-      head.row >= this.borders.bottom ||
-      head.column <= this.borders.left ||
-      head.column >= this.borders.right
-    ) {
+    // Check head collision with walls using board methods
+    if (!this.board.isWithinBorders(head)) {
       console.log(`Player ${player.name} died by hitting a wall`);
       return true;
     }
 
     // Find the first wall segment index
     const firstWallIndex = player.body.findIndex(
-      (segment) =>
-        segment.column <= this.borders.left ||
-        segment.column >= this.borders.right ||
-        segment.row <= this.borders.top ||
-        segment.row >= this.borders.bottom
+      (segment) => !this.board.isWithinBorders(segment)
     );
 
     // If no wall segments, return false
@@ -293,13 +276,7 @@ class SnakeGame {
     // Convert valid segments to apples
     this.apples.push(
       ...disconnectedSegments
-        .filter(
-          (segment) =>
-            segment.column > this.borders.left &&
-            segment.column < this.borders.right &&
-            segment.row > this.borders.top &&
-            segment.row < this.borders.bottom
-        )
+        .filter((segment) => this.board.isWithinBorders(segment))
         .map((segment) => ({
           row: segment.row,
           column: segment.column,
@@ -325,7 +302,7 @@ class SnakeGame {
     return false;
   }
 
-  checkPlayerCollision(player) {
+  checkForPlayerCollision(player) {
     const head = player.body[0];
     if (!head) return false; // Return false if player has no body
 
@@ -368,103 +345,6 @@ class SnakeGame {
       this.winner = -1;
       console.log(`Game Over! Draw! Equal scores and lengths`);
     }
-  }
-
-  shrinkMap() {
-    this.shrinkLevel++;
-
-    this.borders.left = this.shrinkLevel;
-    this.borders.right = this.numOfColumns - 1 - this.shrinkLevel;
-
-    // Calculate how much extra shrinking is needed after 1:1 ratio is reached
-    const extraShrink = Math.max(
-      this.shrinkLevel - Math.floor((this.numOfColumns - this.numOfRows) / 2),
-      -1
-    );
-    this.borders.top = extraShrink;
-    this.borders.bottom = this.numOfRows - 1 - extraShrink;
-
-    // Remove existing apples in wall positions
-    this.apples = this.apples.filter(
-      (apple) =>
-        apple.column > this.borders.left &&
-        apple.column < this.borders.right &&
-        apple.row > this.borders.top &&
-        apple.row < this.borders.bottom
-    );
-
-    // Remove modifier in wall positions
-    this.modifiers = this.modifiers.filter(
-      (modifier) =>
-        modifier.column > this.borders.left &&
-        modifier.column < this.borders.right &&
-        modifier.row > this.borders.top &&
-        modifier.row < this.borders.bottom
-    );
-  }
-
-  updateMap() {
-    this.map = Array.from({ length: this.numOfRows }, (_, rowIndex) =>
-      Array.from({ length: this.numOfColumns }, (_, colIndex) =>
-        colIndex <= this.borders.left ||
-        colIndex >= this.borders.right ||
-        rowIndex <= this.borders.top ||
-        rowIndex >= this.borders.bottom
-          ? "#"
-          : null
-      )
-    );
-
-    this.players.forEach((player) => {
-      if (player.body.length > 0) {
-        const head = player.body[0];
-        if (
-          head &&
-          head.row >= 0 &&
-          head.row < this.numOfRows &&
-          head.column >= 0 &&
-          head.column < this.numOfColumns
-        ) {
-          this.map[head.row][head.column] = {
-            type: "snake-head",
-            player: player.id[0].toLowerCase(),
-          };
-
-          for (let i = 1; i < player.body.length; i++) {
-            const segment = player.body[i];
-            this.map[segment.row][segment.column] = {
-              type: "snake-body",
-              player: player.id[0].toLowerCase(),
-            };
-          }
-        }
-      }
-    });
-
-    this.apples.forEach((apple) => {
-      this.map[apple.row][apple.column] = {
-        type: "apple",
-      };
-    });
-
-    this.modifiers.forEach((modifier) => {
-      switch (modifier.type) {
-        case "golden apple":
-          this.map[modifier.row][modifier.column] = {
-            type: "golden-apple",
-            affect: modifier.affect,
-          };
-          break;
-        case "tron":
-          this.map[modifier.row][modifier.column] = {
-            type: "tron",
-            affect: modifier.affect,
-          };
-          break;
-        default:
-          break;
-      }
-    });
   }
 }
 

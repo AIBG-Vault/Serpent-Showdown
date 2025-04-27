@@ -16,11 +16,24 @@ class Player {
   constructor(playerData, isFirstPlayer, numOfRows, numOfColumns) {
     this.id = playerData.id;
     this.name = playerData.name;
+
     this.body = [];
+
     this.activeModifiers = [];
+
     this.score = config.PLAYERS_STARTING_SCORE;
     this.length = config.PLAYERS_STARTING_LENGTH;
 
+    this.initBodySegments(isFirstPlayer, numOfRows, numOfColumns);
+  }
+
+  /**
+   * Initializes the player's starting position and body segments
+   * @param {boolean} isFirstPlayer - Whether this is the first player
+   * @param {number} numOfRows - Number of rows in the game board
+   * @param {number} numOfColumns - Number of columns in the game board
+   */
+  initBodySegments(isFirstPlayer, numOfRows, numOfColumns) {
     // Initialize player position
     const startRowIndex = Math.floor(numOfRows / 2);
     const startColumnIndex = isFirstPlayer
@@ -69,8 +82,9 @@ class Player {
    * @returns {boolean} True if tail should be kept, false otherwise
    */
   shouldKeepTail() {
-    return this.activeModifiers.some((activeModifier) => 
-      activeModifier.type === "golden apple" || activeModifier.type === "tron"
+    return this.activeModifiers.some(
+      (activeModifier) =>
+        activeModifier.type === "golden apple" || activeModifier.type === "tron"
     );
   }
 
@@ -117,7 +131,10 @@ class Player {
 
         // Handle Tron modifier expiration
         if (activeModifier.type === "tron" && newDuration === 0) {
-          const segmentsToRemove = Math.max(0, activeModifier.temporarySegments);
+          const segmentsToRemove = Math.max(
+            0,
+            activeModifier.temporarySegments
+          );
           if (segmentsToRemove > 0) {
             this.body = this.body.slice(0, -segmentsToRemove);
             this.length -= segmentsToRemove;
