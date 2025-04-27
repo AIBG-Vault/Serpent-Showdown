@@ -27,7 +27,7 @@ class Board {
    * Gets the value of a cell at the specified coordinates
    * @param {number} row - Row coordinate
    * @param {number} column - Column coordinate
-   * @returns {(Object|string|null)} The cell value, '#' for walls, null for empty cells
+   * @returns {(Object|null)} The cell value, null for empty cells
    */
   getCell(row, column) {
     if (
@@ -123,7 +123,9 @@ class Board {
         colIndex >= this.borders.right ||
         rowIndex <= this.borders.top ||
         rowIndex >= this.borders.bottom
-          ? "#"
+          ? {
+              type: "border",
+            }
           : null
       )
     );

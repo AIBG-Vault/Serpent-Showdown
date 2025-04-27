@@ -24,7 +24,8 @@ function updateGrid(map) {
   const rows = map.length;
   const cols = map[0].length;
   const board = document.getElementById("gameBoard");
-  const currentCols = board.style.gridTemplateColumns.match(/repeat\((\d+)/)?.[1];
+  const currentCols =
+    board.style.gridTemplateColumns.match(/repeat\((\d+)/)?.[1];
 
   // Only recreate grid if dimensions changed
   if (currentCols != cols) {
@@ -40,28 +41,34 @@ function updateGrid(map) {
 
       if (map) {
         const value = map[i][j];
-        if (typeof value === 'object' && value !== null) {
+        if (typeof value === "object" && value !== null) {
           // Handle object values
-          if (value.type === 'snake-head') {
-            cell.classList.add(value.player === 'k' ? "snake-player1-head" : "snake-player2-head");
-          } else if (value.type === 'snake-body') {
-            cell.classList.add(value.player === 'k' ? "snake-player1-body" : "snake-player2-body");
-          } else if (value.type === 'apple') {
+          if (value.type === "snake-head") {
+            cell.classList.add(
+              value.player === "k" ? "snake-player1-head" : "snake-player2-head"
+            );
+          } else if (value.type === "snake-body") {
+            cell.classList.add(
+              value.player === "k" ? "snake-player1-body" : "snake-player2-body"
+            );
+          } else if (value.type === "apple") {
             cell.classList.add("apple");
-          } else if (value.type === 'golden-apple') {
+          } else if (value.type === "golden-apple") {
             cell.classList.add("golden-apple");
-            if (value.affect === 'self') cell.classList.add("affect-self");
-            else if (value.affect === 'enemy') cell.classList.add("affect-enemy");
-            else if (value.affect === 'both') cell.classList.add("affect-both");
-          } else if (value.type === 'tron') {
+            if (value.affect === "self") cell.classList.add("affect-self");
+            else if (value.affect === "enemy")
+              cell.classList.add("affect-enemy");
+            else if (value.affect === "both") cell.classList.add("affect-both");
+          } else if (value.type === "tron") {
             cell.classList.add("tron");
-            if (value.affect === 'self') cell.classList.add("affect-self");
-            else if (value.affect === 'enemy') cell.classList.add("affect-enemy");
-            else if (value.affect === 'both') cell.classList.add("affect-both");
+            if (value.affect === "self") cell.classList.add("affect-self");
+            else if (value.affect === "enemy")
+              cell.classList.add("affect-enemy");
+            else if (value.affect === "both") cell.classList.add("affect-both");
+          } else if (value.type === "border") {
+            cell.classList.add("border");
+            cell.textContent = "#";
           }
-        } else if (value === '#') {
-          cell.classList.add("wall");
-          cell.textContent = "#";
         }
       }
     }
