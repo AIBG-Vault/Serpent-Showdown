@@ -2,21 +2,33 @@ const modifiersList = [
   {
     type: "golden apple",
     affect: "self",
-    pickUpReward: 10,
+    pickUpReward: 70,
     duration: 3,
-    weight: 6,
+    spawnWeight: 9,
   },
   {
     type: "tron",
     affect: "random",
-    pickUpReward: 5,
+    pickUpReward: 50,
     duration: 10,
-    weight: 3,
+    spawnWeight: 5,
   },
   {
     type: "reset borders",
-    weight: 1,
+    pickUpReward: 30,
+    spawnWeight: 1,
+  },
+  {
+    type: "shorten 10",
+    affect: "random",
+    pickUpReward: 30,
+    spawnWeight: 2,
+  },
+  {
+    type: "shorten 25",
+    affect: "random",
     pickUpReward: 20,
+    spawnWeight: 1,
   },
 ];
 

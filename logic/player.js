@@ -22,7 +22,6 @@ class Player {
     this.activeModifiers = [];
 
     this.score = config.PLAYERS_STARTING_SCORE;
-    this.length = config.PLAYERS_STARTING_LENGTH;
 
     this.initBodySegments(isFirstPlayer, numOfRows, numOfColumns);
   }
@@ -40,21 +39,13 @@ class Player {
       ? config.PLAYERS_STARTING_LENGTH
       : numOfColumns - (config.PLAYERS_STARTING_LENGTH + 1);
 
-    // Add body segments
-    for (let i = 0; i < config.PLAYERS_STARTING_LENGTH; i++) {
-      this.body.push({
+    // Add body segments using addSegment method starting from the head
+    for (let i = config.PLAYERS_STARTING_LENGTH - 1; i >= 0; i--) {
+      this.addSegment({
         row: startRowIndex,
         column: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
       });
     }
-  }
-
-  /**
-   * Gets the current head position of the snake
-   * @returns {Object} The head segment with row and column coordinates
-   */
-  getHead() {
-    return this.body[0];
   }
 
   /**
@@ -65,27 +56,24 @@ class Player {
    */
   addSegment(position) {
     this.body.unshift(position);
-    this.length += 1;
   }
 
   /**
-   * Removes the last segment of the snake if no active modifiers prevent it
+   * Shortens the player's body length by a specified amount
+   * @param {number} numOfSegments - The number of segments to remove from the end of the body up to body.length = 1
    */
-  removeTail() {
-    if (!this.shouldKeepTail()) {
-      this.body.pop();
-    }
+  removeSegments(numOfSegments) {
+    // final length must be a minimum of 1
+    const finalLength = Math.max(1, this.body.length - numOfSegments);
+    this.body = this.body.slice(0, finalLength);
   }
 
   /**
-   * Checks if the snake's tail should be kept based on active modifiers
-   * @returns {boolean} True if tail should be kept, false otherwise
+   * Adds points to the player's score, ensuring it doesn't go below 0
+   * @param {number} points - The points to add (can be negative)
    */
-  shouldKeepTail() {
-    return this.activeModifiers.some(
-      (activeModifier) =>
-        activeModifier.type === "golden apple" || activeModifier.type === "tron"
-    );
+  addScore(points) {
+    this.score = Math.max(0, this.score + points);
   }
 
   /**
@@ -118,6 +106,29 @@ class Player {
   }
 
   /**
+   * Adds or updates a modifier effect on the player
+   * @param {Object} modifier - The modifier to add
+   * @param {string} modifier.type - The type of modifier ('golden apple' or 'tron')
+   * @param {number} modifier.duration - How long the modifier should last
+   * @param {number} [modifier.temporarySegments] - For tron modifier, tracks temporary segments
+   */
+  addOrExtendModifier(modifier) {
+    const existingModifier = this.activeModifiers.find(
+      (mod) => mod.type === modifier.type
+    );
+
+    if (existingModifier) {
+      existingModifier.duration = modifier.duration;
+    } else {
+      if (modifier.type === "tron") {
+        modifier.temporarySegments = 0;
+      }
+
+      this.activeModifiers.push({ ...modifier });
+    }
+  }
+
+  /**
    * Updates all active modifiers, reducing their duration and handling expiration effects
    */
   updateModifiers() {
@@ -125,51 +136,27 @@ class Player {
       .map((activeModifier) => {
         const newDuration = activeModifier.duration - 1;
 
+        // Handle Tron modifier
         if (activeModifier.type === "tron") {
           activeModifier.temporarySegments += 1;
-        }
 
-        // Handle Tron modifier expiration
-        if (activeModifier.type === "tron" && newDuration === 0) {
-          const segmentsToRemove = Math.max(
-            0,
-            activeModifier.temporarySegments
-          );
-          if (segmentsToRemove > 0) {
-            this.body = this.body.slice(0, -segmentsToRemove);
-            this.length -= segmentsToRemove;
+          if (newDuration === 0) {
+            const segmentsToRemove = Math.max(
+              0,
+              activeModifier.temporarySegments
+            );
+            if (segmentsToRemove > 0) {
+              this.body = this.body.slice(0, -segmentsToRemove);
+            }
           }
         }
 
         return { ...activeModifier, duration: newDuration };
       })
-      .filter((modifier) => modifier.duration > 0);
-  }
-
-  /**
-   * Adds points to the player's score, ensuring it doesn't go below 0
-   * @param {number} points - The points to add (can be negative)
-   */
-  addScore(points) {
-    this.score = Math.max(0, this.score + points);
-  }
-
-  /**
-   * Adds or updates a modifier effect on the player
-   * @param {Object} modifier - The modifier to add
-   * @param {string} modifier.type - The type of modifier ('golden apple' or 'tron')
-   * @param {number} modifier.duration - How long the modifier should last
-   * @param {number} [modifier.temporarySegments] - For tron modifier, tracks temporary segments
-   */
-  addModifier(modifier) {
-    const existingModifier = this.activeModifiers.find(
-      (mod) => mod.type === modifier.type
-    );
-    if (existingModifier) {
-      existingModifier.duration = modifier.duration;
-    } else {
-      this.activeModifiers.push({ ...modifier });
-    }
+      .filter((activeModifier) => {
+        // Remove modifiers with duration <= 0
+        return activeModifier.duration > 0;
+      });
   }
 }
 

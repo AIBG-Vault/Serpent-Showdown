@@ -187,6 +187,24 @@ class Board {
               type: "reset-borders",
             });
             break;
+          case "shorten 10":
+            this.setCell(modifier.row, modifier.column, {
+              type: "shorten-10",
+              affect: modifier.affect,
+            });
+            break;
+          case "shorten 25":
+            this.setCell(modifier.row, modifier.column, {
+              type: "shorten-25",
+              affect: modifier.affect,
+            });
+            break;
+          default:
+            this.setCell(modifier.row, modifier.column, {
+              type: "unknown-modifier",
+              affect: modifier.affect,
+            });
+            break;
         }
       });
     }

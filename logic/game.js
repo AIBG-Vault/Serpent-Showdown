@@ -112,34 +112,47 @@ class SnakeGame {
       return;
     }
 
-    const oldHead = { ...player.getHead() };
-    const newHead = { ...oldHead };
+    const oldHeadPos = { ...player.body[0] };
+    const newHeadPos = { ...oldHeadPos };
 
     switch (direction) {
       case "up":
-        newHead.row -= 1;
+        newHeadPos.row -= 1;
         break;
       case "down":
-        newHead.row += 1;
+        newHeadPos.row += 1;
         break;
       case "left":
-        newHead.column -= 1;
+        newHeadPos.column -= 1;
         break;
       case "right":
-        newHead.column += 1;
+        newHeadPos.column += 1;
         break;
       default:
         return;
     }
 
-    this.updateScoreByMovementDirection(player, oldHead, newHead);
+    this.updateScoreByMovementDirection(player, oldHeadPos, newHeadPos);
 
-    if (
-      !this.collisionHandler.checkForAppleCollision(player, newHead) &&
-      !this.collisionHandler.checkForModifierCollision(player, newHead)
-    ) {
-      player.addSegment(newHead);
-      player.removeTail();
+    const playerAteApple = this.collisionHandler.checkForAppleCollision(
+      player,
+      newHeadPos
+    );
+    this.collisionHandler.checkForModifierCollision(player, newHeadPos);
+
+    player.addSegment(newHeadPos);
+
+    const keepTailSegment =
+      playerAteApple ||
+      player.activeModifiers.some(
+        (activeModifier) =>
+          activeModifier.type === "golden apple" ||
+          activeModifier.type === "tron"
+      );
+
+    if (!keepTailSegment) {
+      // Remove tail segment
+      player.body.pop();
     }
 
     // Use player's updateModifiers method
@@ -225,9 +238,9 @@ class SnakeGame {
     if (player1.score !== player2.score) {
       this.winner = player1.score > player2.score ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by higher score!`);
-    } else if (player1.length !== player2.length) {
+    } else if (player1.body.length !== player2.body.length) {
       this.winner =
-        player1.length > player2.length ? player1.name : player2.name;
+        player1.body.length > player2.body.length ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by longer length!`);
     } else {
       this.winner = -1;

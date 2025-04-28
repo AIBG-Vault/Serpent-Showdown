@@ -153,20 +153,20 @@ class Spawner {
       const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
         position;
 
-      // Calculate total weight
-      const totalWeight = modifiersList.reduce(
-        (sum, type) => sum + type.weight,
+      // Calculate total spawn weight
+      const totalSpawnWeight = modifiersList.reduce(
+        (sum, type) => sum + type.spawnWeight,
         0
       );
 
       // Random number between 0 and total weight
-      const random = Math.random() * totalWeight;
+      const random = Math.random() * totalSpawnWeight;
 
       // Select modifier type based on weight
-      let currentWeight = 0;
+      let currentSpawnWeight = 0;
       const selectedModifier = modifiersList.find((type) => {
-        currentWeight += type.weight;
-        return random <= currentWeight;
+        currentSpawnWeight += type.spawnWeight;
+        return random <= currentSpawnWeight;
       });
 
       // Determine affect for Tron modifier with 40/40/20 split
@@ -181,10 +181,6 @@ class Spawner {
           affect = "both";
         }
       }
-
-      console.log(
-        `Selected modifier: ${selectedModifier.type}, affect: ${affect}`
-      ); // Debugging print for selected modifier and affect
 
       // Add the selected modifier to both positions with the determined affect
       this.game.modifiers.push({

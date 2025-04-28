@@ -16,18 +16,20 @@ class CollisionHandler {
   /**
    * Checks if a player's head collides with an apple
    * @param {Player} player - The player to check for collision
-   * @param {Object} head - The position to check for apple collision
-   * @param {number} head.row - Row coordinate of the head
-   * @param {number} head.column - Column coordinate of the head
+   * @param {Object} newHeadPosition - The position to check for apple collision
+   * @param {number} newHeadPosition.row - Row coordinate of the head
+   * @param {number} newHeadPosition.column - Column coordinate of the head
    * @returns {boolean} True if collision with apple occurred, false otherwise
    */
-  checkForAppleCollision(player, head) {
+  checkForAppleCollision(player, newHeadPosition) {
     const appleIndex = this.game.apples.findIndex(
-      (apple) => apple.row === head.row && apple.column === head.column
+      (apple) =>
+        apple.row === newHeadPosition.row &&
+        apple.column === newHeadPosition.column
     );
 
+    // if player collides with an apple, return true
     if (appleIndex !== -1) {
-      player.addSegment(head);
       player.addScore(config.APPLE_PICKUP_REWARD);
       this.game.apples.splice(appleIndex, 1);
       return true;
@@ -39,23 +41,25 @@ class CollisionHandler {
   /**
    * Checks if a player's head collides with a modifier
    * @param {Player} player - The player to check for collision
-   * @param {Object} head - The position to check for modifier collision
-   * @param {number} head.row - Row coordinate of the head
-   * @param {number} head.column - Column coordinate of the head
+   * @param {Object} newHeadPosition - The position to check for modifier collision
+   * @param {number} newHeadPosition.row - Row coordinate of the head
+   * @param {number} newHeadPosition.column - Column coordinate of the head
    * @returns {boolean} True if collision with modifier occurred, false otherwise
    */
-  checkForModifierCollision(player, head) {
+  checkForModifierCollision(player, newHeadPosition) {
     const modifierIndex = this.game.modifiers.findIndex(
-      (modifier) => modifier.row === head.row && modifier.column === head.column
+      (modifier) =>
+        modifier.row === newHeadPosition.row &&
+        modifier.column === newHeadPosition.column
     );
 
+    // if player collides with a modifier, return true
     if (modifierIndex !== -1) {
       const modifierFromMap = this.game.modifiers[modifierIndex];
       const modifierData = modifiersList.find(
         (m) => m.type === modifierFromMap.type
       );
 
-      player.addSegment(head);
       player.addScore(modifierData.pickUpReward);
 
       // Handle reset map modifier
@@ -68,15 +72,17 @@ class CollisionHandler {
         duration: modifierData.duration,
       };
 
-      if (modifierFromMap.type === "tron") {
-        newModifier.temporarySegments = 0;
-      }
-
       if (
         modifierFromMap.affect === "self" ||
         modifierFromMap.affect === "both"
       ) {
-        player.addModifier(newModifier);
+        if (modifierFromMap.type === "shorten 10") {
+          player.removeSegments(10);
+        } else if (modifierFromMap.type === "shorten 25") {
+          player.removeSegments(25);
+        } else {
+          player.addOrExtendModifier(newModifier);
+        }
       }
 
       if (
@@ -84,7 +90,14 @@ class CollisionHandler {
         modifierFromMap.affect === "both"
       ) {
         const otherPlayer = this.game.players.find((p) => p.id !== player.id);
-        otherPlayer.addModifier(newModifier);
+
+        if (modifierFromMap.type === "shorten 10") {
+          otherPlayer.removeSegments(10);
+        } else if (modifierFromMap.type === "shorten 25") {
+          otherPlayer.removeSegments(25);
+        } else {
+          otherPlayer.addOrExtendModifier(newModifier);
+        }
       }
 
       this.game.modifiers.splice(modifierIndex, 1);
@@ -146,7 +159,6 @@ class CollisionHandler {
       player.score -
         disconnectedSegments.length * config.BODY_SEGMENT_LOSS_PENALTY
     );
-    player.length -= disconnectedSegments.length;
 
     if (player.score <= 0) {
       console.log(
