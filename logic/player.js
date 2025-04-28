@@ -77,6 +77,38 @@ class Player {
   }
 
   /**
+   * Updates player score based on movement relative to board center
+   * @param {Object} boardCenterPosition - The center position of the board
+   * @param {number} boardCenterPosition.row - Row coordinate of board center
+   * @param {number} boardCenterPosition.column - Column coordinate of board center
+   */
+  updateScoreByMovementDirection(newHeadPos, boardCenterPosition) {
+    const oldHeadPos = { ...this.body[0] }; // new neck position
+
+    const oldDistanceToCenter =
+      Math.abs(oldHeadPos.row - boardCenterPosition.row) +
+      Math.abs(oldHeadPos.column - boardCenterPosition.column);
+    const newDistanceToCenter =
+      Math.abs(newHeadPos.row - boardCenterPosition.row) +
+      Math.abs(newHeadPos.column - boardCenterPosition.column);
+
+    // Store initial score for debugging
+    const initialScore = this.score;
+
+    // Award points based on movement relative to center
+    if (newDistanceToCenter < oldDistanceToCenter) {
+      this.addScore(config.MOVEMENT_TOWARDS_CENTER_REWARD);
+    } else {
+      this.addScore(config.MOVEMENT_AWAY_FROM_CENTER_REWARD);
+    }
+
+    // console.log(`Player ${this.name} movement:
+    //   - Old distance to center: ${oldDistanceToCenter}
+    //   - New distance to center: ${newDistanceToCenter}
+    //   - Score: ${initialScore} -> ${this.score}`);
+  }
+
+  /**
    * Checks if the given move direction would result in a reverse movement
    * @param {string} incomingMoveDirection - The proposed movement direction ('up', 'down', 'left', 'right')
    * @returns {boolean} True if the move would reverse the snake's direction

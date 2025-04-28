@@ -112,36 +112,34 @@ class SnakeGame {
       return;
     }
 
-    const oldHeadPos = { ...player.body[0] };
-    const newHeadPos = { ...oldHeadPos };
-
-    switch (direction) {
-      case "up":
-        newHeadPos.row -= 1;
-        break;
-      case "down":
-        newHeadPos.row += 1;
-        break;
-      case "left":
-        newHeadPos.column -= 1;
-        break;
-      case "right":
-        newHeadPos.column += 1;
-        break;
-      default:
-        return;
+    const newHeadPos = { ...player.body[0] };
+    if (direction === "up") {
+      newHeadPos.row -= 1;
+    } else if (direction === "down") {
+      newHeadPos.row += 1;
+    } else if (direction === "left") {
+      newHeadPos.column -= 1;
+    } else if (direction === "right") {
+      newHeadPos.column += 1;
     }
 
-    this.updateScoreByMovementDirection(player, oldHeadPos, newHeadPos);
+    // calculcate before removing tail segment in case length is 1
+    const boardCenterRow = Math.floor(this.numOfRows / 2);
+    const boardCenterCol = Math.floor(this.numOfColumns / 2);
+    const boardCenterPos = { row: boardCenterRow, column: boardCenterCol };
+    player.updateScoreByMovementDirection(newHeadPos, boardCenterPos);
 
+    // check for collisions
     const playerAteApple = this.collisionHandler.checkForAppleCollision(
       player,
       newHeadPos
     );
     this.collisionHandler.checkForModifierCollision(player, newHeadPos);
 
+    // add new head segment
     player.addSegment(newHeadPos);
 
+    // remove tail segment if needed
     const keepTailSegment =
       playerAteApple ||
       player.activeModifiers.some(
@@ -151,47 +149,11 @@ class SnakeGame {
       );
 
     if (!keepTailSegment) {
-      // Remove tail segment
       player.body.pop();
     }
 
     // Use player's updateModifiers method
     player.updateModifiers();
-  }
-
-  /**
-   * Updates player score based on movement relative to board center
-   * @param {Player} player - The player whose score is being updated
-   * @param {Object} oldHead - Previous position of player's head
-   * @param {number} oldHead.row - Row coordinate of old head position
-   * @param {number} oldHead.column - Column coordinate of old head position
-   * @param {Object} newHead - New position of player's head
-   * @param {number} newHead.row - Row coordinate of new head position
-   * @param {number} newHead.column - Column coordinate of new head position
-   */
-  updateScoreByMovementDirection(player, oldHead, newHead) {
-    const centerRow = Math.floor(this.numOfRows / 2);
-    const centerCol = Math.floor(this.numOfColumns / 2);
-
-    const oldDistanceToCenter =
-      Math.abs(oldHead.row - centerRow) + Math.abs(oldHead.column - centerCol);
-    const newDistanceToCenter =
-      Math.abs(newHead.row - centerRow) + Math.abs(newHead.column - centerCol);
-
-    // Store initial score for debugging
-    const initialScore = player.score;
-
-    // Award points based on movement relative to center
-    if (newDistanceToCenter < oldDistanceToCenter) {
-      player.addScore(config.MOVEMENT_TOWARDS_CENTER_REWARD);
-    } else {
-      player.addScore(config.MOVEMENT_AWAY_FROM_CENTER_REWARD);
-    }
-
-    // console.log(`Player ${player.name} movement:
-    //   - Old distance to center: ${oldDistanceToCenter}
-    //   - New distance to center: ${newDistanceToCenter}
-    //   - Score: ${initialScore} -> ${player.score}`);
   }
 
   /**
