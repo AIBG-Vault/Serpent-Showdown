@@ -20,6 +20,7 @@ class Board {
       bottom: this.game.numOfRows - this.horizontalShrinkLevel - 1,
     };
 
+    this.map = null;
     this.updateMap();
   }
 
@@ -36,7 +37,7 @@ class Board {
       column >= 0 &&
       column < this.game.numOfColumns
     ) {
-      return this.game.map[row][column];
+      return this.map[row][column];
     }
     return null;
   }
@@ -54,7 +55,7 @@ class Board {
       column >= 0 &&
       column < this.game.numOfColumns
     ) {
-      this.game.map[row][column] = value;
+      this.map[row][column] = value;
     }
   }
 
@@ -117,7 +118,7 @@ class Board {
    */
   updateMap() {
     // Initialize the grid
-    this.game.map = Array.from({ length: this.game.numOfRows }, (_, rowIndex) =>
+    this.map = Array.from({ length: this.game.numOfRows }, (_, rowIndex) =>
       Array.from({ length: this.game.numOfColumns }, (_, colIndex) =>
         colIndex <= this.borders.left ||
         colIndex >= this.borders.right ||

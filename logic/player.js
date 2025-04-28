@@ -9,35 +9,33 @@ class Player {
    * @param {Object} playerData - The player's initial data
    * @param {string} playerData.id - The player's unique identifier
    * @param {string} playerData.name - The player's name
-   * @param {boolean} isFirstPlayer - Whether this is the first player (determines starting position)
-   * @param {number} numOfRows - Number of rows in the game board
-   * @param {number} numOfColumns - Number of columns in the game board
+   * @param {SnakeGame} game - The game instance
    */
-  constructor(playerData, isFirstPlayer, numOfRows, numOfColumns) {
+  constructor(game, playerData) {
+    this.game = game;
+
     this.id = playerData.id;
     this.name = playerData.name;
 
-    this.body = [];
-
-    this.activeModifiers = [];
-
     this.score = config.PLAYERS_STARTING_SCORE;
 
-    this.initBodySegments(isFirstPlayer, numOfRows, numOfColumns);
+    this.body = [];
+    this.initBodySegments();
+
+    this.activeModifiers = [];
   }
 
   /**
    * Initializes the player's starting position and body segments
-   * @param {boolean} isFirstPlayer - Whether this is the first player
-   * @param {number} numOfRows - Number of rows in the game board
-   * @param {number} numOfColumns - Number of columns in the game board
    */
-  initBodySegments(isFirstPlayer, numOfRows, numOfColumns) {
+  initBodySegments() {
+    const isFirstPlayer = this.game.players.length === 0;
+
     // Initialize player position
-    const startRowIndex = Math.floor(numOfRows / 2);
+    const startRowIndex = Math.floor(this.game.numOfRows / 2);
     const startColumnIndex = isFirstPlayer
       ? config.PLAYERS_STARTING_LENGTH
-      : numOfColumns - (config.PLAYERS_STARTING_LENGTH + 1);
+      : this.game.numOfColumns - (config.PLAYERS_STARTING_LENGTH + 1);
 
     // Add body segments using addSegment method starting from the head
     for (let i = config.PLAYERS_STARTING_LENGTH - 1; i >= 0; i--) {
@@ -76,21 +74,81 @@ class Player {
     this.score = Math.max(0, this.score + points);
   }
 
+  // Modify playMove to use the new function
+  /**
+   * Processes a single move for a specific player
+   * @param {string} direction - Direction of movement ('up', 'down', 'left', 'right')
+   */
+  playMove(direction) {
+    // Use player's isReverseDirection method
+    if (this.isReverseDirection(direction)) {
+      this.addScore(-config.REVERSE_DIRECTION_PENALTY);
+      return;
+    }
+
+    // Penalize invalid moves (including timeout)
+    if (!["up", "down", "left", "right"].includes(direction)) {
+      this.addScore(-config.ILLEGAL_MOVE_PENALTY);
+      return;
+    }
+
+    const newHeadPos = { ...this.body[0] };
+    if (direction === "up") {
+      newHeadPos.row -= 1;
+    } else if (direction === "down") {
+      newHeadPos.row += 1;
+    } else if (direction === "left") {
+      newHeadPos.column -= 1;
+    } else if (direction === "right") {
+      newHeadPos.column += 1;
+    }
+
+    // calculcate before removing tail segment in case length is 1
+    this.updateScoreByMovementDirection(newHeadPos);
+
+    // check for collisions
+    const playerAteApple = this.game.collisionHandler.checkForAppleCollision(
+      this,
+      newHeadPos
+    );
+    this.game.collisionHandler.checkForModifierCollision(this, newHeadPos);
+
+    // add new head segment
+    this.addSegment(newHeadPos);
+
+    // remove tail segment if needed
+    const keepTailSegment =
+      playerAteApple ||
+      this.activeModifiers.some(
+        (activeModifier) =>
+          activeModifier.type === "golden apple" ||
+          activeModifier.type === "tron"
+      );
+
+    if (!keepTailSegment) {
+      this.body.pop();
+    }
+
+    // Use player's updateModifiers method
+    this.updateModifiers();
+  }
+
   /**
    * Updates player score based on movement relative to board center
-   * @param {Object} boardCenterPosition - The center position of the board
-   * @param {number} boardCenterPosition.row - Row coordinate of board center
-   * @param {number} boardCenterPosition.column - Column coordinate of board center
+   * @param {Object} newHeadPos - The new head position
    */
-  updateScoreByMovementDirection(newHeadPos, boardCenterPosition) {
+  updateScoreByMovementDirection(newHeadPos) {
+    const boardCenterRow = Math.floor(this.game.numOfRows / 2);
+    const boardCenterCol = Math.floor(this.game.numOfColumns / 2);
+
     const oldHeadPos = { ...this.body[0] }; // new neck position
 
     const oldDistanceToCenter =
-      Math.abs(oldHeadPos.row - boardCenterPosition.row) +
-      Math.abs(oldHeadPos.column - boardCenterPosition.column);
+      Math.abs(oldHeadPos.row - boardCenterRow) +
+      Math.abs(oldHeadPos.column - boardCenterCol);
     const newDistanceToCenter =
-      Math.abs(newHeadPos.row - boardCenterPosition.row) +
-      Math.abs(newHeadPos.column - boardCenterPosition.column);
+      Math.abs(newHeadPos.row - boardCenterRow) +
+      Math.abs(newHeadPos.column - boardCenterCol);
 
     // Store initial score for debugging
     const initialScore = this.score;
