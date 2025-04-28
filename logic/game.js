@@ -17,7 +17,7 @@ class SnakeGame {
 
     this.board = new Board(this);
 
-    this.internalMoveCounter = 0;
+    this.moveCount = 0;
 
     this.players = [];
     this.winner = null;
@@ -57,7 +57,7 @@ class SnakeGame {
    * @param {string} moves[].direction - Direction of the move ('up', 'down', 'left', 'right')
    */
   processMoves(moves) {
-    this.internalMoveCounter++;
+    this.moveCount++;
 
     // Process all moves
     moves.forEach((move) => this.playMove(move.playerId, move.direction));
@@ -66,8 +66,8 @@ class SnakeGame {
     const currentBoardWidth = this.board.getCurrentBoardWidth();
     if (
       currentBoardWidth > config.MINIMUM_BOARD_SIZE &&
-      this.internalMoveCounter >= config.START_SHRINKING_MAP_AFTER_MOVES &&
-      this.internalMoveCounter % 5 === 0
+      this.moveCount >= config.START_SHRINKING_MAP_AFTER_MOVES &&
+      this.moveCount % 5 === 0
     ) {
       this.board.shrinkMap();
     }
@@ -78,7 +78,7 @@ class SnakeGame {
     }
 
     // Spawn apples every 5 moves
-    if (this.internalMoveCounter % 5 === 0) {
+    if (this.moveCount % 5 === 0) {
       this.spawner.spawnMirroredApples();
     }
 
@@ -181,7 +181,7 @@ class SnakeGame {
     }
 
     // Check for move limit only if no players died
-    if (this.internalMoveCounter >= config.GAME_MAX_MOVES) {
+    if (this.moveCount >= config.GAME_MAX_MOVES) {
       console.log("Maximum number of game moves exceeded.");
       this.determineWinnerByScoreThenLength();
       return true;

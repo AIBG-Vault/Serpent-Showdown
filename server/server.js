@@ -77,7 +77,7 @@ function handleFrontendConnection(ws) {
       map: game.map,
       players: game.players,
       winner: game.winner,
-      moveCounter: game.internalMoveCounter,
+      moveCounter: game.moveCount,
     })
   );
 }
@@ -120,7 +120,7 @@ function handlePlayerConnection(ws, playerId) {
         map: game.map,
         players: game.players,
         winner: game.winner,
-        moveCounter: game.internalMoveCounter,
+        moveCounter: game.moveCount,
       });
       client.send(message, (error) => {
         if (error) {
@@ -139,7 +139,7 @@ function handlePlayerConnection(ws, playerId) {
           map: game.map,
           players: game.players,
           winner: game.winner,
-          moveCounter: game.internalMoveCounter,
+          moveCounter: game.moveCount,
         });
 
         client.send(message, (error) => {
@@ -221,7 +221,7 @@ function handleMessage(ws, message) {
           map: game.map,
           players: game.players,
           winner: game.winner,
-          moveCounter: game.internalMoveCounter,
+          moveCounter: game.moveCount,
         });
 
         client.send(message, (error) => {
