@@ -24,7 +24,7 @@ const START_SHRINKING_MAP_AFTER_MOVES = 50;
 const MINIMUM_BOARD_SIZE = 15;
 
 // Spawn a modifier approximately 1 in 10 moves
-const MODIFIER_SPAWN_CHANCE = 1 / 10;
+const MODIFIER_SPAWN_CHANCE = 1 / 20;
 
 module.exports = {
   GAME_MAX_MOVES,
