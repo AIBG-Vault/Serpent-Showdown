@@ -64,7 +64,7 @@ class SnakeGame {
     if (
       currentBoardWidth > config.MINIMUM_BOARD_SIZE &&
       this.moveCount >= config.START_SHRINKING_MAP_AFTER_MOVES &&
-      this.moveCount % 5 === 0
+      this.moveCount % config.SHRINK_MAP_MOVE_INTERVAL === 0
     ) {
       this.board.shrinkMap();
     }

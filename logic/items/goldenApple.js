@@ -28,6 +28,17 @@ class GoldenApple extends Item {
     // add a segment to the player's body
     // but actually just disables the remove tail for its duration
     // player.addSegment();
+
+    const activeTronItem = player.activeItems.find(
+      (item) => item.type === "tron"
+    );
+
+    if (activeTronItem) {
+      activeTronItem.tempSegments = Math.max(
+        0,
+        activeTronItem.tempSegments - 1
+      );
+    }
   }
 }
 

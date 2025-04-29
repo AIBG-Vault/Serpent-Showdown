@@ -16,8 +16,9 @@ class Shorten extends Item {
    * @param {number} position.row - The row coordinate of the item
    * @param {number} position.col - The column coordinate of the item
    */
-  constructor(position) {
+  constructor(position, affect) {
     super(position, Shorten.config);
+    this.affect = affect;
 
     this.randomizeShorteningLength();
   }
@@ -32,6 +33,18 @@ class Shorten extends Item {
     console.log(
       `Player ${player.name} shortened by ${segmentsToRemove} segments`
     );
+
+    // Handle the effect of the tron item
+    const activeTronItem = player.activeItems.find(
+      (item) => item.type === "tron"
+    );
+
+    if (activeTronItem) {
+      activeTronItem.tempSegments = Math.max(
+        0,
+        activeTronItem.tempSegments - segmentsToRemove
+      );
+    }
   }
 
   /**

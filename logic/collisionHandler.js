@@ -1,4 +1,5 @@
 const config = require("./gameConfig");
+const Apple = require("./items/apple");
 
 /**
  * Handles all collision-related logic in the snake game
@@ -29,7 +30,7 @@ class CollisionHandler {
 
     // if player collides with an apple, return true
     if (appleIndex !== -1) {
-      const apple = this.game.items[appleIndex];
+      const apple = this.game.apples[appleIndex];
 
       player.addScore(apple.pickUpReward);
       this.game.apples.splice(appleIndex, 1);
@@ -122,10 +123,13 @@ class CollisionHandler {
     this.game.apples.push(
       ...disconnectedSegments
         .filter((segment) => this.game.board.isWithinBorders(segment))
-        .map((segment) => ({
-          row: segment.row,
-          column: segment.column,
-        }))
+        .map(
+          (segment) =>
+            new Apple({
+              row: segment.row,
+              column: segment.column,
+            })
+        )
     );
 
     player.score = Math.max(
