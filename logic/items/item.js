@@ -32,20 +32,6 @@ class Item {
   do(player) {
     throw new Error('Method "do" must be implemented by child classes');
   }
-
-  /**
-   * Returns the current state of the item for mapping
-   * @returns {Object} - Current state of the item for mapping
-   */
-  getMapState() {
-    return {
-      type: this.type,
-      affect: this.affect,
-      pickUpReward: this.pickUpReward,
-      duration: this.duration,
-      symbol: this.symbol,
-    };
-  }
 }
 
 module.exports = Item;

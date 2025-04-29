@@ -31,7 +31,8 @@ class Tron extends Item {
     this.temporarySegments++;
 
     if (this.duration === 0) {
-      const segmentsToRemove = Math.max(0, this.temporarySegments);
+      let segmentsToRemove = Math.max(0, this.temporarySegments); // dont remove negative number of segments
+      segmentsToRemove = Math.min(segmentsToRemove, player.body.length - 1); // dont remove more than the player's body length
 
       if (segmentsToRemove > 0) {
         player.body = player.body.slice(0, -segmentsToRemove);

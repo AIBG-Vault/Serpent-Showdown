@@ -74,7 +74,6 @@ class Player {
     this.score = Math.max(0, this.score + points);
   }
 
-  // Modify playMove to use the new function
   /**
    * Processes a single move for a specific player
    * @param {string} direction - Direction of movement ('up', 'down', 'left', 'right')
@@ -202,7 +201,9 @@ class Player {
    * @param {number} [item.temporarySegments] - For tron item, tracks temporary segments
    */
   addOrExtendItem(item) {
-    const existingItem = this.activeItems.find((mod) => mod.type === item.type);
+    const existingItem = this.activeItems.find(
+      (item) => item.type === item.type
+    );
 
     if (existingItem) {
       existingItem.duration = item.duration;
@@ -235,10 +236,10 @@ class Player {
 
         //   // handle item interactions
         //   const activeGoldenAppleItem = this.activeItems.find(
-        //     (mod) => mod.type === "golden apple"
+        //     (item) => item.type === "golden apple"
         //   );
         //   const activeShortenItem = this.activeItems.find(
-        //     (mod) => mod.type.slice(0, 7) === "shorten"
+        //     (item) => item.type.slice(0, 7) === "shorten"
         //   );
         //   if (activeGoldenAppleItem) {
         //     activeItem.temporarySegments -= 1;

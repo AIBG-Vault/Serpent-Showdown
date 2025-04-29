@@ -126,6 +126,7 @@ class Board {
         rowIndex >= this.borders.bottom
           ? {
               type: "border",
+              symbol: "#",
             }
           : null
       )
