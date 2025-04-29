@@ -7,7 +7,7 @@
 
 :root {
   --snake-player1-color: #ff7b00;
-  --snake-player2-color: #00a2ff;
+  --snake-player2-color: hsl(202, 100%, 50%);
 }
 
 html {
@@ -141,22 +141,57 @@ body {
   font-size: clamp(0.75rem, 1.5vw, 4rem);
 }
 
-.left_container .team_name::after {
+.left_container .team_name::after,
+.right_container .team_name::before {
   content: "";
   position: static;
-  width: 0.5em;
-  height: 0.5em;
+  width: clamp(1rem, 1.5vw, 4rem);
+  height: clamp(1rem, 1.5vw, 4rem);
   border-radius: 50%;
+  background-color: white;
+}
+
+.left_container .team_name::after {
   background-color: var(--snake-player1-color);
 }
 
 .right_container .team_name::before {
-  content: "";
-  position: static;
-  width: 0.5em;
-  height: 0.5em;
-  border-radius: 50%;
   background-color: var(--snake-player2-color);
+}
+
+.debug-only {
+  display: none;
+}
+
+.connection_status {
+  text-align: center;
+}
+
+.connection_fail {
+  color: rgb(154, 23, 23);
+}
+
+.connection_success {
+  color: rgb(95, 162, 95);
+}
+
+.connection_pinging {
+  color: rgb(203, 203, 125);
+}
+
+/* Manual connection */
+button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
 }
 
 .board {
@@ -165,12 +200,29 @@ body {
   place-items: center;
 }
 
-.cell.snake-player1-head,
-.cell.snake-player1-body {
+.cell.snake-player1-head {
   background-color: var(--snake-player1-color) !important;
 }
 
-.cell.snake-player2-head,
-.cell.snake-player2-body {
+.cell.snake-player1-body {
+  background-color: color-mix(
+    in srgb,
+    var(--snake-player1-color) 80%,
+    black
+  ) !important;
+  transform: scale(0.8);
+}
+
+.cell.snake-player2-head {
   background-color: var(--snake-player2-color) !important;
+}
+
+.cell.snake-player2-body {
+  background-color: color-mix(
+    in srgb,
+    var(--snake-player2-color) 80%,
+    black
+  ) !important;
+
+  transform: scale(0.8);
 }

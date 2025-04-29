@@ -1,76 +1,61 @@
-// Game configuration constants
-// Number of rows in the game grid. Will be increased to ~25 in production.
-const BOARD_NUM_OF_ROWS = 10;
-// Number of columns in the game grid. Will be increased to ~60 in production.
-const BOARD_NUM_OF_COLUMNS = 15;
-// Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production.
-const PLAYERS_STARTING_LENGTH = 4;
-// Initial score for each player. Will be increased to 100 in production.
-const PLAYERS_STARTING_SCORE = 15;
+const config = require("./gameConfig");
+const Player = require("./player");
+const Spawner = require("./spawner");
+const Board = require("./board");
+const CollisionHandler = require("./collisionHandler");
 
-// Game rewards and penalties
-const APPLE_PICKUP_REWARD = 5; // number of points a player receives for picking up an apple
-const MOVEMENT_CENTER_REWARD = 2; // reward for moving towards the center of the board
-const MOVEMENT_AWAY_FROM_CENTER_REWARD = 1; // reward for moving away from the center
-const ILLEGAL_MOVE_PENALTY = 5; // penalty for making an illegal move (direction), can also be used for timeout
-const REVERSE_DIRECTION_PENALTY = 3; // penalty for making a move that reverses the current direction
-
-// Number of moves after which the map starts shrinking.
-const START_SHRINKING_MAP_AFTER_MOVES = 0;
-// Number of columns left after which the map stops shrinking.
-const MINIMUM_NUM_OF_COLUMNS = 5;
-
+/**
+ * Main game class that handles the snake game logic
+ */
 class SnakeGame {
+  /**
+   * Creates a new SnakeGame instance and initializes game components
+   */
   constructor() {
-    this.numOfRows = BOARD_NUM_OF_ROWS;
-    this.numOfColumns = BOARD_NUM_OF_COLUMNS;
-    this.playersStartingLength = PLAYERS_STARTING_LENGTH;
+    this.numOfRows = config.BOARD_NUM_OF_ROWS;
+    this.numOfColumns = config.BOARD_NUM_OF_COLUMNS;
 
-    this.map = Array.from({ length: this.numOfRows }, () =>
-      Array.from({ length: this.numOfColumns }, () => null)
-    );
+    this.board = new Board(this);
+
+    this.internalMoveCounter = 0;
 
     this.players = [];
     this.winner = null;
 
-    this.internalMoveCounter = 0;
-
     this.apples = [];
+    this.modifiers = [];
 
-    this.shrinkStartMove = START_SHRINKING_MAP_AFTER_MOVES;
-    this.minColumns = MINIMUM_NUM_OF_COLUMNS;
-    this.shrinkLevel = -1;
+    this.spawner = new Spawner(this);
+
+    this.board.updateMap();
+    this.collisionHandler = new CollisionHandler(this);
   }
 
-  addPlayer(player) {
+  /**
+   * Adds a new player to the game
+   * @param {Object} playerData - Data for the new player
+   * @param {string} playerData.id - Unique identifier for the player
+   * @param {string} playerData.name - Display name for the player
+   */
+  addPlayer(playerData) {
     const isFirstPlayer = this.players.length === 0;
+    const player = new Player(
+      playerData,
+      isFirstPlayer,
+      this.numOfRows,
+      this.numOfColumns
+    );
+    this.players.push(player);
 
-    const startRowIndex = Math.floor(this.numOfRows / 2);
-    const startColumnIndex = isFirstPlayer
-      ? this.playersStartingLength
-      : this.numOfColumns - (this.playersStartingLength + 1);
-
-    const gamePlayer = {
-      id: player.id,
-      name: player.name,
-      body: [],
-      score: PLAYERS_STARTING_SCORE,
-      length: this.playersStartingLength,
-    };
-
-    // Add body segments
-    for (let i = 0; i < this.playersStartingLength; i++) {
-      gamePlayer.body.push({
-        row: startRowIndex,
-        column: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
-      });
-    }
-
-    this.players.push(gamePlayer);
-
-    this.updateMap();
+    this.board.updateMap();
   }
 
+  /**
+   * Processes a batch of moves from all players
+   * @param {Array<Object>} moves - Array of move objects
+   * @param {string} moves[].playerId - ID of the player making the move
+   * @param {string} moves[].direction - Direction of the move ('up', 'down', 'left', 'right')
+   */
   processMoves(moves) {
     this.internalMoveCounter++;
 
@@ -78,14 +63,13 @@ class SnakeGame {
     moves.forEach((move) => this.playMove(move.playerId, move.direction));
 
     // Handle map shrinking
-    const currentWidth = this.numOfColumns - this.shrinkLevel * 2;
+    const currentBoardWidth = this.board.getCurrentBoardWidth();
     if (
-      currentWidth > this.minColumns &&
-      this.internalMoveCounter >= this.shrinkStartMove &&
+      currentBoardWidth > config.MINIMUM_BOARD_SIZE &&
+      this.internalMoveCounter >= config.START_SHRINKING_MAP_AFTER_MOVES &&
       this.internalMoveCounter % 5 === 0
     ) {
-      this.shrinkMap();
-      this.updateMap();
+      this.board.shrinkMap();
     }
 
     // Check if game is over and determine winner
@@ -93,381 +77,165 @@ class SnakeGame {
       return;
     }
 
-    this.updateMap();
-
-    // Generate apples after shrinking
+    // Spawn apples every 5 moves
     if (this.internalMoveCounter % 5 === 0) {
-      this.generateMirroredApples();
+      this.spawner.spawnMirroredApples();
     }
+
+    // Spawn modifiers based on a chance
+    if (Math.random() < config.MODIFIER_SPAWN_CHANCE) {
+      this.spawner.spawnMirroredModifiers();
+    }
+
+    this.board.updateMap();
   }
 
-  playMove(playerId, moveDirection) {
+  // Modify playMove to use the new function
+  /**
+   * Processes a single move for a specific player
+   * @param {string} playerId - ID of the player making the move
+   * @param {string} direction - Direction of movement ('up', 'down', 'left', 'right')
+   */
+  playMove(playerId, direction) {
     const player = this.players.find((p) => p.id === playerId);
     if (!player) return;
 
-    // Prevent reversing direction and penalize the attempt
-    if (this.isOppositeDirection(player, moveDirection)) {
-      player.score = Math.max(0, player.score - REVERSE_DIRECTION_PENALTY); // Prevent negative scores
-      return; // Skip the move
+    // Use player's isReverseDirection method
+    if (player.isReverseDirection(direction)) {
+      player.addScore(-config.REVERSE_DIRECTION_PENALTY);
+      return;
     }
 
-    // Penalize invalid moves
-    if (!["up", "down", "left", "right"].includes(moveDirection)) {
-      player.score = Math.max(0, player.score - ILLEGAL_MOVE_PENALTY);
-      return; // Skip the move
+    // Penalize invalid moves (including timeout)
+    if (!["up", "down", "left", "right"].includes(direction)) {
+      player.addScore(-config.ILLEGAL_MOVE_PENALTY);
+      return;
     }
 
-    const head = { ...player.body[0] };
-    switch (moveDirection) {
+    const oldHead = { ...player.getHead() };
+    const newHead = { ...oldHead };
+
+    switch (direction) {
       case "up":
-        head.row -= 1;
+        newHead.row -= 1;
         break;
       case "down":
-        head.row += 1;
+        newHead.row += 1;
         break;
       case "left":
-        head.column -= 1;
+        newHead.column -= 1;
         break;
       case "right":
-        head.column += 1;
+        newHead.column += 1;
         break;
       default:
         return;
     }
 
-    if (!this.handleAppleCollision(player, head)) {
-      player.body.unshift(head);
-      player.body.pop();
+    this.updateScoreByMovementDirection(player, oldHead, newHead);
+
+    if (
+      !this.collisionHandler.checkForAppleCollision(player, newHead) &&
+      !this.collisionHandler.checkForModifierCollision(player, newHead)
+    ) {
+      player.addSegment(newHead);
+      player.removeTail();
     }
+
+    // Use player's updateModifiers method
+    player.updateModifiers();
   }
 
-  isOppositeDirection(player, incomingMoveDirection) {
-    const head = player.body[0];
-    const neck = player.body[1];
+  /**
+   * Updates player score based on movement relative to board center
+   * @param {Player} player - The player whose score is being updated
+   * @param {Object} oldHead - Previous position of player's head
+   * @param {number} oldHead.row - Row coordinate of old head position
+   * @param {number} oldHead.column - Column coordinate of old head position
+   * @param {Object} newHead - New position of player's head
+   * @param {number} newHead.row - Row coordinate of new head position
+   * @param {number} newHead.column - Column coordinate of new head position
+   */
+  updateScoreByMovementDirection(player, oldHead, newHead) {
+    const centerRow = Math.floor(this.numOfRows / 2);
+    const centerCol = Math.floor(this.numOfColumns / 2);
 
-    if (!neck) {
-      return false;
-    }
+    const oldDistanceToCenter =
+      Math.abs(oldHead.row - centerRow) + Math.abs(oldHead.column - centerCol);
+    const newDistanceToCenter =
+      Math.abs(newHead.row - centerRow) + Math.abs(newHead.column - centerCol);
 
-    let currentDirection;
+    // Store initial score for debugging
+    const initialScore = player.score;
 
-    if (head.row === neck.row) {
-      currentDirection = head.column > neck.column ? "right" : "left";
+    // Award points based on movement relative to center
+    if (newDistanceToCenter < oldDistanceToCenter) {
+      player.addScore(config.MOVEMENT_TOWARDS_CENTER_REWARD);
     } else {
-      currentDirection = head.row > neck.row ? "down" : "up";
+      player.addScore(config.MOVEMENT_AWAY_FROM_CENTER_REWARD);
     }
 
-    const opposites = {
-      up: "down",
-      down: "up",
-      left: "right",
-      right: "left",
-    };
-    return opposites[currentDirection] === incomingMoveDirection;
+    // console.log(`Player ${player.name} movement:
+    //   - Old distance to center: ${oldDistanceToCenter}
+    //   - New distance to center: ${newDistanceToCenter}
+    //   - Score: ${initialScore} -> ${player.score}`);
   }
 
-  handleAppleCollision(player, head) {
-    const appleIndex = this.apples.findIndex(
-      (apple) => apple.row === head.row && apple.column === head.column
-    );
+  /**
+   * Checks if the game is over based on player deaths or move limit
+   * @returns {boolean} True if game is over, false otherwise
+   */
+  checkGameOver() {
+    const deadPlayers = this.players
+      .filter(
+        (player) =>
+          player.score <= 0 ||
+          this.collisionHandler.checkForWallCollision(player) ||
+          this.collisionHandler.checkForPlayerCollision(player)
+      )
+      .map((player) => player.id);
 
-    if (appleIndex !== -1) {
-      player.body.unshift(head);
-      player.score += APPLE_PICKUP_REWARD;
-      player.length += 1;
-      this.apples.splice(appleIndex, 1);
+    if (deadPlayers.length > 0) {
+      if (deadPlayers.length === 1) {
+        this.winner = this.players.find((p) => p.id !== deadPlayers[0]).name;
+        console.log(`Game Over! Player ${this.winner} wins!`);
+      } else {
+        this.determineWinnerByScoreThenLength();
+      }
       return true;
     }
+
+    // Check for move limit only if no players died
+    if (this.internalMoveCounter >= config.GAME_MAX_MOVES) {
+      console.log("Maximum number of game moves exceeded.");
+      this.determineWinnerByScoreThenLength();
+      return true;
+    }
+
     return false;
   }
 
-  checkGameOver() {
-    const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
-    const collidedPlayers = this.checkForCollisions();
-
-    if (!zeroScorePlayers.length && !collidedPlayers) return false;
-
-    // If only one condition occurred, handle it normally
-    if (zeroScorePlayers.length && !collidedPlayers) {
-      return this.checkZeroScoreWinner();
-    }
-    if (!zeroScorePlayers.length && collidedPlayers) {
-      return this.checkCollisionWinner();
-    }
-
-    // Both conditions occurred - determine winner by score then length
-    console.log(
-      "Game Over! Multiple loss conditions - determining winner by score and length"
-    );
-    this.determineWinnerByScoreThenLength();
-    return true;
-  }
-
-  checkZeroScoreWinner() {
-    const zeroScorePlayers = this.players.filter((p) => p.score <= 0);
-    if (zeroScorePlayers.length === 0) return false;
-
-    if (zeroScorePlayers.length === 2) {
-      this.determineWinnerByLength();
-      console.log(
-        this.winner === -1
-          ? "Game Over! Draw! Both players reached zero score with equal lengths!"
-          : `Game Over! Both players reached zero score. Player ${this.winner} wins with longer length!`
-      );
-    } else {
-      this.winner = this.players.find((p) => p.score > 0).id;
-      console.log(
-        `Game Over! One player reached zero score. Player ${this.winner} wins!`
-      );
-    }
-    return true;
-  }
-
-  checkCollisionWinner() {
-    const collidedPlayers = this.checkForCollisions();
-    if (!collidedPlayers) return false;
-
-    if (collidedPlayers.length === 1) {
-      this.winner = this.players.find((p) => p.id !== collidedPlayers[0]).name;
-    } else {
-      this.determineWinnerByScoreThenLength();
-    }
-    return true;
-  }
-
-  checkForCollisions() {
-    let collidedPlayers = new Set();
-
-    for (const player of this.players) {
-      const wallCollision = this.checkWallCollision(player);
-      if (wallCollision) {
-        collidedPlayers.add(player.id);
-        continue;
-      }
-
-      const bodyCollision = this.checkPlayerCollision(player);
-      if (bodyCollision) {
-        collidedPlayers.add(player.id);
-        continue;
-      }
-    }
-
-    return collidedPlayers.size > 0 ? Array.from(collidedPlayers) : null;
-  }
-
-  checkWallCollision(player) {
-    const head = player.body[0];
-
-    // Border shrinkage
-    if (!head) {
-      console.log(`Player ${player.name} died by border shrinkage`);
-      return true;
-    }
-
-    // Wall/Border collision
-    const leftBorder = this.shrinkLevel;
-    const rightBorder = this.numOfColumns - 1 - this.shrinkLevel;
-
-    if (
-      head.row < 0 ||
-      head.row >= this.numOfRows ||
-      head.column <= leftBorder ||
-      head.column >= rightBorder
-    ) {
-      console.log(`Player ${player.name} died by hitting a wall`);
-      return true;
-    }
-  }
-
-  checkPlayerCollision(player) {
-    const head = player.body[0];
-
-    // Self collision
-    const playerCollidedWithSelf = player.body
-      .slice(1)
-      .some(
-        (bodySegment) =>
-          bodySegment.row === head.row && bodySegment.column === head.column
-      );
-    if (playerCollidedWithSelf) {
-      console.log(`Player ${player.name} died by colliding with self`);
-      return true;
-    }
-
-    // Other player collision (both head and body)
-    const otherPlayer = this.players.find((p) => p.id !== player.id);
-    const playerCollidedWithOtherPlayer = otherPlayer.body.some(
-      (segment) => segment.row === head.row && segment.column === head.column
-    );
-    if (playerCollidedWithOtherPlayer) {
-      console.log(`Player ${player.name} died by colliding with other player`);
-      return true;
-    }
-  }
-
+  /**
+   * Determines the winner based on score and snake length when game ends in a tie
+   * Sets the winner property to the winning player's name or -1 for a draw
+   */
   determineWinnerByScoreThenLength() {
     const [player1, player2] = this.players;
 
     if (player1.score !== player2.score) {
-      this.winner = player1.score > player2.score ? player1.id : player2.id;
+      this.winner = player1.score > player2.score ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by higher score!`);
-    } else {
-      this.determineWinnerByLength();
-    }
-  }
-
-  determineWinnerByLength() {
-    const [player1, player2] = this.players;
-
-    if (player1.length !== player2.length) {
-      this.winner = player1.length > player2.length ? player1.id : player2.id;
+    } else if (player1.length !== player2.length) {
+      this.winner =
+        player1.length > player2.length ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by longer length!`);
     } else {
       this.winner = -1;
       console.log(`Game Over! Draw! Equal scores and lengths`);
     }
   }
-
-  shrinkMap() {
-    this.shrinkLevel++;
-
-    const leftBorder = this.shrinkLevel;
-    const rightBorder = this.numOfColumns - 1 - this.shrinkLevel;
-
-    // Remove existing apples in wall positions
-    this.apples = this.apples.filter(
-      (apple) => apple.column > leftBorder && apple.column < rightBorder
-    );
-
-    // Check and handle snake segments in new wall positions
-    // this.players.forEach((player) => {
-    //   // Find segments that will be in walls
-    //   const segmentsInWalls = player.body.filter(
-    //     (segment) =>
-    //       segment.column <= leftBorder || segment.column >= rightBorder
-    //   );
-
-    //   // Overwrite map cells with walls
-    //   // segmentsInWalls.forEach((segment) => {
-    //   //   this.map[segment.row][segment.column] = "#";
-    //   // });
-
-    //   // Find disconnected segments
-    //   const disconnectedSegments = [];
-    //   // for (let i = 1; i < player.body.length; i++) {
-    //   //   const current = player.body[i];
-    //   //   const previous = player.body[i - 1];
-
-    //   //   // Check if segment is connected (adjacent in row or column)
-    //   //   const isConnected =
-    //   //     (Math.abs(current.row - previous.row) === 1 &&
-    //   //       current.column === previous.column) ||
-    //   //     (Math.abs(current.column - previous.column) === 1 && current.row === previous.row);
-
-    //   //   if (!isConnected) {
-    //   //     // Found a gap - add all remaining segments to disconnected array
-    //   //     disconnectedSegments.push(...player.body.slice(i));
-    //   //     // Remove disconnected segments from body
-    //   //     player.body = player.body.slice(0, i);
-    //   //     break;
-    //   //   }
-    //   // }
-
-    //   // Apply penalties
-    //   const totalLostSegments =
-    //     segmentsInWalls.length + disconnectedSegments.length;
-    //   player.score = Math.max(0, player.score - totalLostSegments * 3);
-    //   player.length -= totalLostSegments;
-
-    //   // Convert disconnected segments to apples
-    //   // this.apples.push(
-    //   //   ...disconnectedSegments.map((segment) => ({
-    //   //     row: segment.row,
-    //   //     column: segment.column,
-    //   //   }))
-    //   // );
-    // });
-  }
-
-  findValidSpawningPosition() {
-    let attempts = 0;
-    const maxAttempts = this.numOfColumns * this.numOfRows;
-
-    while (attempts < maxAttempts) {
-      const originalRow = Math.floor(Math.random() * this.numOfRows);
-      const originalColumn = Math.floor(
-        Math.random() * Math.floor(this.numOfColumns / 2)
-      );
-
-      const mirroredRow = originalRow;
-      const mirroredColumn = this.numOfColumns - 1 - originalColumn;
-
-      // Only check if cells are available (not wall, not snake)
-      if (
-        this.map[originalRow][originalColumn] === null &&
-        this.map[mirroredRow][mirroredColumn] === null
-      ) {
-        return { originalRow, originalColumn, mirroredRow, mirroredColumn };
-      }
-
-      attempts++;
-    }
-
-    return null;
-  }
-
-  generateMirroredApples() {
-    const position = this.findValidSpawningPosition();
-
-    if (position) {
-      const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
-        position;
-      this.apples.push({ row: originalRow, column: originalColumn });
-      this.apples.push({ row: mirroredRow, column: mirroredColumn });
-
-      this.updateMap();
-
-      return;
-    }
-
-    console.log("Couldn't find valid mirrored positions to spawn apples");
-  }
-
-  updateMap() {
-    const leftBorder = this.shrinkLevel;
-    const rightBorder = this.numOfColumns - 1 - this.shrinkLevel;
-
-    this.map = Array.from({ length: this.numOfRows }, () =>
-      Array.from({ length: this.numOfColumns }, (_, colIndex) =>
-        colIndex <= leftBorder || colIndex >= rightBorder ? "#" : null
-      )
-    );
-
-    this.players.forEach((player) => {
-      if (player.body.length > 0) {
-        const head = player.body[0];
-        if (
-          head &&
-          head.row >= 0 &&
-          head.row < this.numOfRows &&
-          head.column >= 0 &&
-          head.column < this.numOfColumns
-        ) {
-          this.map[head.row][head.column] = player.id[0].toUpperCase();
-
-          for (let i = 1; i < player.body.length; i++) {
-            const segment = player.body[i];
-
-            this.map[segment.row][segment.column] = player.id[0];
-          }
-        }
-      }
-    });
-
-    this.apples.forEach((apple) => {
-      this.map[apple.row][apple.column] = "A";
-    });
-  }
 }
 
-module.exports = { SnakeGame };
+module.exports = {
+  SnakeGame,
+};

@@ -9,13 +9,13 @@ import time
 DEFAULT_AGENT_ID = "l"
 VALID_DIRECTIONS = ["up", "down", "left", "right"]
 VALID_MODES = ["up", "down", "left", "right", "random", "timeout", "apple", "survive"]
-BASE_DELAY = 0.5  # 500ms
+BASE_DELAY = 0.05  # 50ms
 
 # Add helper functions for apple and survive modes
 def find_player_head(game_map, player_symbol):
     for i in range(len(game_map)):
         for j in range(len(game_map[i])):
-            if game_map[i][j] == player_symbol:
+            if game_map[i][j] and game_map[i][j].get('type') == 'snake-head' and game_map[i][j].get('player') == player_symbol.lower():
                 return {"x": i, "y": j}
     return {"x": 0, "y": 0}
 
@@ -24,7 +24,7 @@ def is_safe_move(game_map, pos):
         pos["y"] < 0 or pos["y"] >= len(game_map[0])):
         return False
     cell = game_map[pos["x"]][pos["y"]]
-    return cell is None or cell == "A"
+    return cell is None or (cell and cell.get('type') == 'apple')
 
 def find_safe_direction(game_map, player_head):
     directions = [
@@ -58,7 +58,8 @@ def find_closest_apple(game_map, player_head):
             continue
         visited.add(key)
 
-        if game_map[x][y] == "A":
+        cell = game_map[x][y]
+        if cell and cell.get('type') == 'apple':
             return path
 
         directions = [
@@ -76,8 +77,9 @@ def find_closest_apple(game_map, player_head):
                 continue
 
             cell = game_map[new_x][new_y]
-            if (cell is not None and cell != "A" and 
-                (cell.lower() == "k" or cell.lower() == "l")):
+            if (cell is not None and 
+                cell.get('type') != 'apple' and 
+                (cell.get('type') == 'snake-head' or cell.get('type') == 'snake-body')):
                 continue
 
             queue.append((new_x, new_y, path + [direction["move"]]))
@@ -140,7 +142,7 @@ async def connect_to_game_server(agent_id, mode):
                 # Add delay and increase if in timeout mode
                 await asyncio.sleep(delay)
                 if mode == "timeout":
-                    delay += 0.3  # Add 300ms each move
+                    delay += 0.05  # Add 50ms each move
 
                 # Send move
                 await websocket.send(json.dumps(move))

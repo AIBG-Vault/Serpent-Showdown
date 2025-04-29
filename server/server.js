@@ -4,7 +4,10 @@ const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 const { SnakeGame } = require("../logic/game");
 const fs = require("fs");
-const { reformatGameState } = require("./utility");
+
+// Configuration
+const ENABLE_MOVE_TIMEOUT = true; // Switch to enable/disable move timeout
+const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
 
 let pendingMoves = new Map(); // Store moves until both players have moved
 
@@ -16,6 +19,8 @@ app.use(bodyParser.json());
 let playersMap = new Map(); // This will store player data with ID as key
 let game;
 let currentPlayers = [];
+
+let timeoutId;
 
 // Load players.json and initialize gameObject
 fs.readFile("./players.json", "utf8", (err, data) => {
@@ -109,6 +114,22 @@ function handlePlayerConnection(ws, playerId) {
     })
   );
 
+  connections.forEach((client) => {
+    if (client.id === "frontend" && client.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({
+        map: game.map,
+        players: game.players,
+        winner: game.winner,
+        moveCounter: game.internalMoveCounter,
+      });
+      client.send(message, (error) => {
+        if (error) {
+          console.error("Error sending game state to frontend:", error);
+        }
+      });
+    }
+  });
+
   if (currentPlayers.length === 2) {
     // If there are already two player connections, start the game
     // Send the game state to the first player
@@ -154,46 +175,96 @@ function handleMessage(ws, message) {
     move = JSON.parse(message);
   } catch (error) {
     console.error("Cannot parse message:", message);
+    // Ignore unparseable messages
     return;
   }
 
-  // Validate move format
-  if (!move.playerId || !move.direction) {
-    ws.send(JSON.stringify({ error: "Invalid move format" }));
-
-    move = {
-      playerId: move.playerId,
-      direction: "invalid",
-    };
+  // 1. Check if playerId is missing or invalid
+  if (!move.playerId || !currentPlayers.some((p) => p.id === move.playerId)) {
+    console.log(`Ignoring move due to missing or invalid playerId: ${message}`);
+    ws.send(
+      JSON.stringify({ error: "Invalid or missing playerId. Move ignored." })
+    );
+    // Ignore the move completely
+    return;
   }
 
-  // Store the move
+  // 2. Check if direction is missing (but playerId is valid)
+  if (!move.direction) {
+    console.log(
+      `Received move with missing direction from ${move.playerId}. Setting direction to 'invalid'.`
+    );
+    ws.send(
+      JSON.stringify({
+        warning: "Missing direction in move. Treating as invalid.",
+      })
+    );
+    // Set direction to invalid so game logic can handle it (e.g., apply penalty)
+    move.direction = "invalid";
+  }
+
+  // Store the move (it's either valid or has direction set to 'invalid')
   pendingMoves.set(move.playerId, move);
 
-  // Check if both players have moved
-  if (pendingMoves.size === 2) {
+  // Clear existing timeout if any
+  if (timeoutId) clearTimeout(timeoutId);
+
+  // Process moves function
+  const processPendingMoves = () => {
     game.processMoves(Array.from(pendingMoves.values()));
     pendingMoves.clear();
 
-    // Send updated game state to all clients
+    // Send game state to all connections
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        gameState = reformatGameState(game);
+        const message = JSON.stringify({
+          map: game.map,
+          players: game.players,
+          winner: game.winner,
+          moveCounter: game.internalMoveCounter,
+        });
 
-        client.send(JSON.stringify(gameState));
+        client.send(message, (error) => {
+          if (error) {
+            console.error("Error sending message:", error);
+          }
+        });
       }
     });
 
-    // Handle game over
+    // Check for game over
     if (game.winner !== null) {
-      if (game.winner === -1) {
-        console.log("Game Over! It's a draw.");
-      } else {
-        console.log(`Game Over! Winner: ${game.winner}`);
-      }
-
+      console.log(
+        game.winner === -1
+          ? "Game Over! It's a draw."
+          : `Game Over! Winner: ${game.winner}`
+      );
       closeConnectionsAndServer();
     }
+  };
+
+  // Set new timeout only if enabled
+  if (ENABLE_MOVE_TIMEOUT) {
+    timeoutId = setTimeout(() => {
+      if (pendingMoves.size > 0) {
+        // Add timeout moves for players who haven't moved
+        currentPlayers.forEach((player) => {
+          if (!pendingMoves.has(player.id)) {
+            pendingMoves.set(player.id, {
+              playerId: player.id,
+              direction: "timeout",
+            });
+          }
+        });
+        processPendingMoves();
+      }
+    }, MOVE_TIMEOUT);
+  }
+
+  // Process moves immediately if all players sent their moves
+  if (pendingMoves.size === 2) {
+    if (timeoutId) clearTimeout(timeoutId);
+    processPendingMoves();
   }
 }
 

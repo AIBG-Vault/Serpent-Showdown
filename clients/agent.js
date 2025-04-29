@@ -66,14 +66,24 @@ const movementHelpers = {
       return false;
     }
     const cell = map[pos.x][pos.y];
-    return cell === null || cell === "A";
+    return (
+      cell === null ||
+      (cell && cell.type === "apple") ||
+      (cell && cell.type === "golden-apple") ||
+      (cell && cell.type === "tron")
+    );
   },
 
   findPlayerHead(map, playerSymbol) {
     const playerHead = { x: 0, y: 0 };
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map[i].length; j++) {
-        if (map[i][j] === playerSymbol) {
+        const cell = map[i][j];
+        if (
+          cell &&
+          cell.type === "snake-head" &&
+          cell.player === playerSymbol.toLowerCase()
+        ) {
           playerHead.x = i;
           playerHead.y = j;
         }
@@ -102,7 +112,7 @@ const strategies = {
       }
 
       const cell = map[newX][newY];
-      if (cell === null || cell === "A") {
+      if (cell === null || (cell && cell.type === "apple")) {
         return move;
       }
     }
@@ -125,7 +135,8 @@ const strategies = {
       if (visited.has(key)) continue;
       visited.add(key);
 
-      if (map[x][y] === "A") {
+      const cell = map[x][y];
+      if (cell && cell.type === "apple") {
         return path;
       }
 
@@ -145,8 +156,8 @@ const strategies = {
         const cell = map[newX][newY];
         if (
           cell !== null &&
-          cell !== "A" &&
-          (cell.toLowerCase() === "k" || cell.toLowerCase() === "l")
+          cell.type !== "apple" &&
+          (cell.type === "snake-head" || cell.type === "snake-body")
         ) {
           continue;
         }
@@ -166,6 +177,9 @@ function decideNextMove(map, mode) {
   );
 
   switch (mode) {
+    case "timeout":
+      return strategies.findSafeDirection(map, playerHead);
+
     case "survive":
       return strategies.findSafeDirection(map, playerHead);
 

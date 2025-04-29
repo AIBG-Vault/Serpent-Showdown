@@ -16,6 +16,7 @@
 
     <script src="./js/index.js" defer></script>
     <script src="./js/board.js" defer></script>
+    <script src="./js/debugView.js" defer></script>
   </head>
   <body>
     <div id="particles-js"></div>
@@ -33,11 +34,16 @@
           <h2 class="team_name">Team one name</h2>
           <h3 class="team_score">Score: ####</h3>
           <h3 class="team_length">Length: ####</h3>
+          <div class="debug-only">
+            <button onclick="connectPlayer(1)">Connect manually (WASD)</button>
+          </div>
         </div>
 
         <div class="middle_container">
           <h1>AIBG 9.0</h1>
-
+          <div class="debug-only">
+            <h3 class="connection_status"></h3>
+          </div>
           <h3 class="move_number">Move: ####</h3>
         </div>
 
@@ -45,6 +51,11 @@
           <h2 class="team_name">Team two name</h2>
           <h3 class="team_score">Score: ####</h3>
           <h3 class="team_length">Length: ####</h3>
+          <div class="debug-only">
+            <button onclick="connectPlayer(2)">
+              Connect manually (arrow keys)
+            </button>
+          </div>
         </div>
       </div>
 
