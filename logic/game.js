@@ -23,7 +23,7 @@ class SnakeGame {
     this.winner = null;
 
     this.apples = [];
-    this.modifiers = [];
+    this.items = [];
 
     this.spawner = new Spawner(this);
     this.collisionHandler = new CollisionHandler(this);
@@ -79,9 +79,9 @@ class SnakeGame {
       this.spawner.spawnMirroredApples();
     }
 
-    // Spawn modifiers based on a chance
+    // Spawn items based on a chance
     if (Math.random() < config.MODIFIER_SPAWN_CHANCE) {
-      this.spawner.spawnMirroredModifiers();
+      this.spawner.spawnMirroredItems();
     }
 
     // update map game state

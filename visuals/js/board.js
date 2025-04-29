@@ -56,7 +56,7 @@ function updateGrid(map) {
               value.player === "k" ? "snake-player1-body" : "snake-player2-body"
             );
           } else {
-            cell.classList.add("modifier");
+            cell.classList.add("item");
             cell.textContent = value.symbol || "?";
           }
 

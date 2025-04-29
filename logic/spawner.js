@@ -2,9 +2,10 @@ const GoldenApple = require("./items/goldenApple");
 const Tron = require("./items/tron");
 const ResetBorders = require("./items/resetBorders");
 const Shorten = require("./items/shorten");
+const Apple = require("./items/apple");
 
 /**
- * Class responsible for spawning game elements (apples and modifiers) in mirrored positions
+ * Class responsible for spawning game elements (apples and items) in mirrored positions
  */
 class Spawner {
   /**
@@ -13,8 +14,6 @@ class Spawner {
    */
   constructor(game) {
     this.game = game;
-
-    this.modifierClasses = [GoldenApple, Tron, ResetBorders, Shorten];
   }
 
   /**
@@ -108,15 +107,14 @@ class Spawner {
         continue;
       }
 
-      // Check collision with modifiers
-      const collidesWithModifier = this.game.modifiers.some(
-        (modifier) =>
-          (modifier.row === originalRow &&
-            modifier.column === originalColumn) ||
-          (modifier.row === mirroredRow && modifier.column === mirroredColumn)
+      // Check collision with items
+      const collidesWithItem = this.game.items.some(
+        (item) =>
+          (item.row === originalRow && item.column === originalColumn) ||
+          (item.row === mirroredRow && item.column === mirroredColumn)
       );
 
-      if (collidesWithModifier) {
+      if (collidesWithItem) {
         attempts++;
         continue;
       }
@@ -134,77 +132,85 @@ class Spawner {
    */
   spawnMirroredApples() {
     const position = this.findValidSpawningPosition();
-
-    if (position) {
-      const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
-        position;
-      this.game.apples.push({ row: originalRow, column: originalColumn });
-      this.game.apples.push({ row: mirroredRow, column: mirroredColumn });
+    if (!position) {
+      console.log("Couldn't find valid mirrored positions to spawn apples");
       return;
     }
 
-    console.log("Couldn't find valid mirrored positions to spawn apples");
+    const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
+      position;
+
+    const originalApple = new Apple({
+      row: originalRow,
+      column: originalColumn,
+    });
+    const mirroredApple = new Apple({
+      row: mirroredRow,
+      column: mirroredColumn,
+    });
+
+    this.game.apples.push(originalApple, mirroredApple);
   }
 
   /**
-   * Spawns two modifiers in mirrored positions on the game board
-   * Selects modifier type based on weighted probability and determines affect type
-   * For Tron modifiers, affect is randomly chosen with 40% self, 40% enemy, 20% both
+   * Spawns two items in mirrored positions on the game board
+   * Selects item type based on weighted probability and determines affect type
+   * For Tron items, affect is randomly chosen with 40% self, 40% enemy, 20% both
    * If no valid positions are found, logs an error message
    */
-  spawnMirroredModifiers() {
+  spawnMirroredItems() {
     const position = this.findValidSpawningPosition();
-    if (position) {
-      const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
-        position;
 
-      // Calculate total spawn weight
-      const totalSpawnWeight = this.modifierClasses.reduce(
-        (sum, ModifierClass) => sum + ModifierClass.config.spawnWeight,
-        0
-      );
-
-      // Select modifier class based on weight
-      const random = Math.random() * totalSpawnWeight;
-      let currentSpawnWeight = 0;
-      const SelectedModifierClass = this.modifierClasses.find(
-        (ModifierClass) => {
-          currentSpawnWeight += ModifierClass.config.spawnWeight;
-          return random <= currentSpawnWeight;
-        }
-      );
-
-      // Determine affect for "random" affect modifiers with 40/40/20 split
-      let affect = SelectedModifierClass.config.affect;
-      if (affect === "random") {
-        const affectRoll = Math.random();
-        if (affectRoll < 0.4) {
-          affect = "self";
-        } else if (affectRoll < 0.8) {
-          affect = "enemy";
-        } else {
-          affect = "both";
-        }
-      }
-
-      const originalModifier = new SelectedModifierClass(
-        { row: originalRow, column: originalColumn },
-        affect
-      );
-      const mirroredModifier = new SelectedModifierClass(
-        { row: mirroredRow, column: mirroredColumn },
-        affect
-      );
-
-      //TODO: this is creating a new modifier therefore it picks a random length each time, change for it to just change the modifier row and column but copy the rest
-
-      // Add the selected modifier to both positions with the determined affect
-      this.game.modifiers.push(originalModifier, mirroredModifier);
-
+    if (!position) {
+      console.log("Couldn't find valid mirrored positions to spawn items");
       return;
     }
 
-    console.log("Couldn't find valid mirrored positions to spawn modifiers");
+    const itemClasses = [GoldenApple, Tron, ResetBorders, Shorten];
+
+    const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
+      position;
+
+    // Calculate total spawn weight
+    const totalSpawnWeight = itemClasses.reduce(
+      (sum, ItemClass) => sum + ItemClass.config.spawnWeight,
+      0
+    );
+
+    // Select item class based on weight
+    const random = Math.random() * totalSpawnWeight;
+    let currentSpawnWeight = 0;
+    const SelectedItemClass = itemClasses.find((ItemClass) => {
+      currentSpawnWeight += ItemClass.config.spawnWeight;
+      return random <= currentSpawnWeight;
+    });
+
+    // Determine affect for "random" affect items with 40/40/20 split
+    let affect = SelectedItemClass.config.affect;
+    if (affect === "random") {
+      const affectRoll = Math.random();
+      if (affectRoll < 0.4) {
+        affect = "self";
+      } else if (affectRoll < 0.8) {
+        affect = "enemy";
+      } else {
+        affect = "both";
+      }
+    }
+
+    const originalItem = new SelectedItemClass(
+      { row: originalRow, column: originalColumn },
+      affect
+    );
+    const mirroredItem = new SelectedItemClass(
+      { row: mirroredRow, column: mirroredColumn },
+      affect
+    );
+
+    //TODO: this is creating a new item therefore it picks a random length each time, change for it to just change the item row and column but copy the rest
+
+    // Add the selected item to both positions with the determined affect
+    this.game.items.push(originalItem, mirroredItem);
   }
 }
 

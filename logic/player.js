@@ -22,7 +22,7 @@ class Player {
     this.body = [];
     this.initBodySegments();
 
-    this.activeModifiers = [];
+    this.activeItems = [];
   }
 
   /**
@@ -119,18 +119,17 @@ class Player {
     // remove tail segment if needed
     const keepTailSegment =
       playerAteApple ||
-      this.activeModifiers.some(
-        (activeModifier) =>
-          activeModifier.type === "golden apple" ||
-          activeModifier.type === "tron"
+      this.activeItems.some(
+        (activeItem) =>
+          activeItem.type === "golden apple" || activeItem.type === "tron"
       );
 
     if (!keepTailSegment) {
       this.body.pop();
     }
 
-    // Use player's updateModifiers method
-    this.processModifiers();
+    // Use player's updateItems method
+    this.processItems();
   }
 
   /**
@@ -196,66 +195,64 @@ class Player {
   }
 
   /**
-   * Adds or updates a modifier effect on the player
-   * @param {Object} modifier - The modifier to add
-   * @param {string} modifier.type - The type of modifier ('golden apple' or 'tron')
-   * @param {number} modifier.duration - How long the modifier should last
-   * @param {number} [modifier.temporarySegments] - For tron modifier, tracks temporary segments
+   * Adds or updates a item effect on the player
+   * @param {Object} item - The item to add
+   * @param {string} item.type - The type of item ('golden apple' or 'tron')
+   * @param {number} item.duration - How long the item should last
+   * @param {number} [item.temporarySegments] - For tron item, tracks temporary segments
    */
-  addOrExtendModifier(modifier) {
-    const existingModifier = this.activeModifiers.find(
-      (mod) => mod.type === modifier.type
-    );
+  addOrExtendItem(item) {
+    const existingItem = this.activeItems.find((mod) => mod.type === item.type);
 
-    if (existingModifier) {
-      existingModifier.duration = modifier.duration;
+    if (existingItem) {
+      existingItem.duration = item.duration;
     } else {
-      this.activeModifiers.push(modifier);
+      this.activeItems.push(item);
     }
   }
 
   /**
-   * Updates all active modifiers, reducing their duration and handling expiration effects
+   * Updates all active items, reducing their duration and handling expiration effects
    */
-  processModifiers() {
-    this.activeModifiers = this.activeModifiers
-      .map((activeModifier) => {
-        // console.log("Active: " + activeModifier);
-        // const newDuration = activeModifier.duration - 1;
+  processItems() {
+    this.activeItems = this.activeItems
+      .map((activeItem) => {
+        // console.log("Active: " + activeItem);
+        // const newDuration = activeItem.duration - 1;
 
-        activeModifier.duration -= 1;
+        activeItem.duration -= 1;
 
-        activeModifier.do(this);
+        activeItem.do(this);
 
-        // Handle reset map modifier
-        // if (activeModifier.type === "reset borders") {
+        // Handle reset map item
+        // if (activeItem.type === "reset borders") {
         //   this.game.board.resetShrinkage();
-        // } else if (activeModifier.type.slice(0, 7) === "shorten") {
-        //   const segmentsToRemove = parseInt(activeModifier.type.slice(7));
+        // } else if (activeItem.type.slice(0, 7) === "shorten") {
+        //   const segmentsToRemove = parseInt(activeItem.type.slice(7));
         //   this.removeSegments(segmentsToRemove);
-        // } else if (activeModifier.type === "tron") {
-        //   activeModifier.temporarySegments += 1;
+        // } else if (activeItem.type === "tron") {
+        //   activeItem.temporarySegments += 1;
 
-        //   // handle modifier interactions
-        //   const activeGoldenAppleModifier = this.activeModifiers.find(
+        //   // handle item interactions
+        //   const activeGoldenAppleItem = this.activeItems.find(
         //     (mod) => mod.type === "golden apple"
         //   );
-        //   const activeShortenModifier = this.activeModifiers.find(
+        //   const activeShortenItem = this.activeItems.find(
         //     (mod) => mod.type.slice(0, 7) === "shorten"
         //   );
-        //   if (activeGoldenAppleModifier) {
-        //     activeModifier.temporarySegments -= 1;
-        //   } else if (activeShortenModifier) {
-        //     const segmentsToRemove = parseInt(activeModifier.type.slice(7));
-        //     activeModifier.temporarySegments -= segmentsToRemove;
+        //   if (activeGoldenAppleItem) {
+        //     activeItem.temporarySegments -= 1;
+        //   } else if (activeShortenItem) {
+        //     const segmentsToRemove = parseInt(activeItem.type.slice(7));
+        //     activeItem.temporarySegments -= segmentsToRemove;
         //   }
 
-        //   console.log(activeModifier);
+        //   console.log(activeItem);
 
         //   if (newDuration === 0) {
         //     const segmentsToRemove = Math.max(
         //       0,
-        //       activeModifier.temporarySegments
+        //       activeItem.temporarySegments
         //     );
         //     if (segmentsToRemove > 0) {
         //       this.body = this.body.slice(0, -segmentsToRemove);
@@ -263,11 +260,11 @@ class Player {
         //   }
         // }
 
-        return activeModifier;
+        return activeItem;
       })
-      .filter((activeModifier) => {
-        // Remove modifiers with duration <= 0
-        return activeModifier.duration > 0;
+      .filter((activeItem) => {
+        // Remove items with duration <= 0
+        return activeItem.duration > 0;
       });
   }
 }

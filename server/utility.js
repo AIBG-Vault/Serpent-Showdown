@@ -6,7 +6,7 @@ function serializeGameState(game) {
       name: player.name,
       score: player.score,
       body: player.body,
-      activeModifiers: player.activeModifiers,
+      activeItems: player.activeItems,
     })),
     winner: game.winner,
     moveCount: game.moveCount,

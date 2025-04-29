@@ -92,8 +92,8 @@ class Board {
       this.isWithinBorders(apple)
     );
 
-    this.game.modifiers = this.game.modifiers.filter((modifier) =>
-      this.isWithinBorders(modifier)
+    this.game.items = this.game.items.filter((item) =>
+      this.isWithinBorders(item)
     );
   }
 
@@ -161,53 +161,51 @@ class Board {
     // Update apples
     if (this.game.apples) {
       this.game.apples.forEach((apple) => {
-        this.setCell(apple.row, apple.column, {
-          type: "apple",
-        });
+        this.setCell(apple.row, apple.column, apple);
       });
     }
 
-    // Update modifiers
-    if (this.game.modifiers) {
-      this.game.modifiers.forEach((modifier) => {
-        this.setCell(modifier.row, modifier.column, modifier);
+    // Update items
+    if (this.game.items) {
+      this.game.items.forEach((item) => {
+        this.setCell(item.row, item.column, item);
 
-        // console.log("Cell: " + this.getCell(modifier.row, modifier.column));
+        // console.log("Cell: " + this.getCell(item.row, item.column));
 
-        // switch (modifier.type) {
+        // switch (item.type) {
         //   case "golden apple":
-        //     this.setCell(modifier.row, modifier.column, {
+        //     this.setCell(item.row, item.column, {
         //       type: "golden-apple",
-        //       affect: modifier.affect,
+        //       affect: item.affect,
         //     });
         //     break;
         //   case "tron":
-        //     this.setCell(modifier.row, modifier.column, {
+        //     this.setCell(item.row, item.column, {
         //       type: "tron",
-        //       affect: modifier.affect,
+        //       affect: item.affect,
         //     });
         //     break;
         //   case "reset borders":
-        //     this.setCell(modifier.row, modifier.column, {
+        //     this.setCell(item.row, item.column, {
         //       type: "reset-borders",
         //     });
         //     break;
         //   case "shorten 10":
-        //     this.setCell(modifier.row, modifier.column, {
+        //     this.setCell(item.row, item.column, {
         //       type: "shorten-10",
-        //       affect: modifier.affect,
+        //       affect: item.affect,
         //     });
         //     break;
         //   case "shorten 25":
-        //     this.setCell(modifier.row, modifier.column, {
+        //     this.setCell(item.row, item.column, {
         //       type: "shorten-25",
-        //       affect: modifier.affect,
+        //       affect: item.affect,
         //     });
         //     break;
         //   default:
-        //     this.setCell(modifier.row, modifier.column, {
-        //       type: "unknown-modifier",
-        //       affect: modifier.affect,
+        //     this.setCell(item.row, item.column, {
+        //       type: "unknown-item",
+        //       affect: item.affect,
         //     });
         //     break;
         // }

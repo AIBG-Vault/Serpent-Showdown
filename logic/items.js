@@ -1,4 +1,4 @@
-const modifiersList = [
+const itemsList = [
   {
     type: "golden apple",
     affect: "self",
@@ -36,4 +36,4 @@ const modifiersList = [
   },
 ];
 
-module.exports = modifiersList;
+module.exports = itemsList;
