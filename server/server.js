@@ -1,9 +1,13 @@
 const express = require("express");
 const http = require("http");
 const WebSocket = require("ws");
+
 const bodyParser = require("body-parser");
-const { SnakeGame } = require("../logic/game");
 const fs = require("fs");
+
+const { SnakeGame } = require("../logic/game");
+
+const util = require("./utility");
 
 // Configuration
 const ENABLE_MOVE_TIMEOUT = true; // Switch to enable/disable move timeout
@@ -72,14 +76,7 @@ server.listen(port, () => {
 
 function handleFrontendConnection(ws) {
   console.log("Frontend connected");
-  ws.send(
-    JSON.stringify({
-      map: game.map,
-      players: game.players,
-      winner: game.winner,
-      moveCounter: game.internalMoveCounter,
-    })
-  );
+  ws.send(JSON.stringify(util.serializeGameState(game)));
 }
 
 function handlePlayerConnection(ws, playerId) {
@@ -116,12 +113,7 @@ function handlePlayerConnection(ws, playerId) {
 
   connections.forEach((client) => {
     if (client.id === "frontend" && client.readyState === WebSocket.OPEN) {
-      const message = JSON.stringify({
-        map: game.map,
-        players: game.players,
-        winner: game.winner,
-        moveCounter: game.internalMoveCounter,
-      });
+      const message = JSON.stringify(util.serializeGameState(game));
       client.send(message, (error) => {
         if (error) {
           console.error("Error sending game state to frontend:", error);
@@ -135,12 +127,7 @@ function handlePlayerConnection(ws, playerId) {
     // Send the game state to the first player
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        const message = JSON.stringify({
-          map: game.map,
-          players: game.players,
-          winner: game.winner,
-          moveCounter: game.internalMoveCounter,
-        });
+        const message = JSON.stringify(util.serializeGameState(game));
 
         client.send(message, (error) => {
           if (error) {
@@ -217,12 +204,7 @@ function handleMessage(ws, message) {
     // Send game state to all connections
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        const message = JSON.stringify({
-          map: game.map,
-          players: game.players,
-          winner: game.winner,
-          moveCounter: game.internalMoveCounter,
-        });
+        const message = JSON.stringify(util.serializeGameState(game));
 
         client.send(message, (error) => {
           if (error) {

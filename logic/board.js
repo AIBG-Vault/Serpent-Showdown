@@ -20,6 +20,7 @@ class Board {
       bottom: this.game.numOfRows - this.horizontalShrinkLevel - 1,
     };
 
+    this.map = null;
     this.updateMap();
   }
 
@@ -36,7 +37,7 @@ class Board {
       column >= 0 &&
       column < this.game.numOfColumns
     ) {
-      return this.game.map[row][column];
+      return this.map[row][column];
     }
     return null;
   }
@@ -54,7 +55,7 @@ class Board {
       column >= 0 &&
       column < this.game.numOfColumns
     ) {
-      this.game.map[row][column] = value;
+      this.map[row][column] = value;
     }
   }
 
@@ -91,8 +92,8 @@ class Board {
       this.isWithinBorders(apple)
     );
 
-    this.game.modifiers = this.game.modifiers.filter((modifier) =>
-      this.isWithinBorders(modifier)
+    this.game.items = this.game.items.filter((item) =>
+      this.isWithinBorders(item)
     );
   }
 
@@ -117,7 +118,7 @@ class Board {
    */
   updateMap() {
     // Initialize the grid
-    this.game.map = Array.from({ length: this.game.numOfRows }, (_, rowIndex) =>
+    this.map = Array.from({ length: this.game.numOfRows }, (_, rowIndex) =>
       Array.from({ length: this.game.numOfColumns }, (_, colIndex) =>
         colIndex <= this.borders.left ||
         colIndex >= this.borders.right ||
@@ -160,29 +161,54 @@ class Board {
     // Update apples
     if (this.game.apples) {
       this.game.apples.forEach((apple) => {
-        this.setCell(apple.row, apple.column, {
-          type: "apple",
-        });
+        this.setCell(apple.row, apple.column, apple);
       });
     }
 
-    // Update modifiers
-    if (this.game.modifiers) {
-      this.game.modifiers.forEach((modifier) => {
-        switch (modifier.type) {
-          case "golden apple":
-            this.setCell(modifier.row, modifier.column, {
-              type: "golden-apple",
-              affect: modifier.affect,
-            });
-            break;
-          case "tron":
-            this.setCell(modifier.row, modifier.column, {
-              type: "tron",
-              affect: modifier.affect,
-            });
-            break;
-        }
+    // Update items
+    if (this.game.items) {
+      this.game.items.forEach((item) => {
+        this.setCell(item.row, item.column, item);
+
+        // console.log("Cell: " + this.getCell(item.row, item.column));
+
+        // switch (item.type) {
+        //   case "golden apple":
+        //     this.setCell(item.row, item.column, {
+        //       type: "golden-apple",
+        //       affect: item.affect,
+        //     });
+        //     break;
+        //   case "tron":
+        //     this.setCell(item.row, item.column, {
+        //       type: "tron",
+        //       affect: item.affect,
+        //     });
+        //     break;
+        //   case "reset borders":
+        //     this.setCell(item.row, item.column, {
+        //       type: "reset-borders",
+        //     });
+        //     break;
+        //   case "shorten 10":
+        //     this.setCell(item.row, item.column, {
+        //       type: "shorten-10",
+        //       affect: item.affect,
+        //     });
+        //     break;
+        //   case "shorten 25":
+        //     this.setCell(item.row, item.column, {
+        //       type: "shorten-25",
+        //       affect: item.affect,
+        //     });
+        //     break;
+        //   default:
+        //     this.setCell(item.row, item.column, {
+        //       type: "unknown-item",
+        //       affect: item.affect,
+        //     });
+        //     break;
+        // }
       });
     }
   }
@@ -202,6 +228,20 @@ class Board {
       position.column >= 0 &&
       position.column < this.game.numOfColumns
     );
+  }
+
+  /**
+   * Resets the shrinkage level and borders to their initial values
+   */
+  resetBorders() {
+    this.horizontalShrinkLevel = -1;
+
+    this.borders = {
+      left: this.horizontalShrinkLevel,
+      right: this.game.numOfColumns - this.horizontalShrinkLevel - 1,
+      top: this.horizontalShrinkLevel,
+      bottom: this.game.numOfRows - this.horizontalShrinkLevel - 1,
+    };
   }
 }
 

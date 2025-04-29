@@ -4,7 +4,7 @@ let socket; // WebSocket instance
 let socketConnectingInterval; // Interval for reconnection attempts
 let isConnectingOrConnected = false; // Connection state tracker
 
-let moveCounter = -1;
+let moveCount = -1;
 let dataList = [];
 let lastFrameTime = Date.now();
 
@@ -28,11 +28,11 @@ function connectWebSocket() {
     setConnectionStatus("connected");
 
     // reset frontend
-    moveCounter = -1; // Reset move counter
+    moveCount = -1; // Reset move counter
     dataList = [];
     lastFrameTime = Date.now();
 
-    updateMoveCount(moveCounter); // Update UI with the reset move counter
+    updateMoveCount(moveCount); // Update UI with the reset move counter
     toggleEndScreen(null); // Hide the winner upon reconnection
 
     if (socketConnectingInterval) {
@@ -109,9 +109,9 @@ function toggleEndScreen(data) {
   }
 }
 
-function updateMoveCount(moveCounter) {
+function updateMoveCount(moveCount) {
   document.querySelector(".move_number").textContent =
-    "Move: " + (moveCounter || "####");
+    "Move: " + (moveCount || "####");
 }
 
 function setConnectionStatus(status) {
@@ -172,8 +172,8 @@ function parseData(data) {
   console.log("Processing game state:", data);
 
   // Update move counter
-  moveCounter = data.moveCounter || moveCounter;
-  updateMoveCount(moveCounter);
+  moveCount = data.moveCount || moveCount;
+  updateMoveCount(moveCount);
 
   // Update player information
   if (data.players || data.players?.length) {

@@ -1,7 +1,7 @@
 const config = require("./gameConfig");
 const Player = require("./player");
-const Spawner = require("./spawner");
 const Board = require("./board");
+const Spawner = require("./spawner");
 const CollisionHandler = require("./collisionHandler");
 
 /**
@@ -17,18 +17,18 @@ class SnakeGame {
 
     this.board = new Board(this);
 
-    this.internalMoveCounter = 0;
+    this.moveCount = 0;
 
     this.players = [];
     this.winner = null;
 
     this.apples = [];
-    this.modifiers = [];
+    this.items = [];
 
     this.spawner = new Spawner(this);
+    this.collisionHandler = new CollisionHandler(this);
 
     this.board.updateMap();
-    this.collisionHandler = new CollisionHandler(this);
   }
 
   /**
@@ -38,13 +38,7 @@ class SnakeGame {
    * @param {string} playerData.name - Display name for the player
    */
   addPlayer(playerData) {
-    const isFirstPlayer = this.players.length === 0;
-    const player = new Player(
-      playerData,
-      isFirstPlayer,
-      this.numOfRows,
-      this.numOfColumns
-    );
+    const player = new Player(this, playerData);
     this.players.push(player);
 
     this.board.updateMap();
@@ -57,17 +51,20 @@ class SnakeGame {
    * @param {string} moves[].direction - Direction of the move ('up', 'down', 'left', 'right')
    */
   processMoves(moves) {
-    this.internalMoveCounter++;
+    this.moveCount++;
 
     // Process all moves
-    moves.forEach((move) => this.playMove(move.playerId, move.direction));
+    moves.forEach((move) => {
+      const player = this.players.find((p) => p.id === move.playerId);
+      player.playMove(move.direction);
+    });
 
     // Handle map shrinking
     const currentBoardWidth = this.board.getCurrentBoardWidth();
     if (
       currentBoardWidth > config.MINIMUM_BOARD_SIZE &&
-      this.internalMoveCounter >= config.START_SHRINKING_MAP_AFTER_MOVES &&
-      this.internalMoveCounter % 5 === 0
+      this.moveCount >= config.START_SHRINKING_MAP_AFTER_MOVES &&
+      this.moveCount % 5 === 0
     ) {
       this.board.shrinkMap();
     }
@@ -78,107 +75,17 @@ class SnakeGame {
     }
 
     // Spawn apples every 5 moves
-    if (this.internalMoveCounter % 5 === 0) {
+    if (this.moveCount % 5 === 0) {
       this.spawner.spawnMirroredApples();
     }
 
-    // Spawn modifiers based on a chance
+    // Spawn items based on a chance
     if (Math.random() < config.MODIFIER_SPAWN_CHANCE) {
-      this.spawner.spawnMirroredModifiers();
+      this.spawner.spawnMirroredItems();
     }
 
+    // update map game state
     this.board.updateMap();
-  }
-
-  // Modify playMove to use the new function
-  /**
-   * Processes a single move for a specific player
-   * @param {string} playerId - ID of the player making the move
-   * @param {string} direction - Direction of movement ('up', 'down', 'left', 'right')
-   */
-  playMove(playerId, direction) {
-    const player = this.players.find((p) => p.id === playerId);
-    if (!player) return;
-
-    // Use player's isReverseDirection method
-    if (player.isReverseDirection(direction)) {
-      player.addScore(-config.REVERSE_DIRECTION_PENALTY);
-      return;
-    }
-
-    // Penalize invalid moves (including timeout)
-    if (!["up", "down", "left", "right"].includes(direction)) {
-      player.addScore(-config.ILLEGAL_MOVE_PENALTY);
-      return;
-    }
-
-    const oldHead = { ...player.getHead() };
-    const newHead = { ...oldHead };
-
-    switch (direction) {
-      case "up":
-        newHead.row -= 1;
-        break;
-      case "down":
-        newHead.row += 1;
-        break;
-      case "left":
-        newHead.column -= 1;
-        break;
-      case "right":
-        newHead.column += 1;
-        break;
-      default:
-        return;
-    }
-
-    this.updateScoreByMovementDirection(player, oldHead, newHead);
-
-    if (
-      !this.collisionHandler.checkForAppleCollision(player, newHead) &&
-      !this.collisionHandler.checkForModifierCollision(player, newHead)
-    ) {
-      player.addSegment(newHead);
-      player.removeTail();
-    }
-
-    // Use player's updateModifiers method
-    player.updateModifiers();
-  }
-
-  /**
-   * Updates player score based on movement relative to board center
-   * @param {Player} player - The player whose score is being updated
-   * @param {Object} oldHead - Previous position of player's head
-   * @param {number} oldHead.row - Row coordinate of old head position
-   * @param {number} oldHead.column - Column coordinate of old head position
-   * @param {Object} newHead - New position of player's head
-   * @param {number} newHead.row - Row coordinate of new head position
-   * @param {number} newHead.column - Column coordinate of new head position
-   */
-  updateScoreByMovementDirection(player, oldHead, newHead) {
-    const centerRow = Math.floor(this.numOfRows / 2);
-    const centerCol = Math.floor(this.numOfColumns / 2);
-
-    const oldDistanceToCenter =
-      Math.abs(oldHead.row - centerRow) + Math.abs(oldHead.column - centerCol);
-    const newDistanceToCenter =
-      Math.abs(newHead.row - centerRow) + Math.abs(newHead.column - centerCol);
-
-    // Store initial score for debugging
-    const initialScore = player.score;
-
-    // Award points based on movement relative to center
-    if (newDistanceToCenter < oldDistanceToCenter) {
-      player.addScore(config.MOVEMENT_TOWARDS_CENTER_REWARD);
-    } else {
-      player.addScore(config.MOVEMENT_AWAY_FROM_CENTER_REWARD);
-    }
-
-    // console.log(`Player ${player.name} movement:
-    //   - Old distance to center: ${oldDistanceToCenter}
-    //   - New distance to center: ${newDistanceToCenter}
-    //   - Score: ${initialScore} -> ${player.score}`);
   }
 
   /**
@@ -206,7 +113,7 @@ class SnakeGame {
     }
 
     // Check for move limit only if no players died
-    if (this.internalMoveCounter >= config.GAME_MAX_MOVES) {
+    if (this.moveCount >= config.GAME_MAX_MOVES) {
       console.log("Maximum number of game moves exceeded.");
       this.determineWinnerByScoreThenLength();
       return true;
@@ -225,9 +132,9 @@ class SnakeGame {
     if (player1.score !== player2.score) {
       this.winner = player1.score > player2.score ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by higher score!`);
-    } else if (player1.length !== player2.length) {
+    } else if (player1.body.length !== player2.body.length) {
       this.winner =
-        player1.length > player2.length ? player1.name : player2.name;
+        player1.body.length > player2.body.length ? player1.name : player2.name;
       console.log(`Game Over! Player ${this.winner} wins by longer length!`);
     } else {
       this.winner = -1;

@@ -1,5 +1,4 @@
 const config = require("./gameConfig");
-const modifiersList = require("./modifiers");
 
 /**
  * Handles all collision-related logic in the snake game
@@ -16,19 +15,23 @@ class CollisionHandler {
   /**
    * Checks if a player's head collides with an apple
    * @param {Player} player - The player to check for collision
-   * @param {Object} head - The position to check for apple collision
-   * @param {number} head.row - Row coordinate of the head
-   * @param {number} head.column - Column coordinate of the head
+   * @param {Object} newHeadPosition - The position to check for apple collision
+   * @param {number} newHeadPosition.row - Row coordinate of the head
+   * @param {number} newHeadPosition.column - Column coordinate of the head
    * @returns {boolean} True if collision with apple occurred, false otherwise
    */
-  checkForAppleCollision(player, head) {
+  checkForAppleCollision(player, newHeadPosition) {
     const appleIndex = this.game.apples.findIndex(
-      (apple) => apple.row === head.row && apple.column === head.column
+      (apple) =>
+        apple.row === newHeadPosition.row &&
+        apple.column === newHeadPosition.column
     );
 
+    // if player collides with an apple, return true
     if (appleIndex !== -1) {
-      player.addSegment(head);
-      player.addScore(config.APPLE_PICKUP_REWARD);
+      const apple = this.game.items[appleIndex];
+
+      player.addScore(apple.pickUpReward);
       this.game.apples.splice(appleIndex, 1);
       return true;
     }
@@ -37,52 +40,41 @@ class CollisionHandler {
   }
 
   /**
-   * Checks if a player's head collides with a modifier
+   * Checks if a player's head collides with a item
    * @param {Player} player - The player to check for collision
-   * @param {Object} head - The position to check for modifier collision
-   * @param {number} head.row - Row coordinate of the head
-   * @param {number} head.column - Column coordinate of the head
-   * @returns {boolean} True if collision with modifier occurred, false otherwise
+   * @param {Object} newHeadPosition - The position to check for item collision
+   * @param {number} newHeadPosition.row - Row coordinate of the head
+   * @param {number} newHeadPosition.column - Column coordinate of the head
+   * @returns {boolean} True if collision with item occurred, false otherwise
    */
-  checkForModifierCollision(player, head) {
-    const modifierIndex = this.game.modifiers.findIndex(
-      (modifier) => modifier.row === head.row && modifier.column === head.column
+  checkForItemCollision(player, newHeadPosition) {
+    const itemIndex = this.game.items.findIndex(
+      (item) =>
+        item.row === newHeadPosition.row &&
+        item.column === newHeadPosition.column
     );
 
-    if (modifierIndex !== -1) {
-      const modifierFromMap = this.game.modifiers[modifierIndex];
-      const modifierData = modifiersList.find(
-        (m) => m.type === modifierFromMap.type
-      );
+    // if player collides with a item, return true
+    if (itemIndex !== -1) {
+      const item = this.game.items[itemIndex];
 
-      player.addSegment(head);
-      player.addScore(modifierData.pickUpReward);
-
-      const newModifier = {
-        type: modifierFromMap.type,
-        duration: modifierData.duration,
-      };
-
-      if (modifierFromMap.type === "tron") {
-        newModifier.temporarySegments = 0;
-      }
+      player.addScore(item.pickUpReward);
 
       if (
-        modifierFromMap.affect === "self" ||
-        modifierFromMap.affect === "both"
+        item.affect === "self" ||
+        item.affect === "both" ||
+        item.affect === "map"
       ) {
-        player.addModifier(newModifier);
+        player.addOrExtendItem(item);
       }
 
-      if (
-        modifierFromMap.affect === "enemy" ||
-        modifierFromMap.affect === "both"
-      ) {
+      if (item.affect === "enemy" || item.affect === "both") {
         const otherPlayer = this.game.players.find((p) => p.id !== player.id);
-        otherPlayer.addModifier(newModifier);
+
+        otherPlayer.addOrExtendItem(item);
       }
 
-      this.game.modifiers.splice(modifierIndex, 1);
+      this.game.items.splice(itemIndex, 1);
       return true;
     }
 
@@ -94,7 +86,7 @@ class CollisionHandler {
    * Handles wall collision effects including:
    * - Segment disconnection
    * - Score penalties
-   * - Tron modifier adjustments
+   * - Tron item adjustments
    * - Converting disconnected segments to apples
    * @param {Player} player - The player to check for wall collision
    * @returns {boolean} True if fatal wall collision occurred, false otherwise
@@ -120,11 +112,11 @@ class CollisionHandler {
     const disconnectedSegments = player.body.slice(firstWallIndex);
     player.body = player.body.slice(0, firstWallIndex);
 
-    const activeTronModifier = player.activeModifiers.find(
-      (activeModifier) => activeModifier.type === "tron"
+    const activeTronItem = player.activeItems.find(
+      (activeItem) => activeItem.type === "tron"
     );
-    if (activeTronModifier) {
-      activeTronModifier.temporarySegments -= disconnectedSegments.length;
+    if (activeTronItem) {
+      activeTronItem.temporarySegments -= disconnectedSegments.length;
     }
 
     this.game.apples.push(
@@ -141,7 +133,6 @@ class CollisionHandler {
       player.score -
         disconnectedSegments.length * config.BODY_SEGMENT_LOSS_PENALTY
     );
-    player.length -= disconnectedSegments.length;
 
     if (player.score <= 0) {
       console.log(

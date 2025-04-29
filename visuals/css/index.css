@@ -44,6 +44,10 @@ body {
   background-color: #000;
 }
 
+#particles-js canvas {
+  display: block; /* Removes overflow */
+}
+
 .winner_container {
   position: absolute;
   inset: 0;

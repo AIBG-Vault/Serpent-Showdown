@@ -51,6 +51,22 @@
   background: #00ffff;
 }
 
+.reset-borders {
+  background: #ccc;
+}
+
+.shorten-10 {
+  background: #55b479;
+}
+
+.shorten-25 {
+  background: #336d49;
+}
+
+.unknown {
+  background: #ff0000;
+}
+
 .affect-self {
   border: 3px solid #4caf50; /* green border */
 }
