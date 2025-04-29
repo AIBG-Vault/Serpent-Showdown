@@ -42,40 +42,49 @@ function updateGrid(map) {
       if (map) {
         const value = map[i][j];
         if (typeof value === "object" && value !== null) {
+          cell.classList.add(value.type?.replace(/\s/g, "-") || "unknown");
+
           // Handle object values
           if (value.type === "snake-head") {
+            cell.classList.add("snake");
             cell.classList.add(
               value.player === "k" ? "snake-player1-head" : "snake-player2-head"
             );
           } else if (value.type === "snake-body") {
+            cell.classList.add("snake");
             cell.classList.add(
               value.player === "k" ? "snake-player1-body" : "snake-player2-body"
             );
-          } else if (value.type === "border") {
-            cell.classList.add("border");
-            cell.textContent = "#";
-          } else if (value.type === "apple") {
-            cell.classList.add("apple");
-            cell.textContent = "A";
-          } else if (value.type === "golden-apple") {
-            cell.classList.add("golden-apple");
-            cell.textContent = "G";
-          } else if (value.type === "tron") {
-            cell.classList.add("tron");
-            cell.textContent = "T";
-          } else if (value.type === "reset-borders") {
-            cell.classList.add("reset-borders");
-            cell.textContent = "B";
-          } else if (value.type === "shorten-10") {
-            cell.classList.add("shorten-10");
-            cell.textContent = "10";
-          } else if (value.type === "shorten-25") {
-            cell.classList.add("shorten-25");
-            cell.textContent = "25";
           } else {
-            cell.classList.add("unknown");
-            cell.textContent = "?";
+            cell.classList.add("modifier");
+            cell.textContent = value.symbol || "?";
           }
+
+          // if (value.type === "border") {
+          //   cell.classList.add("border");
+          //   cell.textContent = "#";
+          // } else if (value.type === "apple") {
+          //   cell.classList.add("apple");
+          //   cell.textContent = "A";
+          // } else if (value.type === "golden-apple") {
+          //   cell.classList.add("golden-apple");
+          //   cell.textContent = "G";
+          // } else if (value.type === "tron") {
+          //   cell.classList.add("tron");
+          //   cell.textContent = "T";
+          // } else if (value.type === "reset-borders") {
+          //   cell.classList.add("reset-borders");
+          //   cell.textContent = "B";
+          // } else if (value.type === "shorten-10") {
+          //   cell.classList.add("shorten-10");
+          //   cell.textContent = "10";
+          // } else if (value.type === "shorten-25") {
+          //   cell.classList.add("shorten-25");
+          //   cell.textContent = "25";
+          // } else {
+          //   cell.classList.add("unknown");
+          //   cell.textContent = "?";
+          // }
 
           // add borders (outlines) based on affect property
           if (value.affect === "self") {

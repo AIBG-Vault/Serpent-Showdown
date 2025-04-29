@@ -1,5 +1,4 @@
 const config = require("./gameConfig");
-const modifiersList = require("./modifiers");
 
 /**
  * Handles all collision-related logic in the snake game
@@ -46,7 +45,7 @@ class CollisionHandler {
    * @param {number} newHeadPosition.column - Column coordinate of the head
    * @returns {boolean} True if collision with modifier occurred, false otherwise
    */
-  checkForModifierCollision(player, newHeadPosition) {
+  checkForItemCollision(player, newHeadPosition) {
     const modifierIndex = this.game.modifiers.findIndex(
       (modifier) =>
         modifier.row === newHeadPosition.row &&
@@ -55,49 +54,22 @@ class CollisionHandler {
 
     // if player collides with a modifier, return true
     if (modifierIndex !== -1) {
-      const modifierFromMap = this.game.modifiers[modifierIndex];
-      const modifierData = modifiersList.find(
-        (m) => m.type === modifierFromMap.type
-      );
+      const modifier = this.game.modifiers[modifierIndex];
 
-      player.addScore(modifierData.pickUpReward);
-
-      // Handle reset map modifier
-      if (modifierFromMap.type === "reset borders") {
-        this.game.board.resetShrinkage();
-      }
-
-      const newModifier = {
-        type: modifierFromMap.type,
-        duration: modifierData.duration,
-      };
+      player.addScore(modifier.pickUpReward);
 
       if (
-        modifierFromMap.affect === "self" ||
-        modifierFromMap.affect === "both"
+        modifier.affect === "self" ||
+        modifier.affect === "both" ||
+        modifier.affect === "map"
       ) {
-        if (modifierFromMap.type === "shorten 10") {
-          player.removeSegments(10);
-        } else if (modifierFromMap.type === "shorten 25") {
-          player.removeSegments(25);
-        } else {
-          player.addOrExtendModifier(newModifier);
-        }
+        player.addOrExtendModifier(modifier);
       }
 
-      if (
-        modifierFromMap.affect === "enemy" ||
-        modifierFromMap.affect === "both"
-      ) {
+      if (modifier.affect === "enemy" || modifier.affect === "both") {
         const otherPlayer = this.game.players.find((p) => p.id !== player.id);
 
-        if (modifierFromMap.type === "shorten 10") {
-          otherPlayer.removeSegments(10);
-        } else if (modifierFromMap.type === "shorten 25") {
-          otherPlayer.removeSegments(25);
-        } else {
-          otherPlayer.addOrExtendModifier(newModifier);
-        }
+        otherPlayer.addOrExtendModifier(modifier);
       }
 
       this.game.modifiers.splice(modifierIndex, 1);

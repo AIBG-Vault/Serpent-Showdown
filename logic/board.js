@@ -170,43 +170,47 @@ class Board {
     // Update modifiers
     if (this.game.modifiers) {
       this.game.modifiers.forEach((modifier) => {
-        switch (modifier.type) {
-          case "golden apple":
-            this.setCell(modifier.row, modifier.column, {
-              type: "golden-apple",
-              affect: modifier.affect,
-            });
-            break;
-          case "tron":
-            this.setCell(modifier.row, modifier.column, {
-              type: "tron",
-              affect: modifier.affect,
-            });
-            break;
-          case "reset borders":
-            this.setCell(modifier.row, modifier.column, {
-              type: "reset-borders",
-            });
-            break;
-          case "shorten 10":
-            this.setCell(modifier.row, modifier.column, {
-              type: "shorten-10",
-              affect: modifier.affect,
-            });
-            break;
-          case "shorten 25":
-            this.setCell(modifier.row, modifier.column, {
-              type: "shorten-25",
-              affect: modifier.affect,
-            });
-            break;
-          default:
-            this.setCell(modifier.row, modifier.column, {
-              type: "unknown-modifier",
-              affect: modifier.affect,
-            });
-            break;
-        }
+        this.setCell(modifier.row, modifier.column, modifier);
+
+        // console.log("Cell: " + this.getCell(modifier.row, modifier.column));
+
+        // switch (modifier.type) {
+        //   case "golden apple":
+        //     this.setCell(modifier.row, modifier.column, {
+        //       type: "golden-apple",
+        //       affect: modifier.affect,
+        //     });
+        //     break;
+        //   case "tron":
+        //     this.setCell(modifier.row, modifier.column, {
+        //       type: "tron",
+        //       affect: modifier.affect,
+        //     });
+        //     break;
+        //   case "reset borders":
+        //     this.setCell(modifier.row, modifier.column, {
+        //       type: "reset-borders",
+        //     });
+        //     break;
+        //   case "shorten 10":
+        //     this.setCell(modifier.row, modifier.column, {
+        //       type: "shorten-10",
+        //       affect: modifier.affect,
+        //     });
+        //     break;
+        //   case "shorten 25":
+        //     this.setCell(modifier.row, modifier.column, {
+        //       type: "shorten-25",
+        //       affect: modifier.affect,
+        //     });
+        //     break;
+        //   default:
+        //     this.setCell(modifier.row, modifier.column, {
+        //       type: "unknown-modifier",
+        //       affect: modifier.affect,
+        //     });
+        //     break;
+        // }
       });
     }
   }
@@ -231,7 +235,7 @@ class Board {
   /**
    * Resets the shrinkage level and borders to their initial values
    */
-  resetShrinkage() {
+  resetBorders() {
     this.horizontalShrinkLevel = -1;
 
     this.borders = {

@@ -111,7 +111,7 @@ class Player {
       this,
       newHeadPos
     );
-    this.game.collisionHandler.checkForModifierCollision(this, newHeadPos);
+    this.game.collisionHandler.checkForItemCollision(this, newHeadPos);
 
     // add new head segment
     this.addSegment(newHeadPos);
@@ -130,7 +130,7 @@ class Player {
     }
 
     // Use player's updateModifiers method
-    this.updateModifiers();
+    this.processModifiers();
   }
 
   /**
@@ -210,38 +210,60 @@ class Player {
     if (existingModifier) {
       existingModifier.duration = modifier.duration;
     } else {
-      if (modifier.type === "tron") {
-        modifier.temporarySegments = 0;
-      }
-
-      this.activeModifiers.push({ ...modifier });
+      this.activeModifiers.push(modifier);
     }
   }
 
   /**
    * Updates all active modifiers, reducing their duration and handling expiration effects
    */
-  updateModifiers() {
+  processModifiers() {
     this.activeModifiers = this.activeModifiers
       .map((activeModifier) => {
-        const newDuration = activeModifier.duration - 1;
+        // console.log("Active: " + activeModifier);
+        // const newDuration = activeModifier.duration - 1;
 
-        // Handle Tron modifier
-        if (activeModifier.type === "tron") {
-          activeModifier.temporarySegments += 1;
+        activeModifier.duration -= 1;
 
-          if (newDuration === 0) {
-            const segmentsToRemove = Math.max(
-              0,
-              activeModifier.temporarySegments
-            );
-            if (segmentsToRemove > 0) {
-              this.body = this.body.slice(0, -segmentsToRemove);
-            }
-          }
-        }
+        activeModifier.do(this);
 
-        return { ...activeModifier, duration: newDuration };
+        // Handle reset map modifier
+        // if (activeModifier.type === "reset borders") {
+        //   this.game.board.resetShrinkage();
+        // } else if (activeModifier.type.slice(0, 7) === "shorten") {
+        //   const segmentsToRemove = parseInt(activeModifier.type.slice(7));
+        //   this.removeSegments(segmentsToRemove);
+        // } else if (activeModifier.type === "tron") {
+        //   activeModifier.temporarySegments += 1;
+
+        //   // handle modifier interactions
+        //   const activeGoldenAppleModifier = this.activeModifiers.find(
+        //     (mod) => mod.type === "golden apple"
+        //   );
+        //   const activeShortenModifier = this.activeModifiers.find(
+        //     (mod) => mod.type.slice(0, 7) === "shorten"
+        //   );
+        //   if (activeGoldenAppleModifier) {
+        //     activeModifier.temporarySegments -= 1;
+        //   } else if (activeShortenModifier) {
+        //     const segmentsToRemove = parseInt(activeModifier.type.slice(7));
+        //     activeModifier.temporarySegments -= segmentsToRemove;
+        //   }
+
+        //   console.log(activeModifier);
+
+        //   if (newDuration === 0) {
+        //     const segmentsToRemove = Math.max(
+        //       0,
+        //       activeModifier.temporarySegments
+        //     );
+        //     if (segmentsToRemove > 0) {
+        //       this.body = this.body.slice(0, -segmentsToRemove);
+        //     }
+        //   }
+        // }
+
+        return activeModifier;
       })
       .filter((activeModifier) => {
         // Remove modifiers with duration <= 0

@@ -1,4 +1,7 @@
-const modifiersList = require("./modifiers");
+const GoldenApple = require("./items/goldenApple");
+const Tron = require("./items/tron");
+const ResetBorders = require("./items/resetBorders");
+const Shorten = require("./items/shorten");
 
 /**
  * Class responsible for spawning game elements (apples and modifiers) in mirrored positions
@@ -10,6 +13,8 @@ class Spawner {
    */
   constructor(game) {
     this.game = game;
+
+    this.modifierClasses = [GoldenApple, Tron, ResetBorders, Shorten];
   }
 
   /**
@@ -154,24 +159,24 @@ class Spawner {
         position;
 
       // Calculate total spawn weight
-      const totalSpawnWeight = modifiersList.reduce(
-        (sum, type) => sum + type.spawnWeight,
+      const totalSpawnWeight = this.modifierClasses.reduce(
+        (sum, ModifierClass) => sum + ModifierClass.config.spawnWeight,
         0
       );
 
-      // Random number between 0 and total weight
+      // Select modifier class based on weight
       const random = Math.random() * totalSpawnWeight;
-
-      // Select modifier type based on weight
       let currentSpawnWeight = 0;
-      const selectedModifier = modifiersList.find((type) => {
-        currentSpawnWeight += type.spawnWeight;
-        return random <= currentSpawnWeight;
-      });
+      const SelectedModifierClass = this.modifierClasses.find(
+        (ModifierClass) => {
+          currentSpawnWeight += ModifierClass.config.spawnWeight;
+          return random <= currentSpawnWeight;
+        }
+      );
 
-      // Determine affect for Tron modifier with 40/40/20 split
-      let affect = selectedModifier.affect;
-      if (selectedModifier.affect === "random") {
+      // Determine affect for "random" affect modifiers with 40/40/20 split
+      let affect = SelectedModifierClass.config.affect;
+      if (affect === "random") {
         const affectRoll = Math.random();
         if (affectRoll < 0.4) {
           affect = "self";
@@ -182,20 +187,19 @@ class Spawner {
         }
       }
 
-      // Add the selected modifier to both positions with the determined affect
-      this.game.modifiers.push({
-        type: selectedModifier.type,
-        affect: affect,
-        row: originalRow,
-        column: originalColumn,
-      });
+      const originalModifier = new SelectedModifierClass(
+        { row: originalRow, column: originalColumn },
+        affect
+      );
+      const mirroredModifier = new SelectedModifierClass(
+        { row: mirroredRow, column: mirroredColumn },
+        affect
+      );
 
-      this.game.modifiers.push({
-        type: selectedModifier.type,
-        affect: affect,
-        row: mirroredRow,
-        column: mirroredColumn,
-      });
+      //TODO: this is creating a new modifier therefore it picks a random length each time, change for it to just change the modifier row and column but copy the rest
+
+      // Add the selected modifier to both positions with the determined affect
+      this.game.modifiers.push(originalModifier, mirroredModifier);
 
       return;
     }
