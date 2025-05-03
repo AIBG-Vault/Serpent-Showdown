@@ -59,6 +59,10 @@ class SnakeGame {
       player.playMove(move.direction);
     });
 
+    // filter all apples with "eaten" property set to true,
+    // solves bug where only one player would get the reward and length
+    this.apples = this.apples.filter((apple) => apple.eaten !== true);
+
     // Handle map shrinking
     const currentBoardWidth = this.board.getCurrentBoardWidth();
     if (

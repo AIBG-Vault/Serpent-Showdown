@@ -33,7 +33,10 @@ class CollisionHandler {
       const apple = this.game.apples[appleIndex];
 
       player.addScore(apple.pickUpReward);
-      this.game.apples.splice(appleIndex, 1);
+
+      // add "eaten" attribute to apple, so it can be removed after both moves are processed
+      apple.eaten = true;
+
       return true;
     }
 
