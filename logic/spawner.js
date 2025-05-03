@@ -144,6 +144,7 @@ class Spawner {
       row: originalRow,
       column: originalColumn,
     });
+
     const mirroredApple = new Apple({
       row: mirroredRow,
       column: mirroredColumn,
@@ -206,8 +207,9 @@ class Spawner {
       { row: mirroredRow, column: mirroredColumn },
       affect
     );
-
-    //TODO: this is creating a new item therefore it picks a random length each time, change for it to just change the item row and column but copy the rest
+    // Copy the type and symbol from the original item to the mirrored item (bcs shorten makes it random)
+    mirroredItem.type = originalItem.type;
+    mirroredItem.symbol = originalItem.symbol;
 
     // Add the selected item to both positions with the determined affect
     this.game.items.push(originalItem, mirroredItem);
