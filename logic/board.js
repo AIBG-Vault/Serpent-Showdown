@@ -135,26 +135,16 @@ class Board {
     // Update players
     if (this.game.players) {
       this.game.players.forEach((player) => {
-        if (player.body.length > 0) {
-          const head = player.body[0];
-          if (this.isValidPosition(head)) {
-            // set head
-            this.setCell(head.row, head.column, {
-              type: "snake-head",
-              player: player.id[0].toLowerCase(),
-            });
-
-            // set body
-            for (let i = 1; i < player.body.length; i++) {
-              const segment = player.body[i];
-              if (this.isValidPosition(segment)) {
-                this.setCell(segment.row, segment.column, {
-                  type: "snake-body",
-                  player: player.id[0].toLowerCase(),
-                });
-              }
-            }
+        for (let i = 0; i < player.body.length; i++) {
+          const snakeSegment = player.body[i];
+          if (!this.isValidPosition(snakeSegment)) {
+            break;
           }
+
+          this.setCell(snakeSegment.row, snakeSegment.column, {
+            type: i === 0 ? "snake-head" : "snake-body",
+            playerName: player.name,
+          });
         }
       });
     }
@@ -170,46 +160,6 @@ class Board {
     if (this.game.items) {
       this.game.items.forEach((item) => {
         this.setCell(item.row, item.column, item);
-
-        // console.log("Cell: " + this.getCell(item.row, item.column));
-
-        // switch (item.type) {
-        //   case "golden apple":
-        //     this.setCell(item.row, item.column, {
-        //       type: "golden-apple",
-        //       affect: item.affect,
-        //     });
-        //     break;
-        //   case "tron":
-        //     this.setCell(item.row, item.column, {
-        //       type: "tron",
-        //       affect: item.affect,
-        //     });
-        //     break;
-        //   case "reset borders":
-        //     this.setCell(item.row, item.column, {
-        //       type: "reset-borders",
-        //     });
-        //     break;
-        //   case "shorten 10":
-        //     this.setCell(item.row, item.column, {
-        //       type: "shorten-10",
-        //       affect: item.affect,
-        //     });
-        //     break;
-        //   case "shorten 25":
-        //     this.setCell(item.row, item.column, {
-        //       type: "shorten-25",
-        //       affect: item.affect,
-        //     });
-        //     break;
-        //   default:
-        //     this.setCell(item.row, item.column, {
-        //       type: "unknown-item",
-        //       affect: item.affect,
-        //     });
-        //     break;
-        // }
       });
     }
   }

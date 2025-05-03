@@ -140,13 +140,6 @@ function setConnectionStatus(status) {
 // game logic
 // ========================================
 
-function positionFromIndices(column, row) {
-  // Adjust the row number for chessboard.js (which starts at the bottom for "white" orientation)
-  const rowNum = row + 1; // Adjust if your board size changes
-  const colLetter = String.fromCharCode("a".charCodeAt(0) + column); // Converts 0 -> "a", 1 -> "b", etc.
-  return colLetter + rowNum;
-}
-
 function gameLoop() {
   let now = Date.now();
   let elapsed = now - lastFrameTime;
@@ -201,7 +194,7 @@ function parseData(data) {
   }
 
   // Update board
-  window.boardUtils.updateGrid(data.map);
+  window.boardUtils.updateGrid(data.map, data.players);
 
   if (data.winner) {
     toggleEndScreen(data);

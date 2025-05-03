@@ -53,8 +53,6 @@ function connectPlayer(playerNum) {
     const data = JSON.parse(event.data);
 
     if (!activated && data.map) {
-      window.boardUtils.updateGrid(data.map);
-
       // Check if game has started (2 players in the game)
       if (data.players && data.players.length === 2) {
         activated = true;

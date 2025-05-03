@@ -1,3 +1,8 @@
+:root {
+  --snake-player1-color: hsl(29, 100%, 50%);
+  --snake-player2-color: hsl(202, 100%, 50%);
+}
+
 .game-grid {
   /* margin-top: 20px; */
 
@@ -37,6 +42,33 @@
 
 .player-body {
   background: #45a049;
+}
+
+.cell.snake-player1-head {
+  background-color: var(--snake-player1-color) !important;
+}
+
+.cell.snake-player1-body {
+  background-color: color-mix(
+    in srgb,
+    var(--snake-player1-color) 80%,
+    black
+  ) !important;
+  transform: scale(0.8);
+}
+
+.cell.snake-player2-head {
+  background-color: var(--snake-player2-color) !important;
+}
+
+.cell.snake-player2-body {
+  background-color: color-mix(
+    in srgb,
+    var(--snake-player2-color) 80%,
+    black
+  ) !important;
+
+  transform: scale(0.8);
 }
 
 .apple {
