@@ -223,7 +223,7 @@ class Player {
 
         activeItem.duration -= 1;
 
-        activeItem.do(this);
+        activeItem.do(this, this.game);
 
         // Handle reset map item
         // if (activeItem.type === "reset borders") {

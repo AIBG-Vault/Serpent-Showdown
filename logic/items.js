@@ -1,5 +1,12 @@
 const itemsList = [
   {
+    type: "katana",
+    affect: "enemy",
+    pickUpReward: 100,
+    duration: 1,
+    spawnWeight: 25,
+  },
+  {
     type: "golden apple",
     affect: "self",
     pickUpReward: 70,
