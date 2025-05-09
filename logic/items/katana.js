@@ -43,6 +43,9 @@ class Katana extends Item {
     );
 
     if (collisionIndex > 0) {
+      // Store cut segments before removing them
+      const cutSegments = enemy.body.slice(collisionIndex);
+      
       // Remove all segments from collision point to tail
       enemy.body = enemy.body.slice(0, collisionIndex);
 
@@ -57,6 +60,14 @@ class Katana extends Item {
           activeTronItem.tempSegments - (enemy.body.length - collisionIndex)
         );
       }
+
+      // Spawn apples at cut segment positions, except where player's head is
+      cutSegments.forEach(segment => {
+        if (segment && !(segment.row === head.row && segment.column === head.column)) {
+          const applePosition = { row: segment.row, column: segment.column };
+          game.items.push(new Apple(applePosition));
+        }
+      });
 
       // Unequip the katana after successful hit
       this.equipped = false;
