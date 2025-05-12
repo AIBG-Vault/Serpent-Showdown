@@ -1,13 +1,14 @@
 const Item = require("./item");
 const Apple = require("./apple");
+const config = require("../gameConfig");
 
 class Katana extends Item {
   static config = {
     type: "katana",
     affect: "self",
-    pickUpReward: 100,
+    pickUpReward: 60,
     duration: 10,
-    spawnWeight: 25,
+    spawnWeight: 7,
     symbol: "K",
   };
 
@@ -19,64 +20,52 @@ class Katana extends Item {
    */
   constructor(position, affect) {
     super(position, Katana.config);
-    this.affect = affect;
-    this.equipped = true;
   }
 
   /**
    * Cuts off enemy tail segments and converts them to apples
    * @param {Player} player - The player that collided with the item
-   * @param {Game} game - The game instance for spawning apples
    */
-  do(player, game) {
-    if (!this.equipped) return;
+  do(player) {
+    const playerHead = player.body[0];
 
-    const enemy = player.game.players.find(p => p !== player);
-    if (!enemy || enemy.body.length <= 1) return;
-
-    const head = player.body[0];
-    if (!head || !head.row || !head.column) return;
+    const otherPlayer = player.game.players.find((p) => p !== player);
 
     // Check if player's head collides with enemy's tail (excluding head)
-    const collisionIndex = enemy.body.findIndex((segment, index) => 
-      index > 0 && segment && segment.row === head.row && segment.column === head.column
+    const collisionIndex = otherPlayer.body.findIndex(
+      (segment, index) =>
+        index > 0 &&
+        segment &&
+        segment.row === playerHead.row &&
+        segment.column === playerHead.column
     );
 
-    if (collisionIndex > 0) {
-      // Store cut segments before removing them
-      const cutSegments = enemy.body.slice(collisionIndex);
-      
-      // Remove all segments from collision point to tail
-      enemy.body = enemy.body.slice(0, collisionIndex);
+    if (collisionIndex === -1) return false;
 
-      // Handle interaction with tron item if enemy has it
-      const activeTronItem = enemy.activeItems.find(
-        (item) => item.type === "tron"
-      );
+    // Store disconnecte segments before removing them
+    const disconnectedSegments = otherPlayer.body.slice(collisionIndex);
 
-      if (activeTronItem) {
-        activeTronItem.tempSegments = Math.max(
-          0,
-          activeTronItem.tempSegments - (enemy.body.length - collisionIndex)
+    // Remove all segments from collision point to tail
+    otherPlayer.body = otherPlayer.body.slice(0, collisionIndex);
+
+    // Spawn apples at cut segment positions, except where player's head is
+    disconnectedSegments.forEach((segment) => {
+      if (
+        !(
+          segment.row === playerHead.row && segment.column === playerHead.column
+        )
+      ) {
+        player.game.items.push(
+          new Apple({ row: segment.row, column: segment.column })
         );
       }
+    });
 
-      // Spawn apples at cut segment positions, except where player's head is
-      cutSegments.forEach(segment => {
-        if (segment && !(segment.row === head.row && segment.column === head.column)) {
-          const applePosition = { row: segment.row, column: segment.column };
-          game.apples.push(new Apple(applePosition));
-        }
-      });
+    otherPlayer.score -=
+      disconnectedSegments.length * config.BODY_SEGMENT_LOSS_PENALTY;
 
-      // Unequip the katana after successful hit
-      this.equipped = false;
-      this.duration = 0;
-
-      console.log(
-        `Player ${player.name} used katana to cut ${enemy.name}'s tail at segment ${collisionIndex}`
-      );
-    }
+    // remove the katana item after successful hit
+    this.duration = 0;
   }
 }
 

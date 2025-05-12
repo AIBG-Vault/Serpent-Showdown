@@ -83,15 +83,11 @@ class CollisionHandler {
 
     if (firstWallIndex === -1) return false;
 
+    // Store disconnecte segments before removing them
     const disconnectedSegments = player.body.slice(firstWallIndex);
-    player.body = player.body.slice(0, firstWallIndex);
 
-    const activeTronItem = player.activeItems.find(
-      (activeItem) => activeItem.type === "tron"
-    );
-    if (activeTronItem) {
-      activeTronItem.temporarySegments -= disconnectedSegments.length;
-    }
+    // Remove all segments from first wall index to tail
+    player.body = player.body.slice(0, firstWallIndex);
 
     this.game.items.push(
       ...disconnectedSegments
@@ -105,18 +101,8 @@ class CollisionHandler {
         )
     );
 
-    player.score = Math.max(
-      0,
-      player.score -
-        disconnectedSegments.length * config.BODY_SEGMENT_LOSS_PENALTY
-    );
-
-    if (player.score <= 0) {
-      console.log(
-        `Player ${player.name} died from score reaching zero due to wall penalties`
-      );
-      return true;
-    }
+    player.score -=
+      disconnectedSegments.length * config.BODY_SEGMENT_LOSS_PENALTY;
 
     return false;
   }
