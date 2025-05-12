@@ -29,9 +29,9 @@ class CollisionHandler {
     if (itemIndex !== -1) {
       const item = this.game.items[itemIndex];
 
-      player.addScore(item.pickUpReward);
+      item.hasCollided = true; // prepare for removal
 
-      item.hasCollided = true;
+      player.addScore(item.pickUpReward);
 
       if (
         item.affect === "self" ||

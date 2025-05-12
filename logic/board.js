@@ -145,8 +145,6 @@ class Board {
       });
     }
 
-    console.log(this.game.items);
-
     // Update items
     if (this.game.items) {
       this.game.items.forEach((item) => {
