@@ -65,7 +65,7 @@ class Katana extends Item {
       cutSegments.forEach(segment => {
         if (segment && !(segment.row === head.row && segment.column === head.column)) {
           const applePosition = { row: segment.row, column: segment.column };
-          game.items.push(new Apple(applePosition));
+          game.apples.push(new Apple(applePosition));
         }
       });
 
