@@ -42,7 +42,11 @@ function updateGrid(map, players) {
       if (map) {
         const value = map[i][j];
         if (typeof value === "object" && value !== null) {
-          cell.classList.add(value.type?.replace(/\s/g, "-") || "unknown");
+          value.type = value.type?.replace(/\s/g, "-");
+          if (value.type?.includes("shorten")) {
+            value.type = "shorten";
+          }
+          cell.classList.add(value.type || "unknown");
 
           // Handle object values
           if (value.type === "snake-head") {

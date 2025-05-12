@@ -100,9 +100,9 @@ class SnakeGame {
     const deadPlayers = this.players
       .filter(
         (player) =>
-          player.score <= 0 ||
           this.collisionHandler.checkForWallCollision(player) ||
-          this.collisionHandler.checkForPlayerCollision(player)
+          this.collisionHandler.checkForPlayerCollision(player) ||
+          player.score <= 0
       )
       .map((player) => player.id);
 

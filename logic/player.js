@@ -190,7 +190,7 @@ class Player {
       .map((activeItem) => {
         activeItem.duration -= 1;
 
-        activeItem.do(this);
+        activeItem.do(this, this.game);
 
         return activeItem;
       })
