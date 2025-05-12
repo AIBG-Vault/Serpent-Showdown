@@ -39,7 +39,7 @@ class Player {
 
     // Add body segments using addSegment method starting from the head
     for (let i = config.PLAYERS_STARTING_LENGTH - 1; i >= 0; i--) {
-      this.addSegment({
+      this.body.unshift({
         row: startRowIndex,
         column: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
       });
@@ -47,22 +47,12 @@ class Player {
   }
 
   /**
-   * Adds a new segment to the front of the snake
-   * @param {Object} position - The position to add the new segment
-   * @param {number} position.row - Row coordinate
-   * @param {number} position.column - Column coordinate
-   */
-  addSegment(position) {
-    this.body.unshift(position);
-  }
-
-  /**
    * Shortens the player's body length by a specified amount
    * @param {number} numOfSegments - The number of segments to remove from the end of the body up to body.length = 1
    */
   removeSegments(numOfSegments) {
-    // final length must be a minimum of 1
-    const finalLength = Math.max(1, this.body.length - numOfSegments);
+    // final length must be a minimum of 1 (+ 1 that will be popped)
+    const finalLength = Math.max(1 + 1, this.body.length - numOfSegments);
     this.body = this.body.slice(0, finalLength);
   }
 
@@ -102,44 +92,32 @@ class Player {
       newHeadPos.column += 1;
     }
 
+    // add new head segment
+    this.body.unshift(newHeadPos);
+
     // calculcate before removing tail segment in case length is 1
-    this.updateScoreByMovementDirection(newHeadPos);
+    this.updateScoreByMovementDirection();
 
     // check for collisions
-    const playerAteApple = this.game.collisionHandler.checkForAppleCollision(
-      this,
-      newHeadPos
-    );
-    this.game.collisionHandler.checkForItemCollision(this, newHeadPos);
-
-    // add new head segment
-    this.addSegment(newHeadPos);
-
-    // remove tail segment if needed
-    const keepTailSegment =
-      playerAteApple ||
-      this.activeItems.some(
-        (activeItem) =>
-          activeItem.type === "golden apple" || activeItem.type === "tron"
-      );
-
-    if (!keepTailSegment) {
-      this.body.pop();
-    }
+    this.game.collisionHandler.checkForAppleCollision(this);
+    this.game.collisionHandler.checkForItemCollision(this);
 
     // Use player's updateItems method
     this.processItems();
+
+    // remove tail segment
+    this.body.pop();
   }
 
   /**
    * Updates player score based on movement relative to board center
-   * @param {Object} newHeadPos - The new head position
    */
-  updateScoreByMovementDirection(newHeadPos) {
+  updateScoreByMovementDirection() {
     const boardCenterRow = Math.floor(this.game.numOfRows / 2);
     const boardCenterCol = Math.floor(this.game.numOfColumns / 2);
 
-    const oldHeadPos = { ...this.body[0] }; // new neck position
+    const oldHeadPos = { ...this.body[1] }; // new neck position
+    const newHeadPos = { ...this.body[0] };
 
     const oldDistanceToCenter =
       Math.abs(oldHeadPos.row - boardCenterRow) +
@@ -148,20 +126,12 @@ class Player {
       Math.abs(newHeadPos.row - boardCenterRow) +
       Math.abs(newHeadPos.column - boardCenterCol);
 
-    // Store initial score for debugging
-    const initialScore = this.score;
-
     // Award points based on movement relative to center
     if (newDistanceToCenter < oldDistanceToCenter) {
       this.addScore(config.MOVEMENT_TOWARDS_CENTER_REWARD);
     } else {
       this.addScore(config.MOVEMENT_AWAY_FROM_CENTER_REWARD);
     }
-
-    // console.log(`Player ${this.name} movement:
-    //   - Old distance to center: ${oldDistanceToCenter}
-    //   - New distance to center: ${newDistanceToCenter}
-    //   - Score: ${initialScore} -> ${this.score}`);
   }
 
   /**
@@ -205,7 +175,7 @@ class Player {
       (activeItem) => item.type === activeItem.type
     );
 
-    console.log(existingItem);
+    console.log(this.activeItems);
 
     if (existingItem) {
       existingItem.duration = item.duration;
@@ -222,7 +192,7 @@ class Player {
       .map((activeItem) => {
         activeItem.duration -= 1;
 
-        console.log(this.activeItems);
+        // console.log(this.activeItems);
 
         activeItem.do(this);
 

@@ -16,12 +16,10 @@ class CollisionHandler {
   /**
    * Checks if a player's head collides with an apple
    * @param {Player} player - The player to check for collision
-   * @param {Object} newHeadPosition - The position to check for apple collision
-   * @param {number} newHeadPosition.row - Row coordinate of the head
-   * @param {number} newHeadPosition.column - Column coordinate of the head
    * @returns {boolean} True if collision with apple occurred, false otherwise
    */
-  checkForAppleCollision(player, newHeadPosition) {
+  checkForAppleCollision(player) {
+    const newHeadPosition = player.body[0];
     const appleIndex = this.game.apples.findIndex(
       (apple) =>
         apple.row === newHeadPosition.row &&
@@ -37,6 +35,8 @@ class CollisionHandler {
       // add "eaten" attribute to apple, so it can be removed after both moves are processed
       apple.eaten = true;
 
+      player.addOrExtendItem(apple);
+
       return true;
     }
 
@@ -46,12 +46,11 @@ class CollisionHandler {
   /**
    * Checks if a player's head collides with a item
    * @param {Player} player - The player to check for collision
-   * @param {Object} newHeadPosition - The position to check for item collision
-   * @param {number} newHeadPosition.row - Row coordinate of the head
-   * @param {number} newHeadPosition.column - Column coordinate of the head
+
    * @returns {boolean} True if collision with item occurred, false otherwise
    */
-  checkForItemCollision(player, newHeadPosition) {
+  checkForItemCollision(player) {
+    const newHeadPosition = player.body[0];
     const itemIndex = this.game.items.findIndex(
       (item) =>
         item.row === newHeadPosition.row &&
@@ -167,7 +166,7 @@ class CollisionHandler {
     if (!head) return false;
 
     const playerCollidedWithSelf = player.body
-      .slice(1)
+      .slice(2)
       .some(
         (bodySegment) =>
           bodySegment.row === head.row && bodySegment.column === head.column

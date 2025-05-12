@@ -24,9 +24,8 @@ class Apple extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
-    // add a segment to the player's body
-    // but actually just disables the remove tail for its duration
-    // player.addSegment();
+    // add a segment to player tail to be immediately removed by pop()
+    player.body.push(player.body[player.body.length - 1]);
 
     // handle interaction with tron
     const activeTronItem = player.activeItems.find(
@@ -39,6 +38,7 @@ class Apple extends Item {
         activeTronItem.temporarySegments - 1
       );
     }
+    console.log("activeTronItem", activeTronItem);
 
     // handle interaction with golden apple
     const activeGoldenAppleItem = player.activeItems.find(
@@ -48,6 +48,7 @@ class Apple extends Item {
     if (activeGoldenAppleItem) {
       activeGoldenAppleItem.duration += 1;
     }
+    console.log("activeGoldenAppleItem", activeGoldenAppleItem);
   }
 }
 

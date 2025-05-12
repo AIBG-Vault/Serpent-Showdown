@@ -6,7 +6,7 @@ class GoldenApple extends Item {
     affect: "self",
     pickUpReward: 70,
     duration: 3,
-    spawnWeight: 9,
+    spawnWeight: 90,
     symbol: "G",
   };
 
@@ -25,9 +25,8 @@ class GoldenApple extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
-    // add a segment to the player's body
-    // but actually just disables the remove tail for its duration
-    // player.addSegment();
+    // add a segment to player tail to be immediately removed by pop()
+    player.body.push(player.body[player.body.length - 1]);
 
     const activeTronItem = player.activeItems.find(
       (item) => item.type === "tron"

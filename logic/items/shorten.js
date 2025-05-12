@@ -6,7 +6,7 @@ class Shorten extends Item {
     affect: "self",
     pickUpReward: 30,
     duration: 1, // instant effect
-    spawnWeight: 400,
+    spawnWeight: 4,
     symbol: "S",
   };
 
@@ -28,11 +28,11 @@ class Shorten extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
+    // add a segment to player tail to be immediately removed by pop()
+    player.body.push(player.body[player.body.length - 1]);
+
     const segmentsToRemove = parseInt(this.type.slice(8));
     player.removeSegments(segmentsToRemove);
-    console.log(
-      `Player ${player.name} shortened by ${segmentsToRemove} segments`
-    );
 
     // Handle the effect of the tron item
     const activeTronItem = player.activeItems.find(
