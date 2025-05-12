@@ -22,7 +22,6 @@ class SnakeGame {
     this.players = [];
     this.winner = null;
 
-    this.apples = [];
     this.items = [];
 
     this.spawner = new Spawner(this);
@@ -59,9 +58,9 @@ class SnakeGame {
       player.playMove(move.direction);
     });
 
-    // filter all apples with "eaten" property set to true,
-    // solves bug where only one player would get the reward and length
-    this.apples = this.apples.filter((apple) => apple.eaten !== true);
+    // filter all items with "hasCollided" property set to true,
+    // solves bug where only one player would get the reward (and length)
+    this.items = this.items.filter((item) => item.hasCollided !== true);
 
     // Handle map shrinking
     const currentBoardWidth = this.board.getCurrentBoardWidth();
@@ -74,7 +73,8 @@ class SnakeGame {
     }
 
     // Check if game is over and determine winner
-    if (this.checkGameOver()) {
+    const gameEnded = this.checkGameOver();
+    if (gameEnded) {
       return;
     }
 

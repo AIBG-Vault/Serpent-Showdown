@@ -88,10 +88,6 @@ class Board {
     this.borders.bottom = this.game.numOfRows - 1 - verticalShrink;
 
     // Remove items outside borders
-    this.game.apples = this.game.apples.filter((apple) =>
-      this.isWithinBorders(apple)
-    );
-
     this.game.items = this.game.items.filter((item) =>
       this.isWithinBorders(item)
     );
@@ -149,12 +145,7 @@ class Board {
       });
     }
 
-    // Update apples
-    if (this.game.apples) {
-      this.game.apples.forEach((apple) => {
-        this.setCell(apple.row, apple.column, apple);
-      });
-    }
+    console.log(this.game.items);
 
     // Update items
     if (this.game.items) {

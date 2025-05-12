@@ -96,10 +96,9 @@ class Player {
     this.body.unshift(newHeadPos);
 
     // calculcate before removing tail segment in case length is 1
-    this.updateScoreByMovementDirection();
+    // this.updateScoreByMovementDirection();
 
-    // check for collisions
-    this.game.collisionHandler.checkForAppleCollision(this);
+    // check for item collisions
     this.game.collisionHandler.checkForItemCollision(this);
 
     // Use player's updateItems method

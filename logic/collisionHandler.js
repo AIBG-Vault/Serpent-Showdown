@@ -14,40 +14,8 @@ class CollisionHandler {
   }
 
   /**
-   * Checks if a player's head collides with an apple
-   * @param {Player} player - The player to check for collision
-   * @returns {boolean} True if collision with apple occurred, false otherwise
-   */
-  checkForAppleCollision(player) {
-    const newHeadPosition = player.body[0];
-    const appleIndex = this.game.apples.findIndex(
-      (apple) =>
-        apple.row === newHeadPosition.row &&
-        apple.column === newHeadPosition.column
-    );
-
-    // if player collides with an apple, return true
-    if (appleIndex !== -1) {
-      const apple = this.game.apples[appleIndex];
-
-      player.addScore(apple.pickUpReward);
-
-      // add "eaten" attribute to apple, so it can be removed after both moves are processed
-      apple.eaten = true;
-
-      player.addOrExtendItem(apple);
-
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Checks if a player's head collides with a item
    * @param {Player} player - The player to check for collision
-
-   * @returns {boolean} True if collision with item occurred, false otherwise
    */
   checkForItemCollision(player) {
     const newHeadPosition = player.body[0];
@@ -62,6 +30,8 @@ class CollisionHandler {
       const item = this.game.items[itemIndex];
 
       player.addScore(item.pickUpReward);
+
+      item.hasCollided = true;
 
       if (
         item.affect === "self" ||
@@ -82,12 +52,7 @@ class CollisionHandler {
         }
         otherPlayer.addOrExtendItem(item);
       }
-
-      this.game.items.splice(itemIndex, 1);
-      return true;
     }
-
-    return false;
   }
 
   /**
@@ -128,7 +93,7 @@ class CollisionHandler {
       activeTronItem.temporarySegments -= disconnectedSegments.length;
     }
 
-    this.game.apples.push(
+    this.game.items.push(
       ...disconnectedSegments
         .filter((segment) => this.game.board.isWithinBorders(segment))
         .map(
