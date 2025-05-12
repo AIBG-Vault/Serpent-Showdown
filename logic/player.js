@@ -39,21 +39,11 @@ class Player {
 
     // Add body segments using addSegment method starting from the head
     for (let i = config.PLAYERS_STARTING_LENGTH - 1; i >= 0; i--) {
-      this.addSegment({
+      this.body.unshift({
         row: startRowIndex,
         column: isFirstPlayer ? startColumnIndex - i : startColumnIndex + i,
       });
     }
-  }
-
-  /**
-   * Adds a new segment to the front of the snake
-   * @param {Object} position - The position to add the new segment
-   * @param {number} position.row - Row coordinate
-   * @param {number} position.column - Column coordinate
-   */
-  addSegment(position) {
-    this.body.unshift(position);
   }
 
   /**
@@ -102,44 +92,31 @@ class Player {
       newHeadPos.column += 1;
     }
 
-    // calculcate before removing tail segment in case length is 1
-    this.updateScoreByMovementDirection(newHeadPos);
-
-    // check for collisions
-    const playerAteApple = this.game.collisionHandler.checkForAppleCollision(
-      this,
-      newHeadPos
-    );
-    this.game.collisionHandler.checkForItemCollision(this, newHeadPos);
-
     // add new head segment
-    this.addSegment(newHeadPos);
+    this.body.unshift(newHeadPos);
 
-    // remove tail segment if needed
-    const keepTailSegment =
-      playerAteApple ||
-      this.activeItems.some(
-        (activeItem) =>
-          activeItem.type === "golden apple" || activeItem.type === "tron"
-      );
+    // calculcate before removing tail segment in case length is 1
+    // this.updateScoreByMovementDirection();
 
-    if (!keepTailSegment) {
-      this.body.pop();
-    }
+    // check for item collisions
+    this.game.collisionHandler.checkForItemCollision(this);
 
     // Use player's updateItems method
     this.processItems();
+
+    // remove tail segment
+    this.removeSegments(1);
   }
 
   /**
    * Updates player score based on movement relative to board center
-   * @param {Object} newHeadPos - The new head position
    */
-  updateScoreByMovementDirection(newHeadPos) {
+  updateScoreByMovementDirection() {
     const boardCenterRow = Math.floor(this.game.numOfRows / 2);
     const boardCenterCol = Math.floor(this.game.numOfColumns / 2);
 
-    const oldHeadPos = { ...this.body[0] }; // new neck position
+    const oldHeadPos = { ...this.body[1] }; // new neck position
+    const newHeadPos = { ...this.body[0] };
 
     const oldDistanceToCenter =
       Math.abs(oldHeadPos.row - boardCenterRow) +
@@ -148,20 +125,12 @@ class Player {
       Math.abs(newHeadPos.row - boardCenterRow) +
       Math.abs(newHeadPos.column - boardCenterCol);
 
-    // Store initial score for debugging
-    const initialScore = this.score;
-
     // Award points based on movement relative to center
     if (newDistanceToCenter < oldDistanceToCenter) {
       this.addScore(config.MOVEMENT_TOWARDS_CENTER_REWARD);
     } else {
       this.addScore(config.MOVEMENT_AWAY_FROM_CENTER_REWARD);
     }
-
-    // console.log(`Player ${this.name} movement:
-    //   - Old distance to center: ${oldDistanceToCenter}
-    //   - New distance to center: ${newDistanceToCenter}
-    //   - Score: ${initialScore} -> ${this.score}`);
   }
 
   /**
@@ -202,10 +171,11 @@ class Player {
    */
   addOrExtendItem(item) {
     const existingItem = this.activeItems.find(
-      (item) => item.type === item.type
+      (activeItem) => item.type === activeItem.type
     );
 
     if (existingItem) {
+      // reset item duration
       existingItem.duration = item.duration;
     } else {
       this.activeItems.push(item);
@@ -218,48 +188,9 @@ class Player {
   processItems() {
     this.activeItems = this.activeItems
       .map((activeItem) => {
-        // console.log("Active: " + activeItem);
-        // const newDuration = activeItem.duration - 1;
-
         activeItem.duration -= 1;
 
         activeItem.do(this, this.game);
-
-        // Handle reset map item
-        // if (activeItem.type === "reset borders") {
-        //   this.game.board.resetShrinkage();
-        // } else if (activeItem.type.slice(0, 7) === "shorten") {
-        //   const segmentsToRemove = parseInt(activeItem.type.slice(7));
-        //   this.removeSegments(segmentsToRemove);
-        // } else if (activeItem.type === "tron") {
-        //   activeItem.temporarySegments += 1;
-
-        //   // handle item interactions
-        //   const activeGoldenAppleItem = this.activeItems.find(
-        //     (item) => item.type === "golden apple"
-        //   );
-        //   const activeShortenItem = this.activeItems.find(
-        //     (item) => item.type.slice(0, 7) === "shorten"
-        //   );
-        //   if (activeGoldenAppleItem) {
-        //     activeItem.temporarySegments -= 1;
-        //   } else if (activeShortenItem) {
-        //     const segmentsToRemove = parseInt(activeItem.type.slice(7));
-        //     activeItem.temporarySegments -= segmentsToRemove;
-        //   }
-
-        //   console.log(activeItem);
-
-        //   if (newDuration === 0) {
-        //     const segmentsToRemove = Math.max(
-        //       0,
-        //       activeItem.temporarySegments
-        //     );
-        //     if (segmentsToRemove > 0) {
-        //       this.body = this.body.slice(0, -segmentsToRemove);
-        //     }
-        //   }
-        // }
 
         return activeItem;
       })

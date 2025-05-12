@@ -14,44 +14,11 @@ class CollisionHandler {
   }
 
   /**
-   * Checks if a player's head collides with an apple
-   * @param {Player} player - The player to check for collision
-   * @param {Object} newHeadPosition - The position to check for apple collision
-   * @param {number} newHeadPosition.row - Row coordinate of the head
-   * @param {number} newHeadPosition.column - Column coordinate of the head
-   * @returns {boolean} True if collision with apple occurred, false otherwise
-   */
-  checkForAppleCollision(player, newHeadPosition) {
-    const appleIndex = this.game.apples.findIndex(
-      (apple) =>
-        apple.row === newHeadPosition.row &&
-        apple.column === newHeadPosition.column
-    );
-
-    // if player collides with an apple, return true
-    if (appleIndex !== -1) {
-      const apple = this.game.apples[appleIndex];
-
-      player.addScore(apple.pickUpReward);
-
-      // add "eaten" attribute to apple, so it can be removed after both moves are processed
-      apple.eaten = true;
-
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Checks if a player's head collides with a item
    * @param {Player} player - The player to check for collision
-   * @param {Object} newHeadPosition - The position to check for item collision
-   * @param {number} newHeadPosition.row - Row coordinate of the head
-   * @param {number} newHeadPosition.column - Column coordinate of the head
-   * @returns {boolean} True if collision with item occurred, false otherwise
    */
-  checkForItemCollision(player, newHeadPosition) {
+  checkForItemCollision(player) {
+    const newHeadPosition = player.body[0];
     const itemIndex = this.game.items.findIndex(
       (item) =>
         item.row === newHeadPosition.row &&
@@ -62,6 +29,8 @@ class CollisionHandler {
     if (itemIndex !== -1) {
       const item = this.game.items[itemIndex];
 
+      item.hasCollided = true; // prepare for removal
+
       player.addScore(item.pickUpReward);
 
       if (
@@ -69,20 +38,21 @@ class CollisionHandler {
         item.affect === "both" ||
         item.affect === "map"
       ) {
+        if (item.affect === "both") {
+          item.affect = "self";
+        }
         player.addOrExtendItem(item);
       }
 
       if (item.affect === "enemy" || item.affect === "both") {
         const otherPlayer = this.game.players.find((p) => p.id !== player.id);
 
+        if (item.affect === "both") {
+          item.affect = "self";
+        }
         otherPlayer.addOrExtendItem(item);
       }
-
-      this.game.items.splice(itemIndex, 1);
-      return true;
     }
-
-    return false;
   }
 
   /**
@@ -123,7 +93,7 @@ class CollisionHandler {
       activeTronItem.temporarySegments -= disconnectedSegments.length;
     }
 
-    this.game.apples.push(
+    this.game.items.push(
       ...disconnectedSegments
         .filter((segment) => this.game.board.isWithinBorders(segment))
         .map(
@@ -161,7 +131,7 @@ class CollisionHandler {
     if (!head) return false;
 
     const playerCollidedWithSelf = player.body
-      .slice(1)
+      .slice(2)
       .some(
         (bodySegment) =>
           bodySegment.row === head.row && bodySegment.column === head.column

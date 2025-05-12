@@ -96,18 +96,6 @@ class Spawner {
         continue;
       }
 
-      // Check collision with apples
-      const collidesWithApple = this.game.apples.some(
-        (apple) =>
-          (apple.row === originalRow && apple.column === originalColumn) ||
-          (apple.row === mirroredRow && apple.column === mirroredColumn)
-      );
-
-      if (collidesWithApple) {
-        attempts++;
-        continue;
-      }
-
       // Check collision with items
       const collidesWithItem = this.game.items.some(
         (item) =>
@@ -151,7 +139,7 @@ class Spawner {
       column: mirroredColumn,
     });
 
-    this.game.apples.push(originalApple, mirroredApple);
+    this.game.items.push(originalApple, mirroredApple);
   }
 
   /**
@@ -191,7 +179,7 @@ class Spawner {
     let affect = SelectedItemClass.config.affect;
     if (affect === "random") {
       const affectRoll = Math.random();
-      if (affectRoll < 0.4) {
+      if (affectRoll < 0.3) {
         affect = "self";
       } else if (affectRoll < 0.8) {
         affect = "enemy";
