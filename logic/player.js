@@ -202,8 +202,10 @@ class Player {
    */
   addOrExtendItem(item) {
     const existingItem = this.activeItems.find(
-      (item) => item.type === item.type
+      (activeItem) => item.type === activeItem.type
     );
+
+    console.log(existingItem);
 
     if (existingItem) {
       existingItem.duration = item.duration;
@@ -218,48 +220,11 @@ class Player {
   processItems() {
     this.activeItems = this.activeItems
       .map((activeItem) => {
-        // console.log("Active: " + activeItem);
-        // const newDuration = activeItem.duration - 1;
-
         activeItem.duration -= 1;
 
+        console.log(this.activeItems);
+
         activeItem.do(this);
-
-        // Handle reset map item
-        // if (activeItem.type === "reset borders") {
-        //   this.game.board.resetShrinkage();
-        // } else if (activeItem.type.slice(0, 7) === "shorten") {
-        //   const segmentsToRemove = parseInt(activeItem.type.slice(7));
-        //   this.removeSegments(segmentsToRemove);
-        // } else if (activeItem.type === "tron") {
-        //   activeItem.temporarySegments += 1;
-
-        //   // handle item interactions
-        //   const activeGoldenAppleItem = this.activeItems.find(
-        //     (item) => item.type === "golden apple"
-        //   );
-        //   const activeShortenItem = this.activeItems.find(
-        //     (item) => item.type.slice(0, 7) === "shorten"
-        //   );
-        //   if (activeGoldenAppleItem) {
-        //     activeItem.temporarySegments -= 1;
-        //   } else if (activeShortenItem) {
-        //     const segmentsToRemove = parseInt(activeItem.type.slice(7));
-        //     activeItem.temporarySegments -= segmentsToRemove;
-        //   }
-
-        //   console.log(activeItem);
-
-        //   if (newDuration === 0) {
-        //     const segmentsToRemove = Math.max(
-        //       0,
-        //       activeItem.temporarySegments
-        //     );
-        //     if (segmentsToRemove > 0) {
-        //       this.body = this.body.slice(0, -segmentsToRemove);
-        //     }
-        //   }
-        // }
 
         return activeItem;
       })

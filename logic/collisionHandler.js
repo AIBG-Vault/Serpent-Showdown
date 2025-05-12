@@ -69,12 +69,18 @@ class CollisionHandler {
         item.affect === "both" ||
         item.affect === "map"
       ) {
+        if (item.affect === "both") {
+          item.affect = "self";
+        }
         player.addOrExtendItem(item);
       }
 
       if (item.affect === "enemy" || item.affect === "both") {
         const otherPlayer = this.game.players.find((p) => p.id !== player.id);
 
+        if (item.affect === "both") {
+          item.affect = "self";
+        }
         otherPlayer.addOrExtendItem(item);
       }
 

@@ -23,7 +23,7 @@ const SHRINK_MAP_MOVE_INTERVAL = 2; // Number of moves between each shrinkage
 const MINIMUM_BOARD_SIZE = 15; // Number of columns left after which the map stops shrinking. Will be increased to 9 (as in AIBG 9.0) in production.
 
 // Spawn a item approximately 1 in 10 moves
-const MODIFIER_SPAWN_CHANCE = 1 / 10;
+const MODIFIER_SPAWN_CHANCE = 1 / 5;
 
 module.exports = {
   GAME_MAX_MOVES,

@@ -190,7 +190,7 @@ class Spawner {
     let affect = SelectedItemClass.config.affect;
     if (affect === "random") {
       const affectRoll = Math.random();
-      if (affectRoll < 0.4) {
+      if (affectRoll < 0.3) {
         affect = "self";
       } else if (affectRoll < 0.8) {
         affect = "enemy";

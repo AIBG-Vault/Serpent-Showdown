@@ -6,7 +6,7 @@ class Tron extends Item {
     affect: "random",
     pickUpReward: 50,
     duration: 10,
-    spawnWeight: 10,
+    spawnWeight: 400,
     symbol: "T",
   };
 

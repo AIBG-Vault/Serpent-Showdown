@@ -34,9 +34,9 @@ class Apple extends Item {
     );
 
     if (activeTronItem) {
-      activeTronItem.tempSegments = Math.max(
+      activeTronItem.temporarySegments = Math.max(
         0,
-        activeTronItem.tempSegments - 1
+        activeTronItem.temporarySegments - 1
       );
     }
 

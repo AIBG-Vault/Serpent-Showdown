@@ -6,7 +6,7 @@ class Shorten extends Item {
     affect: "self",
     pickUpReward: 30,
     duration: 1, // instant effect
-    spawnWeight: 40,
+    spawnWeight: 400,
     symbol: "S",
   };
 
@@ -38,11 +38,12 @@ class Shorten extends Item {
     const activeTronItem = player.activeItems.find(
       (item) => item.type === "tron"
     );
+    console.log(activeTronItem);
 
     if (activeTronItem) {
-      activeTronItem.tempSegments = Math.max(
+      activeTronItem.temporarySegments = Math.max(
         0,
-        activeTronItem.tempSegments - segmentsToRemove
+        activeTronItem.temporarySegments - segmentsToRemove
       );
     }
   }
