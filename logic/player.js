@@ -51,8 +51,8 @@ class Player {
    * @param {number} numOfSegments - The number of segments to remove from the end of the body up to body.length = 1
    */
   removeSegments(numOfSegments) {
-    // final length must be a minimum of 1 (+ 1 that will be popped)
-    const finalLength = Math.max(1 + 1, this.body.length - numOfSegments);
+    // final length must be a minimum of 1
+    const finalLength = Math.max(1, this.body.length - numOfSegments);
     this.body = this.body.slice(0, finalLength);
   }
 
@@ -106,7 +106,7 @@ class Player {
     this.processItems();
 
     // remove tail segment
-    this.body.pop();
+    this.removeSegments(1);
   }
 
   /**
@@ -175,9 +175,8 @@ class Player {
       (activeItem) => item.type === activeItem.type
     );
 
-    console.log(this.activeItems);
-
     if (existingItem) {
+      // reset item duration
       existingItem.duration = item.duration;
     } else {
       this.activeItems.push(item);
@@ -191,8 +190,6 @@ class Player {
     this.activeItems = this.activeItems
       .map((activeItem) => {
         activeItem.duration -= 1;
-
-        // console.log(this.activeItems);
 
         activeItem.do(this);
 

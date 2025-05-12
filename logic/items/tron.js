@@ -6,7 +6,7 @@ class Tron extends Item {
     affect: "random",
     pickUpReward: 50,
     duration: 10,
-    spawnWeight: 4,
+    spawnWeight: 100,
     symbol: "T",
   };
 
@@ -28,6 +28,9 @@ class Tron extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
+    // add a segment to player tail to be immediately removed by pop()
+    player.body.push(player.body[player.body.length - 1]);
+
     this.temporarySegments++;
 
     if (this.duration === 0) {

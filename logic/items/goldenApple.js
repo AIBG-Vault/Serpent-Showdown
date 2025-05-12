@@ -6,7 +6,7 @@ class GoldenApple extends Item {
     affect: "self",
     pickUpReward: 70,
     duration: 3,
-    spawnWeight: 90,
+    spawnWeight: 9,
     symbol: "G",
   };
 
@@ -27,17 +27,6 @@ class GoldenApple extends Item {
   do(player) {
     // add a segment to player tail to be immediately removed by pop()
     player.body.push(player.body[player.body.length - 1]);
-
-    const activeTronItem = player.activeItems.find(
-      (item) => item.type === "tron"
-    );
-
-    if (activeTronItem) {
-      activeTronItem.temporarySegments = Math.max(
-        0,
-        activeTronItem.temporarySegments - 1
-      );
-    }
   }
 }
 

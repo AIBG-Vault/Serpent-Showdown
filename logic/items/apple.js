@@ -26,29 +26,6 @@ class Apple extends Item {
   do(player) {
     // add a segment to player tail to be immediately removed by pop()
     player.body.push(player.body[player.body.length - 1]);
-
-    // handle interaction with tron
-    const activeTronItem = player.activeItems.find(
-      (item) => item.type === "tron"
-    );
-
-    if (activeTronItem) {
-      activeTronItem.temporarySegments = Math.max(
-        0,
-        activeTronItem.temporarySegments - 1
-      );
-    }
-    console.log("activeTronItem", activeTronItem);
-
-    // handle interaction with golden apple
-    const activeGoldenAppleItem = player.activeItems.find(
-      (item) => item.type === "golden apple"
-    );
-
-    if (activeGoldenAppleItem) {
-      activeGoldenAppleItem.duration += 1;
-    }
-    console.log("activeGoldenAppleItem", activeGoldenAppleItem);
   }
 }
 
