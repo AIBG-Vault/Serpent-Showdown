@@ -213,3 +213,16 @@ particlesJS.load(
     console.log("callback - particles.js config loaded");
   }
 );
+
+// ========================================
+// URL params
+// ========================================
+
+if (urlParams.get("mode") === "finals") {
+  console.log("Finals mode is ON");
+
+  // show all finals-only elements
+  document
+    .querySelectorAll(".finals-only")
+    .forEach((elem) => elem.classList.remove("finals-only"));
+}

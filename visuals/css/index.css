@@ -162,6 +162,10 @@ body {
   display: none;
 }
 
+.finals-only {
+  display: none;
+}
+
 .connection_status {
   text-align: center;
 }

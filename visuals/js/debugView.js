@@ -67,13 +67,13 @@ function connectPlayer(playerNum) {
   };
 }
 
-// Check if ?debug=1 is set in URL
+// Check if ?mode=debug is set in URL
 const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get("debug") === "1") {
+if (urlParams.get("mode") === "debug") {
   console.log("Debug mode is ON");
 
-  // show all debug only
+  // show all debug-only elements
   document
     .querySelectorAll(".debug-only")
-    .forEach((elem) => (elem.style.display = "block"));
+    .forEach((elem) => elem.classList.remove("debug-only"));
 }
