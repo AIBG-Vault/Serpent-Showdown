@@ -6,7 +6,7 @@ class Shorten extends Item {
     affect: "self",
     pickUpReward: 30,
     duration: 1, // instant effect
-    spawnWeight: 40,
+    spawnWeight: 400,
     symbol: "S",
   };
 
@@ -30,21 +30,6 @@ class Shorten extends Item {
   do(player) {
     const segmentsToRemove = parseInt(this.type.slice(8));
     player.removeSegments(segmentsToRemove);
-    console.log(
-      `Player ${player.name} shortened by ${segmentsToRemove} segments`
-    );
-
-    // Handle the effect of the tron item
-    const activeTronItem = player.activeItems.find(
-      (item) => item.type === "tron"
-    );
-
-    if (activeTronItem) {
-      activeTronItem.tempSegments = Math.max(
-        0,
-        activeTronItem.tempSegments - segmentsToRemove
-      );
-    }
   }
 
   /**
