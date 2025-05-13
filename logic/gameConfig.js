@@ -2,9 +2,9 @@
 // Maximum number of moves before forcing game end. Will be increased to ~500 in production.
 const GAME_MAX_MOVES = 1000;
 // Number of rows in the game grid. Will be increased to ~25 in production.
-const BOARD_NUM_OF_ROWS = 11;
+const BOARD_NUM_OF_ROWS = 25;
 // Number of columns in the game grid. Will be increased to ~60 in production.
-const BOARD_NUM_OF_COLUMNS = 25;
+const BOARD_NUM_OF_COLUMNS = 60;
 // Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production.
 const PLAYERS_STARTING_LENGTH = 9;
 // Initial score for each player. Will be increased to 100 in production.

@@ -17,12 +17,17 @@
   background: #333;
   padding: 0.5rem;
   border-radius: 0.5rem;
+
+  background-image: url(../img/AIBG\ 9.0\ Zagreb\ bear\ gray.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .cell {
   width: 1.75rem;
   height: 1.75rem;
-  background: #2a2a2a;
+  background: rgba(42, 42, 42, 0.8);
   border-radius: 0.25rem;
   display: flex;
   align-items: center;
@@ -31,7 +36,7 @@
 }
 
 .border {
-  background: #666;
+  background: rgba(102, 102, 102, 0.8);
   color: #fff;
   font-weight: bold;
 }
