@@ -93,8 +93,8 @@ function toggleEndScreen(data) {
       winnerNameElem.textContent = data.winner;
     }
 
-    winnerContainer.style.display = "grid";
     winnerContainer.style.opacity = "0";
+    winnerContainer.style.display = "grid";
     setTimeout(() => {
       winnerContainer.style.opacity = "1";
       winnerContainer.style.transition = "opacity 1.5s";
@@ -168,34 +168,32 @@ function parseData(data) {
   moveCount = data.moveCount || moveCount;
   updateMoveCount(moveCount);
 
-  // Update player information
-  if (data.players || data.players?.length) {
-    const player1 = data.players.length > 0 ? data.players[0] : null;
-    const player2 = data.players.length === 2 ? data.players[1] : null;
+  // Update team info
+  const teamInfoContainerElems = document.querySelectorAll(".team_info");
+  if (data.players.length === 0) {
+    // Reset team info if no players are present
+    teamInfoContainerElems.forEach((elem) => {
+      elem.querySelector(".team_name").textContent = "Team ####";
+      elem.querySelector(".team_length").textContent = "Length: ####";
+      elem.querySelector(".team_score").textContent = "Score: ####";
+    });
+  } else {
+    data.players.forEach((player, index) => {
+      teamInfoContainerElems[index].querySelector(".team_name").textContent =
+        player.name;
 
-    // Update player names
-    const teamNameElems = document.querySelectorAll(".team_name");
-    teamNameElems[0].textContent = player1?.name || "Team name 1";
-    teamNameElems[1].textContent = player2?.name || "Team name 2";
+      teamInfoContainerElems[index].querySelector(".team_length").textContent =
+        "Length: " + player.body.length;
 
-    // Update scores
-    document.querySelector(".left_container .team_score").textContent =
-      player1?.score >= 0 ? `Score: ${player1?.score}` : `Score: ####`;
-    document.querySelector(".right_container .team_score").textContent =
-      player2?.score >= 0 ? `Score: ${player2?.score}` : `Score: ####`;
-
-    // Update lengths
-    document.querySelector(
-      ".left_container .team_length"
-    ).textContent = `Length: ${player1?.body?.length || "####"}`;
-    document.querySelector(
-      ".right_container .team_length"
-    ).textContent = `Length: ${player2?.body?.length || "####"}`;
+      teamInfoContainerElems[index].querySelector(".team_score").textContent =
+        "Score: " + player.score;
+    });
   }
 
   // Update board
-  window.boardUtils.updateGrid(data.map, data.players);
+  window.boardUtils.updateGrid(data);
 
+  // If winner is present, show the end screen
   if (data.winner) {
     toggleEndScreen(data);
     return;
