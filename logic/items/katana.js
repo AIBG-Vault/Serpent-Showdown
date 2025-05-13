@@ -18,7 +18,7 @@ class Katana extends Item {
    * @param {number} position.row - The row coordinate of the item
    * @param {number} position.col - The column coordinate of the item
    */
-  constructor(position, affect) {
+  constructor(position) {
     super(position, Katana.config);
   }
 

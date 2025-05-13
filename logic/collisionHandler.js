@@ -60,7 +60,6 @@ class CollisionHandler {
    * Handles wall collision effects including:
    * - Segment disconnection
    * - Score penalties
-   * - Tron item adjustments
    * - Converting disconnected segments to apples
    * @param {Player} player - The player to check for wall collision
    * @returns {boolean} True if fatal wall collision occurred, false otherwise
