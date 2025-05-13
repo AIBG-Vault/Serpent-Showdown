@@ -96,7 +96,7 @@ class Player {
     this.body.unshift(newHeadPos);
 
     // calculcate before removing tail segment in case length is 1
-    // this.updateScoreByMovementDirection();
+    this.updateScoreByMovementDirection();
 
     // check for item collisions
     this.game.collisionHandler.checkForItemCollision(this);
@@ -112,11 +112,11 @@ class Player {
    * Updates player score based on movement relative to board center
    */
   updateScoreByMovementDirection() {
-    const boardCenterRow = Math.floor(this.game.numOfRows / 2);
-    const boardCenterCol = Math.floor(this.game.numOfColumns / 2);
+    let boardCenterRow = (this.game.numOfRows - 1) / 2;
+    let boardCenterCol = (this.game.numOfColumns - 1) / 2;
 
-    const oldHeadPos = { ...this.body[1] }; // new neck position
-    const newHeadPos = { ...this.body[0] };
+    const newHeadPos = this.body[0];
+    const oldHeadPos = this.body[1]; // new neck position
 
     const oldDistanceToCenter =
       Math.abs(oldHeadPos.row - boardCenterRow) +

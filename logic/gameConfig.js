@@ -1,13 +1,13 @@
 // Game configuration constants
-// Maximum number of moves before forcing game end. Will be increased to ~500 in production.
+// Maximum number of moves before forcing game end. Will be set to ~1000 in production.
 const GAME_MAX_MOVES = 1000;
-// Number of rows in the game grid. Will be increased to ~25 in production.
-const BOARD_NUM_OF_ROWS = 11;
-// Number of columns in the game grid. Will be increased to ~60 in production.
-const BOARD_NUM_OF_COLUMNS = 25;
-// Initial length of each player's snake. Will be increased to 9 (as in AIBG 9.0) in production.
+// Number of rows in the game grid (MUST BE AN ODD NUMBER). Will be set to ~25 in production.
+const BOARD_NUM_OF_ROWS = 15;
+// Number of columns in the game grid. Will be set to ~60 in production.
+const BOARD_NUM_OF_COLUMNS = 30;
+// Initial length of each player's snake. Will be set to 9 (as in AIBG 9.0) in production.
 const PLAYERS_STARTING_LENGTH = 9;
-// Initial score for each player. Will be increased to 100 in production.
+// Initial score for each player. Will be set to 1000 in production.
 const PLAYERS_STARTING_SCORE = 1000;
 
 // Game rewards and penalties
@@ -18,11 +18,11 @@ const REVERSE_DIRECTION_PENALTY = 30; // penalty for making a move that reverses
 const BODY_SEGMENT_LOSS_PENALTY = 30; // penalty per segment lost to border shrinkage
 
 // Map shrinkage configuration
-const START_SHRINKING_MAP_AFTER_MOVES = 0; // Number of moves after which the map starts shrinking.
-const SHRINK_MAP_MOVE_INTERVAL = 2; // Number of moves between each shrinkage
-const MINIMUM_BOARD_SIZE = 15; // Number of columns left after which the map stops shrinking. Will be increased to 9 (as in AIBG 9.0) in production.
+const START_SHRINKING_MAP_AFTER_MOVES = 100; // Number of moves after which the map starts shrinking. Will be set to ~100 in production.
+const SHRINK_MAP_MOVE_INTERVAL = 10; // Number of moves between each shrinkage.  Will be set to 10 in production.
+const MINIMUM_BOARD_SIZE = 20; // Number of columns left after which the map stops shrinking. Will be set to ~20 in production.
 
-// Spawn a item approximately 1 in 10 moves
+// Spawn a item approximately 1 in X moves. Will be set to X=~20 in production.
 const MODIFIER_SPAWN_CHANCE = 1 / 10;
 
 module.exports = {
