@@ -23,12 +23,15 @@ function updateGrid(map, players) {
 
   const rows = map.length;
   const cols = map[0].length;
+
   const board = document.getElementById("gameBoard");
+  const currentRows =
+    board.style.gridTemplateRows.match(/repeat\((\d+)/)?.[1];
   const currentCols =
     board.style.gridTemplateColumns.match(/repeat\((\d+)/)?.[1];
 
   // Only recreate grid if dimensions changed
-  if (currentCols != cols) {
+  if (currentRows != rows || currentCols != cols) {
     createGrid(rows, cols);
   }
 
@@ -51,6 +54,7 @@ function updateGrid(map, players) {
           // Handle object values
           if (value.type === "snake-head") {
             cell.classList.add("snake");
+            cell.classList.add("snake-head");
             cell.classList.add(
               value.playerName === players[0].name
                 ? "snake-player1-head"
@@ -58,6 +62,7 @@ function updateGrid(map, players) {
             );
           } else if (value.type === "snake-body") {
             cell.classList.add("snake");
+            cell.classList.add("snake-body");
             cell.classList.add(
               value.playerName === players[0].name
                 ? "snake-player1-body"

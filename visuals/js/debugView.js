@@ -66,14 +66,3 @@ function connectPlayer(playerNum) {
     errorMsgElement.textContent = `Manual player connection failed`;
   };
 }
-
-// Check if ?mode=debug is set in URL
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get("mode") === "debug") {
-  console.log("Debug mode is ON");
-
-  // show all debug-only elements
-  document
-    .querySelectorAll(".debug-only")
-    .forEach((elem) => elem.classList.remove("debug-only"));
-}

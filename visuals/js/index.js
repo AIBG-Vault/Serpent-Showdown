@@ -215,10 +215,18 @@ particlesJS.load(
 );
 
 // ========================================
-// URL params
+// URL params (?mode=debug or ?mode=finals)
 // ========================================
 
-if (urlParams.get("mode") === "finals") {
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get("mode") === "debug") {
+  console.log("Debug mode is ON");
+
+  // show all debug-only elements
+  document
+    .querySelectorAll(".debug-only")
+    .forEach((elem) => elem.classList.remove("debug-only"));
+} else if (urlParams.get("mode") === "finals") {
   console.log("Finals mode is ON");
 
   // show all finals-only elements

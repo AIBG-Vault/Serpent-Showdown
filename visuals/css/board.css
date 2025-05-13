@@ -41,39 +41,39 @@
   font-weight: bold;
 }
 
-.player-head {
-  background: #4caf50;
+.snake-head {
+  /* background: #4caf50; */
+
+  background-image: url(../img/sprites/AIBG\ 6.0\ Zagreb\ bear.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-width: 1px;
+  border-style: dashed;
 }
 
-.player-body {
+.snake-body {
   background: #45a049;
+  transform: scale(0.8);
 }
 
 .cell.snake-player1-head {
-  background-color: var(--snake-player1-color) !important;
+  /* background-color: var(--snake-player1-color); */
+  border-color: var(--snake-player1-color);
 }
 
 .cell.snake-player1-body {
-  background-color: color-mix(
-    in srgb,
-    var(--snake-player1-color) 80%,
-    black
-  ) !important;
-  transform: scale(0.8);
+  background-color: color-mix(in srgb, var(--snake-player1-color) 80%, black);
 }
 
 .cell.snake-player2-head {
-  background-color: var(--snake-player2-color) !important;
+  /* background-color: var(--snake-player2-color); */
+  border-color: var(--snake-player2-color);
 }
 
 .cell.snake-player2-body {
-  background-color: color-mix(
-    in srgb,
-    var(--snake-player2-color) 80%,
-    black
-  ) !important;
-
-  transform: scale(0.8);
+  background-color: color-mix(in srgb, var(--snake-player2-color) 80%, black);
 }
 
 .apple {
