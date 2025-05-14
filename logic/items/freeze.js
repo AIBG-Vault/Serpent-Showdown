@@ -1,13 +1,13 @@
 const Item = require("./item");
 
-class Armour extends Item {
+class Freeze extends Item {
   static config = {
-    type: "armour",
-    affect: "self",
-    pickUpReward: 60,
-    duration: 15,
-    spawnWeight: 7,
-    symbol: "A",
+    type: "freeze",
+    affect: "enemy",
+    pickUpReward: 30,
+    duration: 8,
+    spawnWeight: 4,
+    symbol: "F",
   };
 
   /**
@@ -17,14 +17,16 @@ class Armour extends Item {
    * @param {number} position.col - The column coordinate of the item
    */
   constructor(position) {
-    super(position, Armour.config);
+    super(position, Freeze.config);
   }
 
   /**
-   * Cuts off enemy tail segments and converts them to apples
+   * Increases temporary segments to be removed when expires, and does so
    * @param {Player} player - The player that collided with the item
    */
-  do(player) {}
+  do(player) {
+    player.nextMoveDirection = "invalid";
+  }
 }
 
-module.exports = Armour;
+module.exports = Freeze;

@@ -107,6 +107,18 @@
   background: #c0c0c0;
 }
 
+.jump {
+  background: #b32400;
+}
+
+.freeze {
+  background: #b6edff;
+}
+
+.nausea {
+  background: #798e00;
+}
+
 .unknown {
   background: #ff0000;
 }

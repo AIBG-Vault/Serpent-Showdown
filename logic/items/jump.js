@@ -1,13 +1,13 @@
 const Item = require("./item");
 
-class GoldenApple extends Item {
+class Jump extends Item {
   static config = {
-    type: "golden-apple",
+    type: "jump",
     affect: "self",
-    pickUpReward: 70,
+    pickUpReward: 80,
     duration: 5,
-    spawnWeight: 9,
-    symbol: "G",
+    spawnWeight: 5,
+    symbol: "J",
   };
 
   /**
@@ -17,17 +17,21 @@ class GoldenApple extends Item {
    * @param {number} position.col - The column coordinate of the item
    */
   constructor(position) {
-    super(position, GoldenApple.config);
+    super(position, Jump.config);
   }
 
   /**
-   * Implements the effect of picking up a golden apple
+   * Increases temporary segments to be removed when expires, and does so
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
-    // add a segment to player tail to be immediately removed by pop()
-    player.body.push(player.body[player.body.length - 1]);
+    player.playMove(player.lastMoveDirection);
+
+    // if player has katana item, remove it
+    player.activeItems = player.activeItems.filter(
+      (item) => item.type !== "katana"
+    );
   }
 }
 
-module.exports = GoldenApple;
+module.exports = Jump;
