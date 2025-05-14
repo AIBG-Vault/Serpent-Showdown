@@ -176,6 +176,10 @@ function parseData(data) {
       elem.querySelector(".team_name").textContent = "Team ####";
       elem.querySelector(".team_length").textContent = "Length: ####";
       elem.querySelector(".team_score").textContent = "Score: ####";
+
+      elem.querySelectorAll(".item").forEach((itemElem) => {
+        itemElem.style.filter = "grayscale(100%)";
+      });
     });
   } else {
     data.players.forEach((player, index) => {
@@ -187,6 +191,24 @@ function parseData(data) {
 
       teamInfoContainerElems[index].querySelector(".team_score").textContent =
         "Score: " + player.score;
+
+      teamInfoContainerElems[index]
+        .querySelectorAll(".item")
+        .forEach((elem) => {
+          elem.style.filter = "grayscale(100%)";
+        });
+
+      player.activeItems.forEach((item) => {
+        // find element with data-value = item.type
+        const itemElem = teamInfoContainerElems[index].querySelector(
+          `[data-value="${item.type}"]`
+        );
+
+        // if itemElem is not present, skip
+        if (!itemElem) return;
+
+        itemElem.style.filter = "none";
+      });
     });
   }
 

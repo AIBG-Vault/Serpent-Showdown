@@ -45,10 +45,19 @@ fs.readFile("./players.json", "utf8", (err, data) => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 const connections = new Set(); // Track WebSocket connections
+const connectionIds = new Set(); // Track WebSocket connections
 
 wss.on("connection", (ws, req) => {
   const url = new URL(req.url, "http://localhost:3000");
   const receivedId = url.searchParams.get("id");
+
+  // Check if a connection already exists for this ID
+  if (connectionIds.has(receivedId) && receivedId !== "frontend") {
+    console.log("Connection already exists for this ID: " + receivedId);
+    return;
+  }
+
+  // Add the new connection to the Set (connections)
   ws.id = receivedId;
   connections.add(ws);
 

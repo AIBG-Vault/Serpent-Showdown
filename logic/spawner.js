@@ -3,6 +3,8 @@ const Tron = require("./items/tron");
 const ResetBorders = require("./items/resetBorders");
 const Shorten = require("./items/shorten");
 const Katana = require("./items/katana");
+const Armour = require("./items/armour");
+
 const Apple = require("./items/apple");
 
 /**
@@ -156,7 +158,14 @@ class Spawner {
       return;
     }
 
-    const itemClasses = [GoldenApple, Tron, ResetBorders, Shorten, Katana];
+    const itemClasses = [
+      GoldenApple,
+      Tron,
+      ResetBorders,
+      Shorten,
+      Katana,
+      Armour,
+    ];
 
     const { originalRow, originalColumn, mirroredRow, mirroredColumn } =
       position;
