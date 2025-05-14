@@ -104,19 +104,21 @@ const movementHelpers = {
       return false;
     }
 
-    // check if any cell next to pos is border
-    if (
-      (map[pos.x - 1] &&
-        map[pos.x - 1][pos.y] &&
-        map[pos.x - 1][pos.y].type === "border") ||
-      (map[pos.x + 1] &&
-        map[pos.x + 1][pos.y] &&
-        map[pos.x + 1][pos.y].type === "border") ||
-      (map[pos.x][pos.y - 1] && map[pos.x][pos.y - 1].type === "border") ||
-      (map[pos.x][pos.y + 1] && map[pos.x][pos.y + 1].type === "border")
-    ) {
-      return false;
-    }
+    // check if any cell next to pos is border or enemy player head
+    ["border", "snake-head"].forEach((cellType) => {
+      if (
+        (map[pos.x - 1] &&
+          map[pos.x - 1][pos.y] &&
+          map[pos.x - 1][pos.y].type === cellType) ||
+        (map[pos.x + 1] &&
+          map[pos.x + 1][pos.y] &&
+          map[pos.x + 1][pos.y].type === cellType) ||
+        (map[pos.x][pos.y - 1] && map[pos.x][pos.y - 1].type === cellType) ||
+        (map[pos.x][pos.y + 1] && map[pos.x][pos.y + 1].type === cellType)
+      ) {
+        return false;
+      }
+    });
 
     // Check if it's a safe item type
     const safeTypes = [
@@ -188,6 +190,15 @@ const strategies = {
 
       const cell = map[x][y];
       if (cell && cell.type === "apple") {
+        // Validate the entire path to make sure it's still safe
+        let currentPos = { x: playerHead.x, y: playerHead.y };
+        for (const move of path) {
+          const nextPos = movementHelpers.getNextPosition(currentPos, move);
+          if (!movementHelpers.isSafeMove(map, nextPos)) {
+            return null; // Path is not safe anymore
+          }
+          currentPos = nextPos;
+        }
         return path;
       }
 
@@ -201,17 +212,12 @@ const strategies = {
       for (const { dRow, dColumn, move } of directions) {
         const newX = x + dRow;
         const newY = y + dColumn;
+        const nextPos = { x: newX, y: newY };
 
         if (newX < 0 || newX >= rows || newY < 0 || newY >= cols) continue;
 
-        const cell = map[newX][newY];
-        if (
-          cell !== null &&
-          cell.type !== "apple" &&
-          (cell.type === "snake-head" || cell.type === "snake-body")
-        ) {
-          continue;
-        }
+        // Use isSafeMove to check if the next position is safe
+        if (!movementHelpers.isSafeMove(map, nextPos)) continue;
 
         queue.push([newX, newY, [...path, move]]);
       }
