@@ -23,6 +23,9 @@ class Player {
     this.initBodySegments();
 
     this.activeItems = [];
+
+    this.lastMoveDirection = null;
+    this.nextMoveDirection = null;
   }
 
   /**
@@ -69,6 +72,14 @@ class Player {
    * @param {string} direction - Direction of movement ('up', 'down', 'left', 'right')
    */
   playMove(direction) {
+    this.lastMoveDirection = direction;
+
+    // use preset direction if exists
+    if (this.nextMoveDirection !== null) {
+      direction = this.nextMoveDirection;
+      this.nextMoveDirection = null;
+    }
+
     // Use player's isReverseDirection method
     if (this.isReverseDirection(direction)) {
       this.addScore(-config.REVERSE_DIRECTION_PENALTY);

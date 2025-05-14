@@ -6,7 +6,7 @@ class Shorten extends Item {
     affect: "self",
     pickUpReward: 30,
     duration: 1, // instant effect
-    spawnWeight: 2,
+    spawnWeight: 4,
     symbol: "S",
   };
 

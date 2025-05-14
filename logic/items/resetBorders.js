@@ -2,7 +2,7 @@ const Item = require("./item");
 
 class ResetBorders extends Item {
   static config = {
-    type: "reset borders",
+    type: "reset-borders",
     affect: "map",
     pickUpReward: 30,
     duration: 1, // instant effect
