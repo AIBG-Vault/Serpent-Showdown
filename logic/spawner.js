@@ -4,6 +4,7 @@ const ResetBorders = require("./items/resetBorders");
 const Shorten = require("./items/shorten");
 const Katana = require("./items/katana");
 const Armour = require("./items/armour");
+const SpeedUp = require("./items/speedUp");
 
 const Apple = require("./items/apple");
 
@@ -165,6 +166,7 @@ class Spawner {
       Shorten,
       Katana,
       Armour,
+      SpeedUp,
     ];
 
     const { originalRow, originalColumn, mirroredRow, mirroredColumn } =

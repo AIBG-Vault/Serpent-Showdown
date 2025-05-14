@@ -31,27 +31,19 @@ class Katana extends Item {
 
     const otherPlayer = player.game.players.find((p) => p !== player);
 
-    // Check if player's head collides with enemy's tail (excluding head)
+    // Check if player's head collides with enemy's body (excluding head)
     const collisionIndex = otherPlayer.body.findIndex(
-      (segment, index) =>
-        index > 0 &&
-        segment &&
-        segment.row === playerHead.row &&
-        segment.column === playerHead.column
+      (segment) =>
+        segment.row === playerHead.row && segment.column === playerHead.column
     );
 
-    // If no collision, return false
-    if (collisionIndex === -1) return false;
-
-    // if collision with head, return false
-    if (collisionIndex === 0) return false;
+    // If no collision or collision with head, return false
+    if (collisionIndex === -1 || collisionIndex === 0) return false;
 
     // Check if the other player has active armour
-    const hasArmour =
-      otherPlayer.activeItems &&
-      otherPlayer.activeItems.some(
-        (item) => item.type === "armour" && item.duration > 0
-      );
+    const hasArmour = otherPlayer.activeItems.some(
+      (item) => item.type === "armour"
+    );
 
     if (hasArmour) {
       // Katana is negated, do nothing special, let normal collision kill the player
