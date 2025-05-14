@@ -71,7 +71,7 @@ function updateGrid(data) {
             );
           } else {
             cell.classList.add("item");
-            cell.textContent = value.symbol || "?";
+            // cell.textContent = value.symbol || "?";
           }
 
           // add borders (outlines) based on affect property

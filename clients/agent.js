@@ -31,12 +31,13 @@ const gameState = {
   agentId: process.argv[2] || CONFIG.defaultId,
   agentMode: process.argv[3],
   delayBetweenMoves: CONFIG.baseDelay,
+  playerName: null, // Add this to store the player name
 };
 
 // Initialize agent mode
 if (!gameState.agentMode || !CONFIG.validModes.includes(gameState.agentMode)) {
   console.error(
-    "Direction not provided or invalid, using default:",
+    "Mode not provided or invalid, using default:",
     CONFIG.defaultMode
   );
   gameState.agentMode = CONFIG.defaultMode;
@@ -56,8 +57,31 @@ const movementHelpers = {
     return pos;
   },
 
+  findPlayerHead(map, playerName) {
+    if (!map || !playerName) return { x: 0, y: 0 };
+
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[i].length; j++) {
+        const cell = map[i][j];
+        if (
+          cell &&
+          cell.type === "snake-head" &&
+          cell.playerName === playerName
+        ) {
+          return { x: i, y: j };
+        }
+      }
+    }
+
+    console.error("Player not found in map");
+    // Return default position if player not found
+    return { x: 0, y: 0 };
+  },
+
   isSafeMove(map, pos) {
     if (
+      !map ||
+      !map[0] ||
       pos.x < 0 ||
       pos.x >= map.length ||
       pos.y < 0 ||
@@ -65,58 +89,85 @@ const movementHelpers = {
     ) {
       return false;
     }
-    const cell = map[pos.x][pos.y];
-    return (
-      cell === null ||
-      (cell && cell.type === "apple") ||
-      (cell && cell.type === "golden-apple") ||
-      (cell && cell.type === "tron")
-    );
-  },
 
-  findPlayerHead(map, playerSymbol) {
-    const playerHead = { x: 0, y: 0 };
-    for (let i = 0; i < map.length; i++) {
-      for (let j = 0; j < map[i].length; j++) {
-        const cell = map[i][j];
-        if (
-          cell &&
-          cell.type === "snake-head" &&
-          cell.player === playerSymbol.toLowerCase()
-        ) {
-          playerHead.x = i;
-          playerHead.y = j;
-        }
-      }
+    const cell = map[pos.x][pos.y];
+
+    // If cell is null, it's safe
+    if (cell === null) return true;
+
+    // If it's a snake part or border, it's not safe
+    if (
+      cell.type === "snake-head" ||
+      cell.type === "snake-body" ||
+      cell.type === "border"
+    ) {
+      return false;
     }
-    return playerHead;
+
+    // check if any cell next to pos is border
+    if (
+      (map[pos.x - 1] &&
+        map[pos.x - 1][pos.y] &&
+        map[pos.x - 1][pos.y].type === "border") ||
+      (map[pos.x + 1] &&
+        map[pos.x + 1][pos.y] &&
+        map[pos.x + 1][pos.y].type === "border") ||
+      (map[pos.x][pos.y - 1] && map[pos.x][pos.y - 1].type === "border") ||
+      (map[pos.x][pos.y + 1] && map[pos.x][pos.y + 1].type === "border")
+    ) {
+      return false;
+    }
+
+    // Check if it's a safe item type
+    const safeTypes = [
+      "apple",
+      "armour",
+      "freeze",
+      "golden-apple",
+      "katana",
+      "nausea",
+      "reset-borders",
+      "shorten",
+      "tron",
+    ];
+
+    return safeTypes.includes(cell.type);
   },
 };
 
 // Strategy implementations
 const strategies = {
   findSafeDirection(map, playerHead) {
+    if (!map || !playerHead) {
+      return CONFIG.validDirections[
+        Math.floor(Math.random() * CONFIG.validDirections.length)
+      ];
+    }
+
+    // Define all possible moves with their priorities
     const directions = [
-      { dx: -1, dy: 0, move: "up" },
-      { dx: 1, dy: 0, move: "down" },
-      { dx: 0, dy: -1, move: "left" },
-      { dx: 0, dy: 1, move: "right" },
-    ].sort(() => Math.random() - 0.5);
+      { dRow: -1, dColumn: 0, move: "up" },
+      { dRow: 1, dColumn: 0, move: "down" },
+      { dRow: 0, dColumn: -1, move: "left" },
+      { dRow: 0, dColumn: 1, move: "right" },
+    ];
 
-    for (const { dx, dy, move } of directions) {
-      const newX = playerHead.x + dx;
-      const newY = playerHead.y + dy;
+    // Randomize direction order to avoid predictable patterns
+    directions.sort(() => Math.random() - 0.5);
 
-      if (newX < 0 || newX >= map.length || newY < 0 || newY >= map[0].length) {
-        continue;
-      }
+    // First pass: Check for immediate safe moves
+    for (const dir of directions) {
+      const nextPos = {
+        x: playerHead.x + dir.dRow,
+        y: playerHead.y + dir.dColumn,
+      };
 
-      const cell = map[newX][newY];
-      if (cell === null || (cell && cell.type === "apple")) {
-        return move;
+      if (movementHelpers.isSafeMove(map, nextPos)) {
+        return dir.move;
       }
     }
 
+    // If no safe moves found, pick a random direction
     return CONFIG.validDirections[
       Math.floor(Math.random() * CONFIG.validDirections.length)
     ];
@@ -141,15 +192,15 @@ const strategies = {
       }
 
       const directions = [
-        { dx: -1, dy: 0, move: "up" },
-        { dx: 1, dy: 0, move: "down" },
-        { dx: 0, dy: -1, move: "left" },
-        { dx: 0, dy: 1, move: "right" },
+        { dRow: -1, dColumn: 0, move: "up" },
+        { dRow: 1, dColumn: 0, move: "down" },
+        { dRow: 0, dColumn: -1, move: "left" },
+        { dRow: 0, dColumn: 1, move: "right" },
       ];
 
-      for (const { dx, dy, move } of directions) {
-        const newX = x + dx;
-        const newY = y + dy;
+      for (const { dRow, dColumn, move } of directions) {
+        const newX = x + dRow;
+        const newY = y + dColumn;
 
         if (newX < 0 || newX >= rows || newY < 0 || newY >= cols) continue;
 
@@ -171,10 +222,7 @@ const strategies = {
 
 // Movement decision logic
 function decideNextMove(map, mode) {
-  const playerHead = movementHelpers.findPlayerHead(
-    map,
-    gameState.agentId.toUpperCase()
-  );
+  const playerHead = movementHelpers.findPlayerHead(map, gameState.playerName);
 
   switch (mode) {
     case "timeout":
@@ -212,12 +260,24 @@ ws.on("open", () => console.log("Connected to WebSocket server"));
 ws.on("error", (error) => console.error("WebSocket error:", error));
 ws.on("close", () => console.log("Disconnected from WebSocket by server"));
 
+// Update WebSocket message handler
 ws.on("message", (data) => {
   const receivedMsg = JSON.parse(data.toString("utf-8"));
-  // console.log("Received message:", receivedMsg);
 
-  const gameIsOver =
-    receivedMsg.winner !== null && receivedMsg.winner !== undefined;
+  // Store player name when receiving the connection success message
+  if (receivedMsg.message === "Player connected successfully.") {
+    console.log(
+      "Agent connected with name: '" +
+        receivedMsg.name +
+        "' and id: '" +
+        gameState.agentId +
+        "'."
+    );
+    gameState.playerName = receivedMsg.name;
+    return;
+  }
+
+  const gameIsOver = receivedMsg.winner !== null;
 
   if (!gameIsOver && receivedMsg.map) {
     const direction = decideNextMove(receivedMsg.map, gameState.agentMode);

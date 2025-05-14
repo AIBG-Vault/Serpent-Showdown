@@ -35,10 +35,92 @@
   color: #fff;
 }
 
+.cell.item {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .border {
-  background: rgba(102, 102, 102, 0.8);
-  color: #fff;
-  font-weight: bold;
+  /* background: rgba(102, 102, 102, 0.8); */
+
+  background-image: url(../img/sprites/border.png);
+}
+
+.apple {
+  /* background: #ff4444; */
+
+  background-image: url(../img/sprites/apple.png);
+}
+
+.golden-apple {
+  /* background: #ffd700; */
+
+  background-image: url(../img/sprites/goldenApple.png);
+}
+
+.tron {
+  /* background: #00ffff; */
+
+  background-image: url(../img/sprites/tron.png);
+}
+
+.reset-borders {
+  /* background: #ccc; */
+
+  background-image: url(../img/sprites/resetBorders.png);
+}
+
+.shorten {
+  /* background: #55b479; */
+
+  background-image: url(../img/sprites/shorten.png);
+}
+
+.katana {
+  /* background: #4400ff; */
+
+  background-image: url(../img/sprites/katana.png);
+}
+
+.armour {
+  /* background: #c0c0c0; */
+
+  background-image: url(../img/sprites/armour.png);
+}
+
+.jump {
+  /* background: #b32400; */
+
+  background-image: url(../img/sprites/jump.png);
+}
+
+.freeze {
+  /* background: #b6edff; */
+
+  background-image: url(../img/sprites/freeze.png);
+}
+
+.nausea {
+  /* background: #798e00; */
+
+  background-image: url(../img/sprites/nausea.png);
+}
+
+.unknown {
+  background: #ff0000;
+}
+
+.affect-self {
+  border: 1px dashed #4caf50; /* green border */
+}
+
+.affect-enemy {
+  border: 1px dashed #ff0000; /* red border */
+}
+
+.affect-both {
+  border: 1px dashed #4169e1; /* royal blue border */
 }
 
 .snake {
@@ -77,60 +159,4 @@
 
 .cell.snake-player2-body {
   background-color: color-mix(in srgb, var(--snake-player2-color) 80%, black);
-}
-
-.apple {
-  background: #ff4444;
-}
-
-.golden-apple {
-  background: #ffd700;
-}
-
-.tron {
-  background: #00ffff;
-}
-
-.reset-borders {
-  background: #ccc;
-}
-
-.shorten {
-  background: #55b479;
-}
-
-.katana {
-  background: #4400ff;
-}
-
-.armour {
-  background: #c0c0c0;
-}
-
-.jump {
-  background: #b32400;
-}
-
-.freeze {
-  background: #b6edff;
-}
-
-.nausea {
-  background: #798e00;
-}
-
-.unknown {
-  background: #ff0000;
-}
-
-.affect-self {
-  border: 3px solid #4caf50; /* green border */
-}
-
-.affect-enemy {
-  border: 3px solid #ff0000; /* red border */
-}
-
-.affect-both {
-  border: 3px solid #4169e1; /* royal blue border */
 }

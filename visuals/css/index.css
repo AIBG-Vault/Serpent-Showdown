@@ -179,7 +179,7 @@ body {
 }
 
 .items .item {
-  height: clamp(1rem, 4vw, 6rem);
+  height: clamp(1rem, 3vw, 3rem);
   width: auto;
 
   filter: grayscale(100%);
