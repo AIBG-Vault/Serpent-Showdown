@@ -154,6 +154,14 @@ body {
   background-color: var(--snake-player2-color);
 }
 
+.left_container .items {
+  flex-direction: row; /* default */
+}
+
+.right_container .items {
+  flex-direction: row-reverse; /* reverse */
+}
+
 .team_score,
 .team_length,
 .items {
