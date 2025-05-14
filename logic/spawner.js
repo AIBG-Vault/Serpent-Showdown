@@ -6,6 +6,7 @@ const Katana = require("./items/katana");
 const Armour = require("./items/armour");
 const SpeedUp = require("./items/jump");
 const Freeze = require("./items/freeze");
+const Nausea = require("./items/nausea");
 
 const Apple = require("./items/apple");
 
@@ -169,6 +170,7 @@ class Spawner {
       Armour,
       SpeedUp,
       Freeze,
+      Nausea,
     ];
 
     const { originalRow, originalColumn, mirroredRow, mirroredColumn } =

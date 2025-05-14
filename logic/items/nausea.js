@@ -1,13 +1,13 @@
 const Item = require("./item");
 
-class Freeze extends Item {
+class Nausea extends Item {
   static config = {
-    type: "freeze",
+    type: "nausea",
     affect: "enemy",
-    pickUpReward: 30,
-    duration: 8,
-    spawnWeight: 4,
-    symbol: "F",
+    pickUpReward: 90,
+    duration: 1,
+    spawnWeight: 7,
+    symbol: "N",
   };
 
   /**
@@ -17,7 +17,7 @@ class Freeze extends Item {
    * @param {number} position.col - The column coordinate of the item
    */
   constructor(position) {
-    super(position, Freeze.config);
+    super(position, Nausea.config);
   }
 
   /**
@@ -25,8 +25,13 @@ class Freeze extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
-    player.nextMoveDirection = "invalid";
+    // pick a random direction
+    const directions = ["up", "down", "left", "right"];
+    const randomIndex = Math.floor(Math.random() * directions.length);
+    const randomDirection = directions[randomIndex];
+
+    player.nextMoveDirection = randomDirection;
   }
 }
 
-module.exports = Freeze;
+module.exports = Nausea;
