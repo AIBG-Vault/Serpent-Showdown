@@ -1,13 +1,13 @@
 const Item = require("./item");
 
-class SpeedUp extends Item {
+class Freeze extends Item {
   static config = {
-    type: "speed-up",
-    affect: "self",
-    pickUpReward: 80,
-    duration: 5,
-    spawnWeight: 5,
-    symbol: "S+",
+    type: "freeze",
+    affect: "enemy",
+    pickUpReward: 30,
+    duration: 8,
+    spawnWeight: 400,
+    symbol: "F",
   };
 
   /**
@@ -17,7 +17,7 @@ class SpeedUp extends Item {
    * @param {number} position.col - The column coordinate of the item
    */
   constructor(position) {
-    super(position, SpeedUp.config);
+    super(position, Freeze.config);
   }
 
   /**
@@ -25,13 +25,8 @@ class SpeedUp extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
-    player.playMove(player.lastMoveDirection);
-
-    // if player has katana item, remove it
-    player.activeItems = player.activeItems.filter(
-      (item) => item.type !== "katana"
-    );
+    player.nextMoveDirection = "invalid";
   }
 }
 
-module.exports = SpeedUp;
+module.exports = Freeze;

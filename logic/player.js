@@ -25,6 +25,7 @@ class Player {
     this.activeItems = [];
 
     this.lastMoveDirection = null;
+    this.nextMoveDirection = null;
   }
 
   /**
@@ -72,6 +73,12 @@ class Player {
    */
   playMove(direction) {
     this.lastMoveDirection = direction;
+
+    // use preset direction if exists
+    if (this.nextMoveDirection !== null) {
+      direction = this.nextMoveDirection;
+      this.nextMoveDirection = null;
+    }
 
     // Use player's isReverseDirection method
     if (this.isReverseDirection(direction)) {

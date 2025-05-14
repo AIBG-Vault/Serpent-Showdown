@@ -5,7 +5,7 @@ class Armour extends Item {
     type: "armour",
     affect: "self",
     pickUpReward: 60,
-    duration: 10,
+    duration: 15,
     spawnWeight: 7,
     symbol: "A",
   };

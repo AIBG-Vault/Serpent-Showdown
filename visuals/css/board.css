@@ -107,8 +107,12 @@
   background: #c0c0c0;
 }
 
-.speed-up {
+.jump {
   background: #b32400;
+}
+
+.freeze {
+  background: #b6edff;
 }
 
 .unknown {

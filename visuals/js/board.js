@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createGrid();
 });
 
-function createGrid(rows = 25, cols = 60) {
+function createGrid(rows = 15, cols = 30) {
   const board = document.getElementById("gameBoard");
   board.style.gridTemplateColumns = `repeat(${cols}, 1.75rem)`;
   board.innerHTML = ""; // Clear existing grid
