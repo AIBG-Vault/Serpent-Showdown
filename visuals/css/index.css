@@ -128,16 +128,12 @@ body {
 .team_name {
   font-size: clamp(1rem, 2.5vw, 6rem);
   margin-bottom: 0.5rem;
+
   word-break: break-all;
-  position: relative;
+
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-}
-
-.team_score,
-.team_length {
-  font-size: clamp(0.75rem, 1.5vw, 4rem);
 }
 
 .left_container .team_name::after,
@@ -156,6 +152,29 @@ body {
 
 .right_container .team_name::before {
   background-color: var(--snake-player2-color);
+}
+
+.team_score,
+.team_length,
+.items {
+  font-size: clamp(0.75rem, 1.5vw, 4rem);
+  font-weight: bold;
+}
+
+.items {
+  min-height: clamp(1rem, 1.875vw, 4.25rem);
+  margin: 0.25em;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.items .item {
+  height: clamp(1rem, 4vw, 6rem);
+  width: auto;
+
+  filter: grayscale(100%);
 }
 
 .debug-only {

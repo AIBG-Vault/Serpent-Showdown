@@ -101,9 +101,6 @@ class Player {
     // check for item collisions
     this.game.collisionHandler.checkForItemCollision(this);
 
-    // Use player's updateItems method
-    this.processItems();
-
     // remove tail segment
     this.removeSegments(1);
   }
@@ -180,24 +177,6 @@ class Player {
     } else {
       this.activeItems.push(item);
     }
-  }
-
-  /**
-   * Updates all active items, reducing their duration and handling expiration effects
-   */
-  processItems() {
-    this.activeItems = this.activeItems
-      .map((activeItem) => {
-        activeItem.duration -= 1;
-
-        activeItem.do(this, this.game);
-
-        return activeItem;
-      })
-      .filter((activeItem) => {
-        // Remove items with duration <= 0
-        return activeItem.duration > 0;
-      });
   }
 }
 

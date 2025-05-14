@@ -58,6 +58,9 @@ class SnakeGame {
       player.playMove(move.direction);
     });
 
+    // process players items
+    this.processPlayersItems();
+
     // filter all items with "hasCollided" property set to true,
     // solves bug where only one player would get the reward (and length)
     this.items = this.items.filter((item) => item.hasCollided !== true);
@@ -73,8 +76,8 @@ class SnakeGame {
     }
 
     // Check if game is over and determine winner
-    const gameEnded = this.checkGameOver();
-    if (gameEnded) {
+    this.checkGameOver();
+    if (this.winner !== null) {
       return;
     }
 
@@ -113,17 +116,13 @@ class SnakeGame {
       } else {
         this.determineWinnerByScoreThenLength();
       }
-      return true;
     }
 
     // Check for move limit only if no players died
     if (this.moveCount >= config.GAME_MAX_MOVES) {
       console.log("Maximum number of game moves exceeded.");
       this.determineWinnerByScoreThenLength();
-      return true;
     }
-
-    return false;
   }
 
   /**
@@ -144,6 +143,24 @@ class SnakeGame {
       this.winner = -1;
       console.log(`Game Over! Draw! Equal scores and lengths`);
     }
+  }
+
+  /**
+   * Processes all active items, reducing their duration and handling expiration effects
+   */
+  processPlayersItems() {
+    this.players.forEach((player) => {
+      player.activeItems.forEach((activeItem) => {
+        activeItem.duration -= 1;
+
+        activeItem.do(player, this);
+      });
+
+      // removes items with duration <= 0
+      player.activeItems = player.activeItems.filter(
+        (activeItem) => activeItem.duration > 0
+      );
+    });
   }
 }
 

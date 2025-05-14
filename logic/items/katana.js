@@ -40,7 +40,23 @@ class Katana extends Item {
         segment.column === playerHead.column
     );
 
+    // If no collision, return false
     if (collisionIndex === -1) return false;
+
+    // if collision with head, return false
+    if (collisionIndex === 0) return false;
+
+    // Check if the other player has active armour
+    const hasArmour =
+      otherPlayer.activeItems &&
+      otherPlayer.activeItems.some(
+        (item) => item.type === "armour" && item.duration > 0
+      );
+
+    if (hasArmour) {
+      // Katana is negated, do nothing special, let normal collision kill the player
+      return false;
+    }
 
     // Store disconnecte segments before removing them
     const disconnectedSegments = otherPlayer.body.slice(collisionIndex);
