@@ -147,18 +147,8 @@ class Player {
    * @returns {boolean} True if the move would reverse the snake's direction
    */
   isReverseDirection(incomingMoveDirection) {
-    const head = this.body[0];
-    const neck = this.body[1];
-
-    if (!neck) {
+    if (!this.lastMoveDirection || this.body.length < 2) {
       return false;
-    }
-
-    let currentDirection;
-    if (head.row === neck.row) {
-      currentDirection = head.column > neck.column ? "right" : "left";
-    } else {
-      currentDirection = head.row > neck.row ? "down" : "up";
     }
 
     const opposites = {
@@ -167,7 +157,8 @@ class Player {
       left: "right",
       right: "left",
     };
-    return opposites[currentDirection] === incomingMoveDirection;
+
+    return opposites[this.lastMoveDirection] === incomingMoveDirection;
   }
 
   /**
