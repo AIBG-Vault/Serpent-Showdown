@@ -1,8 +1,8 @@
 const Item = require("./item");
 
-class Jump extends Item {
+class Leap extends Item {
   static config = {
-    type: "jump",
+    type: "leap",
     affect: "self",
     pickUpReward: 80,
     duration: 5,
@@ -17,7 +17,7 @@ class Jump extends Item {
    * @param {number} position.col - The column coordinate of the item
    */
   constructor(position) {
-    super(position, Jump.config);
+    super(position, Leap.config);
   }
 
   /**
@@ -34,4 +34,4 @@ class Jump extends Item {
   }
 }
 
-module.exports = Jump;
+module.exports = Leap;

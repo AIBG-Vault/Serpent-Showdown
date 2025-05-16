@@ -89,10 +89,10 @@
   background-image: url(../img/sprites/armour.png);
 }
 
-.jump {
+.leap {
   /* background: #b32400; */
 
-  background-image: url(../img/sprites/jump.png);
+  background-image: url(../img/sprites/leap.png);
 }
 
 .freeze {
