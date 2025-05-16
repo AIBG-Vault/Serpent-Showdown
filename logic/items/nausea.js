@@ -6,7 +6,7 @@ class Nausea extends Item {
     affect: "enemy",
     pickUpReward: 90,
     duration: 1,
-    spawnWeight: 700,
+    spawnWeight: 7,
     symbol: "N",
   };
 
