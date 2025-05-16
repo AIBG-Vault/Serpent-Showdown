@@ -131,7 +131,18 @@ class Board {
     // Update items
     if (this.game.items) {
       this.game.items.forEach((item) => {
-        this.setCell(item.row, item.column, item);
+        // this.setCell(item.row, item.column, item);
+
+        this.setCell(item.row, item.column, {
+          row: item.row,
+          column: item.column,
+          type: item.type || "unknown",
+          affect: item.affect,
+          pickUpReward: item.pickUpReward,
+          duration: item.duration,
+          spawnWeight: item.spawnWeight,
+          symbol: item.symbol || "?",
+        });
       });
     }
 

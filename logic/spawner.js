@@ -214,6 +214,7 @@ class Spawner {
     // Copy the type and symbol from the original item to the mirrored item (bcs shorten makes it random)
     mirroredItem.type = originalItem.type;
     mirroredItem.symbol = originalItem.symbol;
+    mirroredItem.randomDirection = originalItem.randomDirection;
 
     // Add the selected item to both positions with the determined affect
     this.game.items.push(originalItem, mirroredItem);
