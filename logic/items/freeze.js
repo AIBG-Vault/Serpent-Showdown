@@ -25,7 +25,7 @@ class Freeze extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
-    player.nextMoveDirection = "invalid";
+    player.nextMoveDirection = "frozen";
   }
 }
 

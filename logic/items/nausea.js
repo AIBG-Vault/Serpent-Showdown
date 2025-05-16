@@ -6,7 +6,7 @@ class Nausea extends Item {
     affect: "enemy",
     pickUpReward: 90,
     duration: 1,
-    spawnWeight: 7,
+    spawnWeight: 700,
     symbol: "N",
   };
 
@@ -18,6 +18,11 @@ class Nausea extends Item {
    */
   constructor(position) {
     super(position, Nausea.config);
+
+    // pick a random direction
+    const directions = ["up", "down", "left", "right"];
+    const randomIndex = Math.floor(Math.random() * directions.length);
+    this.randomDirection = directions[randomIndex];
   }
 
   /**
@@ -25,12 +30,7 @@ class Nausea extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
-    // pick a random direction
-    const directions = ["up", "down", "left", "right"];
-    const randomIndex = Math.floor(Math.random() * directions.length);
-    const randomDirection = directions[randomIndex];
-
-    player.nextMoveDirection = randomDirection;
+    player.nextMoveDirection = this.randomDirection;
   }
 }
 
