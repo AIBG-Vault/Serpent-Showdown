@@ -47,9 +47,6 @@ function updateGrid(data) {
       if (data.map) {
         const value = data.map[i][j];
         if (typeof value === "object" && value !== null) {
-          if (value.type?.includes("shorten")) {
-            value.type = "shorten";
-          }
           cell.classList.add(value.type || "unknown");
 
           // Handle object values

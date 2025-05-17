@@ -6,7 +6,7 @@ class Shorten extends Item {
     affect: "random",
     pickUpReward: 30,
     duration: 1, // instant effect
-    spawnWeight: 4,
+    spawnWeight: 400,
     symbol: "S",
   };
 
@@ -45,7 +45,7 @@ class Shorten extends Item {
 
     this.type = typeName;
 
-    this.symbol = typeName.slice(8);
+    this.symbol += typeName.slice(8);
   }
 }
 

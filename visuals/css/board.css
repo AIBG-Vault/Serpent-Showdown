@@ -71,7 +71,8 @@
   background-image: url(../img/sprites/resetBorders.png);
 }
 
-.shorten {
+/* class starts with the word shorten */
+[class*="shorten"] {
   /* background: #55b479; */
 
   background-image: url(../img/sprites/shorten.png);
