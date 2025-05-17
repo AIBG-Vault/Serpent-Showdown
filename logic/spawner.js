@@ -190,7 +190,7 @@ class Spawner {
       return random <= currentSpawnWeight;
     });
 
-    // Determine affect for "random" affect items with 40/40/20 split
+    // Determine affect for "random" affect items with 30/50/20 split
     let affect = SelectedItemClass.config.affect;
     if (affect === "random") {
       const affectRoll = Math.random();

@@ -7,7 +7,7 @@ class Leap extends Item {
     pickUpReward: 80,
     duration: 5,
     spawnWeight: 5,
-    symbol: "J",
+    symbol: "L",
   };
 
   /**
@@ -16,8 +16,9 @@ class Leap extends Item {
    * @param {number} position.row - The row coordinate of the item
    * @param {number} position.col - The column coordinate of the item
    */
-  constructor(position) {
+  constructor(position, affect) {
     super(position, Leap.config);
+    this.affect = affect;
   }
 
   /**
