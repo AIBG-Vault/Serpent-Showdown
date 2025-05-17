@@ -3,7 +3,7 @@ const Item = require("./item");
 class Leap extends Item {
   static config = {
     type: "leap",
-    affect: "self",
+    affect: "random",
     pickUpReward: 80,
     duration: 5,
     spawnWeight: 5,
