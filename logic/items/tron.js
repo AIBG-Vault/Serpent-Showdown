@@ -28,6 +28,16 @@ class Tron extends Item {
    * @param {Player} player - The player that collided with the item
    */
   do(player) {
+    // if player has "freeze" item
+    const playerHasActiveFreezeItem = player.activeItems.some(
+      (item) => item.type === "freeze"
+    );
+
+    // breaks collision check for self if player has "freeze" item so skip adding a segment
+    if (playerHasActiveFreezeItem) {
+      return;
+    }
+
     // add a segment to player tail to be immediately removed by pop()
     player.body.push(player.body[player.body.length - 1]);
 
