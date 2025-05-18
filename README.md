@@ -45,10 +45,10 @@ pip install black  # optional formatter
 
 ```bash
 cd server
-node server.js
+node server.js [port]
 ```
 
-- The server runs on port `3000`
+- The server runs on port defined on start or `3000` by default
 
 ## Running the Visuals
 

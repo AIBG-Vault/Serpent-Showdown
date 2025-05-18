@@ -16,7 +16,7 @@ const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
 let pendingMoves = new Map(); // Store moves until both players have moved
 
 const app = express();
-const port = 3000;
+const port = process.argv[2] || 3000;
 
 app.use(bodyParser.json());
 
