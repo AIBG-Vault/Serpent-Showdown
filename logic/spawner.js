@@ -1,3 +1,5 @@
+const config = require("./gameConfig");
+
 const GoldenApple = require("./items/goldenApple");
 const Tron = require("./items/tron");
 const ResetBorders = require("./items/resetBorders");
@@ -33,7 +35,6 @@ class Spawner {
   findValidSpawningPosition() {
     let attempts = 0;
     const maxAttempts = this.game.numOfColumns * this.game.numOfRows;
-    const MIN_DISTANCE = 1.5; // This ensures at least 1 cell distance diagonally
 
     while (attempts < maxAttempts) {
       const originalRow = Math.floor(Math.random() * this.game.numOfRows);
@@ -76,8 +77,8 @@ class Spawner {
         );
 
         return (
-          distanceToOriginal <= MIN_DISTANCE ||
-          distanceToMirrored <= MIN_DISTANCE
+          distanceToOriginal <= config.MIN_SPAWNING_DISTANCE ||
+          distanceToMirrored <= config.MIN_SPAWNING_DISTANCE
         );
       });
 
