@@ -6,7 +6,7 @@ class Leap extends Item {
     affect: "random",
     pickUpReward: 80,
     duration: 5,
-    spawnWeight: 500,
+    spawnWeight: 5,
     symbol: "L",
   };
 
