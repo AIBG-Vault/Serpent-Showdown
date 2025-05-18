@@ -23,7 +23,8 @@ const CONFIG = {
   ],
   validDirections: ["up", "down", "left", "right"],
   baseDelay: 100,
-  wsUrl: "ws://localhost:3000",
+  // wsUrl: "ws://localhost:3000",
+  wsUrl: "ws://91.99.101.119:3000",
 };
 
 // Game state

@@ -16,6 +16,7 @@ const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
 let pendingMoves = new Map(); // Store moves until both players have moved
 
 const app = express();
+const host = "0.0.0.0"; // Listen on all network interfaces
 const port = 3000;
 
 app.use(bodyParser.json());
@@ -79,8 +80,8 @@ wss.on("connection", (ws, req) => {
 });
 
 // Start the server
-server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+server.listen(port, host, () => {
+  console.log(`Server is running on ${host}:${port}`);
 });
 
 function handleFrontendConnection(ws) {

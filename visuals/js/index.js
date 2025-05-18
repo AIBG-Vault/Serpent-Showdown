@@ -20,7 +20,7 @@ function connectWebSocket() {
   isConnectingOrConnected = true;
 
   // Initialize or reinitialize the WebSocket connection
-  socket = new WebSocket("ws://localhost:3000?id=frontend");
+  socket = new WebSocket("ws://91.99.101.119:3000?id=frontend");
   setConnectionStatus("connecting");
 
   socket.addEventListener("open", (event) => {
