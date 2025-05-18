@@ -72,13 +72,17 @@ class Player {
    * @param {string} direction - Direction of movement ('up', 'down', 'left', 'right')
    */
   playMove(direction) {
-    this.lastMoveDirection = direction;
-
     // use preset direction if exists
     if (this.nextMoveDirection !== null) {
       direction = this.nextMoveDirection;
       this.nextMoveDirection = null;
     }
+
+    if (direction === "frozen") {
+      return; // ignore move
+    }
+
+    this.lastMoveDirection = direction;
 
     // Use player's isReverseDirection method
     if (this.isReverseDirection(direction)) {
@@ -148,8 +152,13 @@ class Player {
    */
   isReverseDirection(incomingMoveDirection) {
     const head = this.body[0];
-    const neck = this.body[1];
 
+    // find the first segment that column and row is not same as head
+    const neck = this.body.find(
+      (segment) => segment.column !== head.column || segment.row !== head.row
+    );
+
+    // if neck is not found, return false
     if (!neck) {
       return false;
     }
@@ -157,7 +166,7 @@ class Player {
     let currentDirection;
     if (head.row === neck.row) {
       currentDirection = head.column > neck.column ? "right" : "left";
-    } else {
+    } else if (head.row !== neck.row) {
       currentDirection = head.row > neck.row ? "down" : "up";
     }
 

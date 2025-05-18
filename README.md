@@ -5,153 +5,207 @@
 1. Install Node.js and npm (for server and JavaScript clients)
 2. Install Python 3.7+ (for Python clients)
 3. Install an IDE with Live Server extension (for visuals)
-4. Install code formatters:
+4. (Optional) Install code formatters:
    - Prettier for JavaScript/Node.js development
    - Black for Python development
 5. Install required dependencies:
 
-For server:
+### For server:
 
 ```bash
 cd server
 npm install
 ```
 
-For JavaScript client:
+### For JavaScript client:
 
 ```bash
 cd clients
 npm install
 ```
 
-For Python client:
+### For Python client:
 
 ```bash
 pip install websockets
-pip install black  # for code formatting
+pip install black  # optional formatter
 ```
 
 ## Running the Server
 
-1. Create a `players.json` file in the server directory using the example file:
+1. Create a `players.json` file in the server directory using the example:
 
-   - Copy `players.json.example` to `players.json`
-   - Modify player IDs and names as needed
+   ```bash
+   cp players.json.example players.json
+   ```
 
-2. Start the server (choose one):
+   - Edit player IDs and names as needed
 
-```bash
-cd server
-npm run dev    # Runs with nodemon (auto-restart on changes)
-```
-
-OR
+2. Start the server:
 
 ```bash
 cd server
-node server.js # Runs without auto-restart
+node server.js [port]
 ```
 
-The server will run on port 3000.
+- The server runs on port defined on start or `3000` by default
 
 ## Running the Visuals
 
-1. Open the project in your IDE (VS Code or Trae)
-2. Right-click on visuals/index.html and select "Open with Live Server"
-   - If you don't see this option, install the "Live Server" extension first
+1. Open the project in your IDE (we recommend VS Code or Trae AI)
+2. Right-click on `visuals/index.html` → "Open with Live Server"
+   - Install the Live Server extension if not available
 3. The game visualization will open in your default browser
-4. The visuals will automatically connect to the server when it's running
+4. The visuals auto-connect to the server
+
+To test the game manually in **debug mode** (ideal for development):
+
+```text
+http://127.0.0.1:5500/visuals/index.html?mode=debug
+```
+
+Use player IDs `"k"` and `"l"` for manual testing.
 
 ## Running Clients
 
 ### JavaScript Client
-
-Run the JS client (agent.js):
 
 ```bash
 cd clients
 node agent.js [playerID] [mode]
 ```
 
-- playerID: Your unique player ID (default: "k")
-- mode: Game mode
-  - Movement directions: "up", "down", "left", "right"
-  - "random": Makes random moves
-  - "timeout": Progressively increases delay between moves
-  - "apple": Seeks and moves toward the nearest apple while avoiding obstacles
-  - "survive": Focuses on avoiding collisions and staying alive
-
 ### Python Client
-
-Run the Python client (agent.py):
 
 ```bash
 cd clients
 python agent.py [playerID] [mode]
 ```
 
-- playerID: Your unique player ID (default: "k")
-- mode: Supports same basic modes as agent.js
-  - Movement directions: "up", "down", "left", "right"
-  - "random": Makes random moves
-  - "timeout": Increases delay progressively
-  - "apple": Seeks and moves toward the nearest apple while avoiding obstacles
-  - "survive": Focuses on avoiding collisions and staying alive
+#### Modes
+
+- `"up"`, `"down"`, `"left"`, `"right"`: Constant direction
+- `"random"`: Random valid moves
+- `"timeout"`: Delayed actions
+- `"apple"`: Seeks the closest apple
+- `"survive"`: Avoids death and collisions
+
+## Connecting Your Own Agents
+
+Templates are available in the `clients` folder:
+
+- `simpleAgent.js` and `simpleAgent.py` – starter templates
+- Advanced agents included for AI training and testing
 
 ## Game Flow
 
-1. Start the server first
-2. Connect two clients using valid player IDs
-3. The game starts automatically when both players are connected
-4. Server will close automatically when the game ends
+1. Start the server
+2. Connect two clients using valid IDs from `players.json`
+3. Game starts automatically when both connect
+4. Server shuts down automatically after the game
 
-## Notes
+## Game Overview
 
-- Maximum 2 players can connect simultaneously
-- Invalid player IDs will be rejected (must be defined in players.json)
-- The game state is continuously updated and sent to all connected clients
-- The server automatically closes all connections when the game ends
-- The game map is represented as a 2D array with:
-  - Uppercase letters: Snake heads
-  - Lowercase letters: Snake bodies
-  - "A": Apples
-  - null: Empty spaces
-
-## Game Rules
+- 2-player turn-based snake battle
+- Board size: 25 rows × 60 columns
+- Initial snake length: 9
+- Starting score: 1000 points
+- After 100 moves, horizontal borders shrink every 10 moves; vertical shrink begins when board becomes square. Minimum board size: 20×20
+- Snakes outside border: body parts turn into apples
 
 ### Win Conditions
 
-1. **Collision Victory**
+1. **Instant Win**:
 
-   - If one player collides with a wall, their own body, or the opponent's body, the other player wins
-   - If both players collide (head-to-head), the winner is determined by:
+   - Opponent collides with wall, self, or other snake
+
+2. **Score Loss**:
+
+   - A player’s score drops to 0
+
+3. **Tie-breaking**:
+
+   - If both players lose simultaneously:
+     1. Higher score wins
+     2. If scores equal → longer snake
+     3. Still tied → draw
+
+4. **Timeout**:
+   - Max 900 moves
+   - Winner decided by:
      1. Higher score
-     2. If scores are equal, longer snake length
-     3. If both score and length are equal, the game is a draw
+     2. Then snake length
+     3. Else, draw
 
-2. **Score Victory**
-   - If a player's score reaches 0, the other player wins
-   - If both players reach 0 simultaneously:
-     1. The player with longer snake length wins
-     2. If lengths are equal, the game is a draw
+## Scoring System
 
-### Scoring System
+### Rewards
 
-Players start with 100 points. Points can be gained or lost through various actions:
+- Move toward center: +20 points
+- Move away from center: +10 points
+- Apple: +50 points, +1 length
+- Golden Apple: +70 points, +1 length per move over 5 moves
+- Katana: +60 points, active 10 moves
+- Armour: +60 points, protects 15 moves
+- Shorten: +30 points
+- Tron: +50 points, leaves 15-move trail
+- Freeze: +30 points, freezes enemy 8 moves
+- Leap: +80 points, repeats last move for 5 moves
+- Nausea: +90 points, randomizes enemy move
+- Reset Borders: +30 points, resets board size
 
-#### Rewards
+### Penalties
 
-- **Apple Collection**: +5 points
-  - Also increases snake length by 1
-- **Towards Center Movement**: +2 points (not implemented yet)
-  - For moving towards the center of the board
-- **Away From Center Movement**: +1 point (not implemented yet)
-  - For moving away from the center of the board
+- Invalid move or timeout (>150ms): -50 points
+- Reverse direction: -30 points
+- Body segment lost (from border or item): -30 points per segment
 
-#### Penalties
+### Notes
 
-- **Illegal Move**: -5 points
-  - Attempting to move in an invalid direction
-  - Invalid move commands
-- **Reverse Direction**: -5 points
-  - Attempting to move in the opposite direction of current movement
+- Items spawn every 5 moves (apples), others with 10% chance per move
+- All items spawn symmetrically for fairness
+- Items can stack or reset their effect duration if picked up again
+
+## Game State Format
+
+Game state sent to clients after each move:
+
+```json
+{
+  "map": [[null, ...], ...],
+  "players": [
+    {
+      "name": "Team K",
+      "score": 1030,
+      "body": [{"row": 5, "column": 3}, ...],
+      "activeItems": [...],
+      "lastMoveDirection": "up",
+      "nextMoveDirection": "frozen"
+    },
+    {
+      "name": "Team L",
+      "score": 1050,
+      "body": [{"row": 7, "column": 3}, ...],
+      "activeItems": [...],
+      "lastMoveDirection": "left",
+      "nextMoveDirection": null
+    }
+  ],
+  "moveCount": 420,
+  "winner": null
+}
+```
+
+## Sending Moves
+
+Each client must send a valid move every turn in this format:
+
+```json
+{
+  "playerId": "k",
+  "direction": "up"
+}
+```
+
+- Valid directions: `"up"`, `"down"`, `"left"`, `"right"`
+- Must respond within 150 ms

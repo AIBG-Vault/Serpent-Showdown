@@ -3,7 +3,7 @@ const Item = require("./item");
 class Shorten extends Item {
   static config = {
     type: "shorten",
-    affect: "self",
+    affect: "random",
     pickUpReward: 30,
     duration: 1, // instant effect
     spawnWeight: 4,
@@ -45,7 +45,7 @@ class Shorten extends Item {
 
     this.type = typeName;
 
-    this.symbol = typeName.slice(8);
+    this.symbol += typeName.slice(8);
   }
 }
 

@@ -6,6 +6,8 @@ function serializeGameState(game) {
       score: player.score,
       body: player.body,
       activeItems: player.activeItems,
+      lastMoveDirection: player.lastMoveDirection,
+      nextMoveDirection: player.nextMoveDirection,
     })),
     winner: game.winner,
     moveCount: game.moveCount,

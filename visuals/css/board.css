@@ -71,7 +71,8 @@
   background-image: url(../img/sprites/resetBorders.png);
 }
 
-.shorten {
+/* class starts with the word shorten */
+[class*="shorten"] {
   /* background: #55b479; */
 
   background-image: url(../img/sprites/shorten.png);
@@ -89,10 +90,10 @@
   background-image: url(../img/sprites/armour.png);
 }
 
-.jump {
+.leap {
   /* background: #b32400; */
 
-  background-image: url(../img/sprites/jump.png);
+  background-image: url(../img/sprites/leap.png);
 }
 
 .freeze {

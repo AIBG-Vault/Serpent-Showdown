@@ -1,10 +1,12 @@
+const config = require("./gameConfig");
+
 const GoldenApple = require("./items/goldenApple");
 const Tron = require("./items/tron");
 const ResetBorders = require("./items/resetBorders");
 const Shorten = require("./items/shorten");
 const Katana = require("./items/katana");
 const Armour = require("./items/armour");
-const SpeedUp = require("./items/jump");
+const SpeedUp = require("./items/leap");
 const Freeze = require("./items/freeze");
 const Nausea = require("./items/nausea");
 
@@ -33,7 +35,6 @@ class Spawner {
   findValidSpawningPosition() {
     let attempts = 0;
     const maxAttempts = this.game.numOfColumns * this.game.numOfRows;
-    const MIN_DISTANCE = 1.5; // This ensures at least 1 cell distance diagonally
 
     while (attempts < maxAttempts) {
       const originalRow = Math.floor(Math.random() * this.game.numOfRows);
@@ -76,8 +77,8 @@ class Spawner {
         );
 
         return (
-          distanceToOriginal <= MIN_DISTANCE ||
-          distanceToMirrored <= MIN_DISTANCE
+          distanceToOriginal <= config.MIN_SPAWNING_DISTANCE ||
+          distanceToMirrored <= config.MIN_SPAWNING_DISTANCE
         );
       });
 
@@ -190,7 +191,7 @@ class Spawner {
       return random <= currentSpawnWeight;
     });
 
-    // Determine affect for "random" affect items with 40/40/20 split
+    // Determine affect for "random" affect items with 30/50/20 split
     let affect = SelectedItemClass.config.affect;
     if (affect === "random") {
       const affectRoll = Math.random();
@@ -214,6 +215,7 @@ class Spawner {
     // Copy the type and symbol from the original item to the mirrored item (bcs shorten makes it random)
     mirroredItem.type = originalItem.type;
     mirroredItem.symbol = originalItem.symbol;
+    mirroredItem.randomDirection = originalItem.randomDirection;
 
     // Add the selected item to both positions with the determined affect
     this.game.items.push(originalItem, mirroredItem);

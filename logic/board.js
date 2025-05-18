@@ -128,10 +128,29 @@ class Board {
       )
     );
 
+    // Update items
+    if (this.game.items) {
+      this.game.items.forEach((item) => {
+        // this.setCell(item.row, item.column, item);
+
+        this.setCell(item.row, item.column, {
+          row: item.row,
+          column: item.column,
+          type: item.type || "unknown",
+          affect: item.affect,
+          pickUpReward: item.pickUpReward,
+          duration: item.duration,
+          spawnWeight: item.spawnWeight,
+          symbol: item.symbol || "?",
+        });
+      });
+    }
+
     // Update players
     if (this.game.players) {
       this.game.players.forEach((player) => {
-        for (let i = 0; i < player.body.length; i++) {
+        // Draw snake segments from tail to head
+        for (let i = player.body.length - 1; i >= 0; i--) {
           const snakeSegment = player.body[i];
           if (!this.isValidPosition(snakeSegment)) {
             break;
@@ -142,13 +161,6 @@ class Board {
             playerName: player.name,
           });
         }
-      });
-    }
-
-    // Update items
-    if (this.game.items) {
-      this.game.items.forEach((item) => {
-        this.setCell(item.row, item.column, item);
       });
     }
   }

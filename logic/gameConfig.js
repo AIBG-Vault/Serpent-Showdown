@@ -22,8 +22,9 @@ const START_SHRINKING_MAP_AFTER_MOVES = 100; // Number of moves after which the 
 const SHRINK_MAP_MOVE_INTERVAL = 10; // Number of moves between each shrinkage.  Will be set to 10 in production.
 const MINIMUM_BOARD_SIZE = 20; // Number of columns left after which the map stops shrinking. Will be set to ~20 in production.
 
-// Spawn a item approximately 1 in X moves. Will be set to X=~20 in production.
-const MODIFIER_SPAWN_CHANCE = 1 / 10;
+// Item spawning configuration
+const MIN_SPAWNING_DISTANCE = 2.9; // Ensures at least 2 cells distance (Chebyshev), also preventing spawns where a 2-cell leap would land.
+const MODIFIER_SPAWN_CHANCE = 1 / 10; // Spawn a item approximately 1 in X moves. Will be set to X=~20 in production.
 
 module.exports = {
   GAME_MAX_MOVES,
@@ -39,5 +40,6 @@ module.exports = {
   START_SHRINKING_MAP_AFTER_MOVES,
   SHRINK_MAP_MOVE_INTERVAL,
   MINIMUM_BOARD_SIZE,
+  MIN_SPAWNING_DISTANCE,
   MODIFIER_SPAWN_CHANCE,
 };

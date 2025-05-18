@@ -1,0 +1,6760 @@
+{
+    "map": [
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 3,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 3,
+                "column": 24,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            null,
+            {
+                "row": 3,
+                "column": 29,
+                "type": "leap",
+                "affect": "self",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            {
+                "row": 3,
+                "column": 30,
+                "type": "leap",
+                "affect": "self",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            null,
+            null,
+            null,
+            null,
+            {
+                "row": 3,
+                "column": 35,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 3,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 4,
+                "column": 20,
+                "type": "leap",
+                "affect": "enemy",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            {
+                "row": 4,
+                "column": 21,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 4,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 4,
+                "column": 23,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 4,
+                "column": 24,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 4,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 4,
+                "column": 29,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            {
+                "row": 4,
+                "column": 30,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 4,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 4,
+                "column": 35,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 4,
+                "column": 36,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 4,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 4,
+                "column": 38,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 4,
+                "column": 39,
+                "type": "leap",
+                "affect": "enemy",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 5,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 5,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 5,
+                "column": 23,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            {
+                "row": 5,
+                "column": 24,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 5,
+                "column": 26,
+                "type": "freeze",
+                "affect": "enemy",
+                "pickUpReward": 30,
+                "duration": 8,
+                "spawnWeight": 4,
+                "symbol": "F"
+            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            {
+                "row": 5,
+                "column": 33,
+                "type": "freeze",
+                "affect": "enemy",
+                "pickUpReward": 30,
+                "duration": 8,
+                "spawnWeight": 4,
+                "symbol": "F"
+            },
+            null,
+            {
+                "row": 5,
+                "column": 35,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 5,
+                "column": 36,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            {
+                "row": 5,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 5,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 6,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 6,
+                "column": 21,
+                "type": "leap",
+                "affect": "self",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            {
+                "row": 6,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 6,
+                "column": 23,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 6,
+                "column": 24,
+                "type": "leap",
+                "affect": "enemy",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            null,
+            {
+                "row": 6,
+                "column": 26,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 6,
+                "column": 29,
+                "type": "leap",
+                "affect": "self",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            {
+                "row": 6,
+                "column": 30,
+                "type": "leap",
+                "affect": "self",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            null,
+            null,
+            {
+                "row": 6,
+                "column": 33,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 6,
+                "column": 35,
+                "type": "leap",
+                "affect": "enemy",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            {
+                "row": 6,
+                "column": 36,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 6,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 6,
+                "column": 38,
+                "type": "leap",
+                "affect": "self",
+                "pickUpReward": 80,
+                "duration": 5,
+                "spawnWeight": 5,
+                "symbol": "L"
+            },
+            {
+                "row": 6,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            null,
+            null,
+            {
+                "row": 7,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 7,
+                "column": 24,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            null,
+            {
+                "row": 7,
+                "column": 29,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 7,
+                "column": 30,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            null,
+            {
+                "row": 7,
+                "column": 35,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 7,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 8,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 8,
+                "column": 21,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 8,
+                "column": 22,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            null,
+            {
+                "row": 8,
+                "column": 24,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 8,
+                "column": 26,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 8,
+                "column": 27,
+                "type": "tron",
+                "affect": "enemy",
+                "pickUpReward": 50,
+                "duration": 15,
+                "spawnWeight": 3,
+                "symbol": "T"
+            },
+            null,
+            {
+                "row": 8,
+                "column": 29,
+                "type": "golden-apple",
+                "affect": "self",
+                "pickUpReward": 70,
+                "duration": 5,
+                "spawnWeight": 9,
+                "symbol": "G"
+            },
+            {
+                "row": 8,
+                "column": 30,
+                "type": "golden-apple",
+                "affect": "self",
+                "pickUpReward": 70,
+                "duration": 5,
+                "spawnWeight": 9,
+                "symbol": "G"
+            },
+            null,
+            {
+                "row": 8,
+                "column": 32,
+                "type": "tron",
+                "affect": "enemy",
+                "pickUpReward": 50,
+                "duration": 15,
+                "spawnWeight": 3,
+                "symbol": "T"
+            },
+            {
+                "row": 8,
+                "column": 33,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 8,
+                "column": 35,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 8,
+                "column": 37,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            {
+                "row": 8,
+                "column": 38,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 8,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 9,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 9,
+                "column": 21,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 9,
+                "column": 23,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 9,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 9,
+                "column": 29,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 9,
+                "column": 30,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 9,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 9,
+                "column": 36,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            null,
+            {
+                "row": 9,
+                "column": 38,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 9,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            null,
+            {
+                "row": 10,
+                "column": 21,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 10,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 10,
+                "column": 26,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            {
+                "row": 10,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 10,
+                "column": 29,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 10,
+                "column": 30,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 10,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 10,
+                "column": 33,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 10,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 10,
+                "column": 38,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 11,
+                "column": 23,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 11,
+                "column": 26,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 11,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 11,
+                "column": 29,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 11,
+                "column": 30,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 11,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 11,
+                "column": 33,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 11,
+                "column": 36,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            null,
+            {
+                "row": 12,
+                "column": 21,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 12,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 12,
+                "column": 26,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 12,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 12,
+                "column": 29,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 12,
+                "column": 30,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 12,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 12,
+                "column": 33,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 12,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 12,
+                "column": 38,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 13,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 13,
+                "column": 21,
+                "type": "golden-apple",
+                "affect": "self",
+                "pickUpReward": 70,
+                "duration": 5,
+                "spawnWeight": 9,
+                "symbol": "G"
+            },
+            null,
+            {
+                "row": 13,
+                "column": 23,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 13,
+                "column": 26,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 13,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            null,
+            {
+                "row": 13,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 13,
+                "column": 33,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 13,
+                "column": 36,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 13,
+                "column": 38,
+                "type": "golden-apple",
+                "affect": "self",
+                "pickUpReward": 70,
+                "duration": 5,
+                "spawnWeight": 9,
+                "symbol": "G"
+            },
+            {
+                "row": 13,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            null,
+            null,
+            {
+                "row": 14,
+                "column": 22,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            null,
+            {
+                "row": 14,
+                "column": 24,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            null,
+            {
+                "row": 14,
+                "column": 26,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 14,
+                "column": 29,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 14,
+                "column": 30,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 14,
+                "column": 33,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 14,
+                "column": 35,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            null,
+            {
+                "row": 14,
+                "column": 37,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            null,
+            null,
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            null,
+            null,
+            {
+                "row": 15,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 15,
+                "column": 24,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 15,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 15,
+                "column": 28,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 15,
+                "column": 29,
+                "type": "golden-apple",
+                "affect": "self",
+                "pickUpReward": 70,
+                "duration": 5,
+                "spawnWeight": 9,
+                "symbol": "G"
+            },
+            {
+                "row": 15,
+                "column": 30,
+                "type": "golden-apple",
+                "affect": "self",
+                "pickUpReward": 70,
+                "duration": 5,
+                "spawnWeight": 9,
+                "symbol": "G"
+            },
+            {
+                "row": 15,
+                "column": 31,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 15,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 15,
+                "column": 35,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 15,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 16,
+                "column": 20,
+                "type": "shorten-40",
+                "affect": "enemy",
+                "pickUpReward": 30,
+                "duration": 1,
+                "spawnWeight": 4,
+                "symbol": "S40"
+            },
+            {
+                "row": 16,
+                "column": 21,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 16,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            null,
+            {
+                "type": "snake-head",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "row": 16,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 16,
+                "column": 29,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            {
+                "row": 16,
+                "column": 30,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            null,
+            {
+                "row": 16,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "snake-head",
+                "playerName": "BEST agent Duo"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 16,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 16,
+                "column": 38,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 16,
+                "column": 39,
+                "type": "shorten-40",
+                "affect": "enemy",
+                "pickUpReward": 30,
+                "duration": 1,
+                "spawnWeight": 4,
+                "symbol": "S40"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 17,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 17,
+                "column": 21,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            null,
+            null,
+            null,
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "row": 17,
+                "column": 27,
+                "type": "freeze",
+                "affect": "enemy",
+                "pickUpReward": 30,
+                "duration": 8,
+                "spawnWeight": 4,
+                "symbol": "F"
+            },
+            null,
+            null,
+            null,
+            null,
+            {
+                "row": 17,
+                "column": 32,
+                "type": "freeze",
+                "affect": "enemy",
+                "pickUpReward": 30,
+                "duration": 8,
+                "spawnWeight": 4,
+                "symbol": "F"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            null,
+            null,
+            null,
+            {
+                "row": 17,
+                "column": 38,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            {
+                "row": 17,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 18,
+                "column": 20,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            {
+                "row": 18,
+                "column": 21,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 18,
+                "column": 22,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            null,
+            {
+                "row": 18,
+                "column": 24,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "row": 18,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 18,
+                "column": 29,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 18,
+                "column": 30,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 18,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "row": 18,
+                "column": 35,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 18,
+                "column": 37,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            {
+                "row": 18,
+                "column": 38,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 18,
+                "column": 39,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            null,
+            {
+                "row": 19,
+                "column": 21,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 19,
+                "column": 23,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 19,
+                "column": 24,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "row": 19,
+                "column": 35,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            {
+                "row": 19,
+                "column": 36,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 19,
+                "column": 38,
+                "type": "armour",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 15,
+                "spawnWeight": 7,
+                "symbol": "A"
+            },
+            null,
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 20,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            null,
+            {
+                "row": 20,
+                "column": 23,
+                "type": "tron",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 15,
+                "spawnWeight": 3,
+                "symbol": "T"
+            },
+            {
+                "row": 20,
+                "column": 24,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Uno"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "type": "snake-body",
+                "playerName": "BEST agent Duo"
+            },
+            {
+                "row": 20,
+                "column": 35,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 20,
+                "column": 36,
+                "type": "tron",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 15,
+                "spawnWeight": 3,
+                "symbol": "T"
+            },
+            null,
+            null,
+            {
+                "row": 20,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "row": 21,
+                "column": 20,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 21,
+                "column": 21,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            {
+                "row": 21,
+                "column": 22,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 21,
+                "column": 23,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            {
+                "row": 21,
+                "column": 24,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            null,
+            {
+                "row": 21,
+                "column": 26,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            {
+                "row": 21,
+                "column": 27,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 21,
+                "column": 28,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 21,
+                "column": 29,
+                "type": "tron",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 15,
+                "spawnWeight": 3,
+                "symbol": "T"
+            },
+            {
+                "row": 21,
+                "column": 30,
+                "type": "tron",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 15,
+                "spawnWeight": 3,
+                "symbol": "T"
+            },
+            {
+                "row": 21,
+                "column": 31,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 21,
+                "column": 32,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 21,
+                "column": 33,
+                "type": "nausea",
+                "affect": "enemy",
+                "pickUpReward": 90,
+                "duration": 1,
+                "spawnWeight": 7,
+                "symbol": "N"
+            },
+            null,
+            {
+                "row": 21,
+                "column": 35,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 21,
+                "column": 36,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            {
+                "row": 21,
+                "column": 37,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "row": 21,
+                "column": 38,
+                "type": "katana",
+                "affect": "self",
+                "pickUpReward": 60,
+                "duration": 10,
+                "spawnWeight": 7,
+                "symbol": "K"
+            },
+            {
+                "row": 21,
+                "column": 39,
+                "type": "apple",
+                "affect": "self",
+                "pickUpReward": 50,
+                "duration": 1,
+                "symbol": "A"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ],
+        [
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            },
+            {
+                "type": "border",
+                "symbol": "#"
+            }
+        ]
+    ],
+    "players": [
+        {
+            "name": "BEST agent Uno",
+            "score": 11890,
+            "body": [
+                {
+                    "row": 16,
+                    "column": 26
+                },
+                {
+                    "row": 17,
+                    "column": 26
+                },
+                {
+                    "row": 18,
+                    "column": 26
+                },
+                {
+                    "row": 19,
+                    "column": 26
+                },
+                {
+                    "row": 19,
+                    "column": 27
+                },
+                {
+                    "row": 19,
+                    "column": 28
+                },
+                {
+                    "row": 19,
+                    "column": 29
+                },
+                {
+                    "row": 20,
+                    "column": 29
+                },
+                {
+                    "row": 20,
+                    "column": 28
+                },
+                {
+                    "row": 20,
+                    "column": 27
+                },
+                {
+                    "row": 20,
+                    "column": 26
+                },
+                {
+                    "row": 20,
+                    "column": 25
+                },
+                {
+                    "row": 19,
+                    "column": 25
+                },
+                {
+                    "row": 18,
+                    "column": 25
+                },
+                {
+                    "row": 17,
+                    "column": 25
+                }
+            ],
+            "activeItems": [
+                {
+                    "row": 19,
+                    "column": 28,
+                    "type": "armour",
+                    "affect": "self",
+                    "pickUpReward": 60,
+                    "duration": 10,
+                    "spawnWeight": 7,
+                    "symbol": "A",
+                    "hasCollided": true
+                },
+                {
+                    "row": 17,
+                    "column": 33,
+                    "type": "leap",
+                    "affect": "enemy",
+                    "pickUpReward": 80,
+                    "duration": 4,
+                    "spawnWeight": 5,
+                    "symbol": "L",
+                    "hasCollided": true
+                }
+            ],
+            "lastMoveDirection": "up",
+            "nextMoveDirection": null
+        },
+        {
+            "name": "BEST agent Duo",
+            "score": 11680,
+            "body": [
+                {
+                    "row": 16,
+                    "column": 33
+                },
+                {
+                    "row": 17,
+                    "column": 33
+                },
+                {
+                    "row": 18,
+                    "column": 33
+                },
+                {
+                    "row": 19,
+                    "column": 33
+                },
+                {
+                    "row": 19,
+                    "column": 32
+                },
+                {
+                    "row": 19,
+                    "column": 31
+                },
+                {
+                    "row": 19,
+                    "column": 30
+                },
+                {
+                    "row": 20,
+                    "column": 30
+                },
+                {
+                    "row": 20,
+                    "column": 31
+                },
+                {
+                    "row": 20,
+                    "column": 32
+                },
+                {
+                    "row": 20,
+                    "column": 33
+                },
+                {
+                    "row": 20,
+                    "column": 34
+                },
+                {
+                    "row": 19,
+                    "column": 34
+                },
+                {
+                    "row": 18,
+                    "column": 34
+                },
+                {
+                    "row": 17,
+                    "column": 34
+                }
+            ],
+            "activeItems": [
+                {
+                    "row": 19,
+                    "column": 31,
+                    "type": "armour",
+                    "affect": "self",
+                    "pickUpReward": 60,
+                    "duration": 10,
+                    "spawnWeight": 7,
+                    "symbol": "A",
+                    "hasCollided": true
+                },
+                {
+                    "row": 17,
+                    "column": 26,
+                    "type": "leap",
+                    "affect": "enemy",
+                    "pickUpReward": 80,
+                    "duration": 4,
+                    "spawnWeight": 5,
+                    "symbol": "L",
+                    "hasCollided": true
+                }
+            ],
+            "lastMoveDirection": "up",
+            "nextMoveDirection": null
+        }
+    ],
+    "winner": null,
+    "moveCount": 634
+}
