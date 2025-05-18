@@ -17,7 +17,7 @@ let pendingMoves = new Map(); // Store moves until both players have moved
 
 const app = express();
 const host = "0.0.0.0"; // Listen on all network interfaces
-const port = 3000;
+const port = process.argv[2] || 3000;
 
 app.use(bodyParser.json());
 
