@@ -9,7 +9,7 @@ import time
 DEFAULT_AGENT_ID = "l"
 VALID_DIRECTIONS = ["up", "down", "left", "right"]
 VALID_MODES = ["up", "down", "left", "right", "random", "timeout", "apple", "survive"]
-BASE_DELAY = 0.05  # 50ms
+BASE_DELAY = 0  # 50ms
 
 # Add helper functions for apple and survive modes
 def find_player_head(game_map, player_symbol):

@@ -22,8 +22,9 @@ const CONFIG = {
     "survive",
   ],
   validDirections: ["up", "down", "left", "right"],
-  baseDelay: 100,
-  wsUrl: "ws://localhost:3000",
+  baseDelay: 0,
+  serverIP: "localhost",
+  serverPort: 3000,
 };
 
 // Game state
@@ -260,7 +261,9 @@ function decideNextMove(map, mode) {
 }
 
 // WebSocket setup and event handlers
-const ws = new WebSocket(`${CONFIG.wsUrl}?id=${gameState.agentId}`);
+const ws = new WebSocket(
+  `ws://${CONFIG.serverIP}:${CONFIG.serverPort}?id=${gameState.agentId}`
+);
 
 ws.on("open", () => console.log("Connected to WebSocket server"));
 ws.on("error", (error) => console.error("WebSocket error:", error));

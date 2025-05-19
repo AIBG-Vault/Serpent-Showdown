@@ -52,7 +52,7 @@ const connections = new Set(); // Track WebSocket connections
 const connectionIds = new Set(); // Track WebSocket connections
 
 wss.on("connection", (ws, req) => {
-  const url = new URL(req.url, "http://localhost:3000");
+  const url = new URL(req.url, "http://localhost" + port);
   const receivedId = url.searchParams.get("id");
 
   // Check if a connection already exists for this ID
