@@ -10,8 +10,12 @@ const { SnakeGame } = require("../logic/game");
 const util = require("./utility");
 
 // Configuration
-const ENABLE_MOVE_TIMEOUT = true; // Switch to enable/disable move timeout
-const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
+const MOVE_TIMEOUT = process.argv[3] || 150; // Timeout for each move in milliseconds (0 to run off)
+if (MOVE_TIMEOUT > 0) {
+  console.log("Move timeout set to " + MOVE_TIMEOUT + "ms");
+} else {
+  console.log("Move timeout DISABLED");
+}
 
 let pendingMoves = new Map(); // Store moves until both players have moved
 
@@ -48,7 +52,7 @@ const connections = new Set(); // Track WebSocket connections
 const connectionIds = new Set(); // Track WebSocket connections
 
 wss.on("connection", (ws, req) => {
-  const url = new URL(req.url, "http://localhost:3000");
+  const url = new URL(req.url, "http://localhost" + port);
   const receivedId = url.searchParams.get("id");
 
   // Check if a connection already exists for this ID
@@ -235,7 +239,7 @@ function handleMessage(ws, message) {
   };
 
   // Set new timeout only if enabled
-  if (ENABLE_MOVE_TIMEOUT) {
+  if (MOVE_TIMEOUT > 0) {
     timeoutId = setTimeout(() => {
       if (pendingMoves.size > 0) {
         // Add timeout moves for players who haven't moved
