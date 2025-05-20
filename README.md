@@ -45,10 +45,10 @@ pip install black  # optional formatter
 
 ```bash
 cd server
-node server.js [port]
+node server.js [port] [timeout]
 ```
 
-- The server runs on port defined on start or `3000` by default
+- The server runs on port defined on start or `3000` by default, with the set custom timeout in mmiliseconds (default: 150ms, 0 to disable)
 
 ## Running the Visuals
 
@@ -72,14 +72,14 @@ Use player IDs `"k"` and `"l"` for manual testing.
 
 ```bash
 cd clients
-node agent.js [playerID] [mode]
+node BESTAgent.js [playerID] [mode]
 ```
 
 ### Python Client
 
 ```bash
 cd clients
-python agent.py [playerID] [mode]
+python BESTAgent.py [playerID] [mode]
 ```
 
 #### Modes
@@ -87,8 +87,8 @@ python agent.py [playerID] [mode]
 - `"up"`, `"down"`, `"left"`, `"right"`: Constant direction
 - `"random"`: Random valid moves
 - `"timeout"`: Delayed actions
-- `"apple"`: Seeks the closest apple
 - `"survive"`: Avoids death and collisions
+- `"apple"`: Seeks the closest apple (most advanced)
 
 ## Connecting Your Own Agents
 
