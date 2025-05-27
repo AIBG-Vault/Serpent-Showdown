@@ -9,6 +9,8 @@ const WebSocket = require("ws");
 
 // Configuration
 const CONFIG = {
+  serverIP: "localhost",
+  serverPort: 3000,
   defaultId: "k",
   defaultMode: "up",
   validModes: [
@@ -23,8 +25,6 @@ const CONFIG = {
   ],
   validDirections: ["up", "down", "left", "right"],
   baseDelay: 0,
-  serverIP: "localhost",
-  serverPort: 3000,
 };
 
 // Game state
@@ -47,15 +47,16 @@ if (!gameState.agentMode || !CONFIG.validModes.includes(gameState.agentMode)) {
 // Movement helpers
 const movementHelpers = {
   getNextPosition(current, direction) {
-    const pos = { x: current.x, y: current.y };
     const moves = {
-      up: () => (pos.x -= 1),
-      down: () => (pos.x += 1),
-      left: () => (pos.y -= 1),
-      right: () => (pos.y += 1),
+      up: { x: -1, y: 0 },
+      down: { x: 1, y: 0 },
+      left: { x: 0, y: -1 },
+      right: { x: 0, y: 1 },
     };
-    moves[direction]();
-    return pos;
+    return {
+      x: current.x + moves[direction].x,
+      y: current.y + moves[direction].y,
+    };
   },
 
   findPlayerHead(map, playerName) {
@@ -63,78 +64,65 @@ const movementHelpers = {
 
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map[i].length; j++) {
-        const cell = map[i][j];
         if (
-          cell &&
-          cell.type === "snake-head" &&
-          cell.playerName === playerName
+          map[i][j]?.type === "snake-head" &&
+          map[i][j]?.playerName === playerName
         ) {
           return { x: i, y: j };
         }
       }
     }
-
-    console.error("Player not found in map");
-    // Return default position if player not found
     return { x: 0, y: 0 };
   },
 
-  isSafeMove(map, pos) {
-    if (
-      !map ||
-      !map[0] ||
-      pos.x < 0 ||
-      pos.x >= map.length ||
-      pos.y < 0 ||
-      pos.y >= map[0].length
-    ) {
-      return false;
-    }
+  isWithinBounds(map, pos) {
+    return (
+      pos.x >= 0 && pos.x < map.length && pos.y >= 0 && pos.y < map[0].length
+    );
+  },
 
+  isCellSafe(map, pos) {
+    if (!this.isWithinBounds(map, pos)) return false;
     const cell = map[pos.x][pos.y];
+    return (
+      !cell ||
+      (cell.type !== "snake-head" &&
+        cell.type !== "snake-body" &&
+        cell.type !== "border")
+    );
+  },
 
-    // If cell is null, it's safe
-    if (cell === null) return true;
+  areAdjacentCellsSafe(map, pos) {
+    if (!this.isWithinBounds(map, pos)) return false;
 
-    // If it's a snake part or border, it's not safe
+    // Check if position is at least 1 cell away from edges
     if (
-      cell.type === "snake-head" ||
-      cell.type === "snake-body" ||
-      cell.type === "border"
+      pos.x <= 0 ||
+      pos.x >= map.length - 1 ||
+      pos.y <= 0 ||
+      pos.y >= map[0].length - 1
     ) {
       return false;
     }
 
-    // check if any cell next to pos is border or enemy player head
-    ["border", "snake-head"].forEach((cellType) => {
-      if (
-        (map[pos.x - 1] &&
-          map[pos.x - 1][pos.y] &&
-          map[pos.x - 1][pos.y].type === cellType) ||
-        (map[pos.x + 1] &&
-          map[pos.x + 1][pos.y] &&
-          map[pos.x + 1][pos.y].type === cellType) ||
-        (map[pos.x][pos.y - 1] && map[pos.x][pos.y - 1].type === cellType) ||
-        (map[pos.x][pos.y + 1] && map[pos.x][pos.y + 1].type === cellType)
-      ) {
-        return false;
-      }
-    });
-
-    // Check if it's a safe item type
-    const safeTypes = [
-      "apple",
-      "armour",
-      "freeze",
-      "golden-apple",
-      "katana",
-      "nausea",
-      "reset-borders",
-      "shorten",
-      "tron",
+    // Check all adjacent cells
+    const adjacentOffsets = [
+      [-1, 0],
+      [1, 0],
+      [0, -1],
+      [0, 1],
     ];
-
-    return safeTypes.includes(cell.type);
+    return adjacentOffsets.every(([dx, dy]) => {
+      const cell = map[pos.x + dx]?.[pos.y + dy];
+      return (
+        !cell ||
+        (cell.type !== "border" &&
+          !(
+            cell.type === "snake-head" &&
+            cell.playerName !== gameState.playerName
+          ))
+      );
+    });
   },
 };
 
@@ -147,80 +135,85 @@ const strategies = {
       ];
     }
 
-    // Define all possible moves with their priorities
-    const directions = [
-      { dRow: -1, dColumn: 0, move: "up" },
-      { dRow: 1, dColumn: 0, move: "down" },
-      { dRow: 0, dColumn: -1, move: "left" },
-      { dRow: 0, dColumn: 1, move: "right" },
-    ];
+    const directions = CONFIG.validDirections.map((dir) => ({
+      direction: dir,
+      position: movementHelpers.getNextPosition(playerHead, dir),
+    }));
 
-    // Randomize direction order to avoid predictable patterns
+    // Shuffle directions for unpredictability
     directions.sort(() => Math.random() - 0.5);
 
-    // First pass: Check for immediate safe moves
-    for (const dir of directions) {
-      const nextPos = {
-        x: playerHead.x + dir.dRow,
-        y: playerHead.y + dir.dColumn,
-      };
+    // Find best move: first perfectly safe, then just safe, finally random
+    const perfectMove = directions.find(
+      ({ position }) =>
+        movementHelpers.isCellSafe(map, position) &&
+        movementHelpers.areAdjacentCellsSafe(map, position)
+    );
 
-      if (movementHelpers.isSafeMove(map, nextPos)) {
-        return dir.move;
-      }
-    }
+    if (perfectMove) return perfectMove.direction;
 
-    // If no safe moves found, pick a random direction
-    return CONFIG.validDirections[
-      Math.floor(Math.random() * CONFIG.validDirections.length)
-    ];
+    const safeMove = directions.find(({ position }) =>
+      movementHelpers.isCellSafe(map, position)
+    );
+
+    if (safeMove) return safeMove.direction;
+
+    return directions[0].direction;
   },
 
   findClosestApple(map, playerHead) {
-    const rows = map.length;
-    const cols = map[0].length;
+    if (!map || !playerHead) return null;
+
     const queue = [[playerHead.x, playerHead.y, []]];
     const visited = new Set();
+    const maxPathLength = map.length * map[0].length; // Prevent infinite loops
 
     while (queue.length > 0) {
       const [x, y, path] = queue.shift();
       const key = `${x},${y}`;
 
-      if (visited.has(key)) continue;
+      if (visited.has(key) || path.length > maxPathLength) continue;
       visited.add(key);
 
-      const cell = map[x][y];
-      if (cell && cell.type === "apple") {
-        // Validate the entire path to make sure it's still safe
+      // Found apple
+      if (map[x]?.[y]?.type === "apple") {
+        // Validate path safety
         let currentPos = { x: playerHead.x, y: playerHead.y };
-        for (const move of path) {
+        const isPathSafe = path.every((move) => {
           const nextPos = movementHelpers.getNextPosition(currentPos, move);
-          if (!movementHelpers.isSafeMove(map, nextPos)) {
-            return null; // Path is not safe anymore
-          }
+          // Only do full safety check for final path
+          const isSafe = movementHelpers.isCellSafe(map, nextPos);
           currentPos = nextPos;
+          return isSafe;
+        });
+
+        if (isPathSafe) {
+          // Do one final check for adjacent cell safety of the last move
+          const finalPos = path.reduce(
+            (pos, move) => movementHelpers.getNextPosition(pos, move),
+            { x: playerHead.x, y: playerHead.y }
+          );
+          if (movementHelpers.areAdjacentCellsSafe(map, finalPos)) {
+            return path;
+          }
         }
-        return path;
+        continue;
       }
 
-      const directions = [
-        { dRow: -1, dColumn: 0, move: "up" },
-        { dRow: 1, dColumn: 0, move: "down" },
-        { dRow: 0, dColumn: -1, move: "left" },
-        { dRow: 0, dColumn: 1, move: "right" },
-      ];
+      // Add safe neighbors to queue
+      const directions = {
+        up: { x: -1, y: 0 },
+        down: { x: 1, y: 0 },
+        left: { x: 0, y: -1 },
+        right: { x: 0, y: 1 },
+      };
 
-      for (const { dRow, dColumn, move } of directions) {
-        const newX = x + dRow;
-        const newY = y + dColumn;
-        const nextPos = { x: newX, y: newY };
-
-        if (newX < 0 || newX >= rows || newY < 0 || newY >= cols) continue;
-
-        // Use isSafeMove to check if the next position is safe
-        if (!movementHelpers.isSafeMove(map, nextPos)) continue;
-
-        queue.push([newX, newY, [...path, move]]);
+      for (const [direction, { x: dx, y: dy }] of Object.entries(directions)) {
+        const newPos = { x: x + dx, y: y + dy };
+        // Only check basic safety for path finding
+        if (movementHelpers.isCellSafe(map, newPos)) {
+          queue.push([newPos.x, newPos.y, [...path, direction]]);
+        }
       }
     }
     return null;
@@ -243,9 +236,13 @@ function decideNextMove(map, mode) {
       if (path && path.length > 0) {
         const nextMove = path[0];
         const nextPos = movementHelpers.getNextPosition(playerHead, nextMove);
-        return movementHelpers.isSafeMove(map, nextPos)
-          ? nextMove
-          : strategies.findSafeDirection(map, playerHead);
+
+        if (
+          movementHelpers.isCellSafe(map, nextPos) &&
+          movementHelpers.areAdjacentCellsSafe(map, nextPos)
+        ) {
+          return nextMove;
+        }
       }
       return strategies.findSafeDirection(map, playerHead);
     }
@@ -266,7 +263,10 @@ const ws = new WebSocket(
 );
 
 ws.on("open", () => console.log("Connected to WebSocket server"));
-ws.on("error", (error) => console.error("WebSocket error:", error));
+// Improve WebSocket error handling
+ws.on("error", (error) => {
+  console.error("WebSocket error:", error);
+});
 ws.on("close", () => console.log("Disconnected from WebSocket by server"));
 
 // Update WebSocket message handler
