@@ -38,13 +38,6 @@ function connectPlayer(playerNum) {
   if (playerNum == 1) playerId = ID_MANUAL_1;
   else if (playerNum == 2) playerId = ID_MANUAL_2;
 
-  // Check if the player is already connected
-  if ((playerNum === 1 && ws1 && ws1.readyState === WebSocket.OPEN) ||
-      (playerNum === 2 && ws2 && ws2.readyState === WebSocket.OPEN)) {
-    console.log(`Player ${playerNum} is already connected`);
-    return;
-  }
-
   // Create a new player websocket connection
   const ws = new WebSocket(`ws://localhost:3000?id=${playerId}`);
 
