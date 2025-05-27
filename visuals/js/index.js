@@ -40,6 +40,7 @@ function connectWebSocket() {
 
     updateMoveCount(moveCount); // Update UI with the reset move counter
     toggleEndScreen(null); // Hide the winner upon reconnection
+    console.clear(); // Clear console on reconnect so tab doesn't run out of memory
 
     if (socketConnectingInterval) {
       clearInterval(socketConnectingInterval);
@@ -80,6 +81,12 @@ setConnectionStatus("connection_fail");
 
 // Initial connection attempt
 connectWebSocket();
+
+// Add event listener to close modal button
+const closeBtn = document.querySelector(".close-btn");
+closeBtn.addEventListener("click", () => {
+  toggleEndScreen(null);
+});
 
 // ========================================
 // utility
