@@ -81,6 +81,12 @@ setConnectionStatus("connection_fail");
 // Initial connection attempt
 connectWebSocket();
 
+// Add event listener to close modal button
+const closeBtn = document.querySelector(".close-btn");
+closeBtn.addEventListener("click", () => {
+  toggleEndScreen(null);
+});
+
 // ========================================
 // utility
 // ========================================
