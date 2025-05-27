@@ -9,10 +9,6 @@ const { SnakeGame } = require("../logic/game");
 
 const util = require("./utility");
 
-// Configuration
-const ENABLE_MOVE_TIMEOUT = true; // Switch to enable/disable move timeout
-const MOVE_TIMEOUT = 150; // Timeout for each move in milliseconds
-
 let pendingMoves = new Map(); // Store moves until both players have moved
 
 const app = express();
@@ -24,6 +20,7 @@ app.use(bodyParser.json());
 let playersMap = new Map(); // This will store player data with ID as key
 let game;
 let currentPlayers = [];
+let disconnectedPlayers = new Set(); // Track disconnected players
 
 let timeoutId;
 
@@ -46,17 +43,10 @@ fs.readFile("./players.json", "utf8", (err, data) => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 const connections = new Set(); // Track WebSocket connections
-const connectionIds = new Set(); // Track WebSocket connections
 
 wss.on("connection", (ws, req) => {
-  const url = new URL(req.url, "http://localhost:3000");
+  const url = new URL(req.url, "http://localhost" + port);
   const receivedId = url.searchParams.get("id");
-
-  // Check if a connection already exists for this ID
-  if (connectionIds.has(receivedId) && receivedId !== "frontend") {
-    console.log("Connection already exists for this ID: " + receivedId);
-    return;
-  }
 
   // Add the new connection to the Set (connections)
   ws.id = receivedId;
@@ -84,6 +74,14 @@ server.listen(port, host, () => {
   console.log(`Server is running on ${host}:${port}`);
 });
 
+// Configuration
+const MOVE_TIMEOUT = process.argv[3] || 150; // Timeout for each move in milliseconds (0 to run off)
+if (MOVE_TIMEOUT > 0) {
+  console.log("Move timeout set to " + MOVE_TIMEOUT + "ms");
+} else {
+  console.log("Move timeout DISABLED");
+}
+
 function handleFrontendConnection(ws) {
   console.log("Frontend connected");
   ws.send(JSON.stringify(util.serializeGameState(game)));
@@ -93,24 +91,31 @@ function handlePlayerConnection(ws, playerId) {
   const player = playersMap.get(playerId);
   console.log(`${player.name} connected with ID: ${playerId}`);
 
-  // Filter connections to exclude the frontend and count only player connections
-  currentPlayers.push(player);
-
-  // console.log(playerConnections.length);
-
-  if (currentPlayers.length > 2) {
-    // If there are already two player connections, inform the new connection and close it
+  // Check if this is a reconnection
+  if (disconnectedPlayers.has(playerId)) {
+    disconnectedPlayers.delete(playerId);
     ws.send(
       JSON.stringify({
-        message:
-          "The game already has two players. Please wait for the next game.",
+        message: "Reconnected successfully.",
+        id: playerId,
+        name: player.name,
       })
     );
-    ws.close();
-    return;
+  } else if (!currentPlayers.some((p) => p.id === playerId)) {
+    // Only add to currentPlayers if it's a new connection
+    if (currentPlayers.length >= 2) {
+      ws.send(
+        JSON.stringify({
+          message:
+            "The game already has two players. Please wait for the next game.",
+        })
+      );
+      ws.close();
+      return;
+    }
+    currentPlayers.push(player);
+    game.addPlayer(player);
   }
-
-  game.addPlayer(player);
 
   // If not exceeding the player limit, acknowledge the connection
   ws.send(
@@ -133,8 +138,7 @@ function handlePlayerConnection(ws, playerId) {
   });
 
   if (currentPlayers.length === 2) {
-    // If there are already two player connections, start the game
-    // Send the game state to the first player
+    // If there are already two player connections, start the game and send the initial game state
     connections.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         const message = JSON.stringify(util.serializeGameState(game));
@@ -236,7 +240,7 @@ function handleMessage(ws, message) {
   };
 
   // Set new timeout only if enabled
-  if (ENABLE_MOVE_TIMEOUT) {
+  if (MOVE_TIMEOUT > 0) {
     timeoutId = setTimeout(() => {
       if (pendingMoves.size > 0) {
         // Add timeout moves for players who haven't moved
@@ -263,6 +267,12 @@ function handleMessage(ws, message) {
 function handleDisconnection(ws) {
   connections.delete(ws);
   const connectionId = ws.id;
+
+  // Add to disconnected players if it's a game player
+  if (currentPlayers.some((p) => p.id === connectionId)) {
+    disconnectedPlayers.add(connectionId);
+  }
+
   console.log(
     "Connection closed: " + (playersMap.get(connectionId)?.name || connectionId)
   );

@@ -1,6 +1,10 @@
-const gameTicksPerSecond = 20; // Adjust as needed
+const CONFIG = {
+  serverIP: "topic.aibg.best.hr",
+  serverPort: 3000,
+  gameTicksPerSecond: 20, // Adjust as needed
+};
 
-let socket; // WebSocket instance
+let ws; // WebSocket instance
 let socketConnectingInterval; // Interval for reconnection attempts
 let isConnectingOrConnected = false; // Connection state tracker
 
@@ -20,10 +24,12 @@ function connectWebSocket() {
   isConnectingOrConnected = true;
 
   // Initialize or reinitialize the WebSocket connection
-  socket = new WebSocket("ws://topic.aibg.best.hr:3000?id=frontend");
+  const ws = new WebSocket(
+    `ws://${CONFIG.serverIP}:${CONFIG.serverPort}?id=frontend`
+  );
   setConnectionStatus("connecting");
 
-  socket.addEventListener("open", (event) => {
+  ws.addEventListener("open", (event) => {
     console.log("WebSocket connection established");
     setConnectionStatus("connected");
 
@@ -43,13 +49,13 @@ function connectWebSocket() {
     isConnectingOrConnected = true;
   });
 
-  socket.addEventListener("message", (message) => {
+  ws.addEventListener("message", (message) => {
     const data = JSON.parse(message.data);
     // console.log("Received from server:", data);
     dataList.push(data);
   });
 
-  socket.addEventListener("close", (message) => {
+  ws.addEventListener("close", (message) => {
     console.log("WebSocket connection closed:", message);
     // Reset connection state to allow reconnection attempts
     isConnectingOrConnected = false;
@@ -60,12 +66,12 @@ function connectWebSocket() {
     setConnectionStatus("connection_fail");
   });
 
-  socket.addEventListener("error", (error) => {
+  ws.addEventListener("error", (error) => {
     console.error("WebSocket error:", error);
     setConnectionStatus("connection_fail");
     // Close the socket if an error occurs to trigger the 'close' event listener
     // and thereby attempt reconnection. This also implicitly handles the 'close' event.
-    socket.close();
+    ws.close();
   });
 }
 
@@ -145,8 +151,8 @@ function gameLoop() {
   let elapsed = now - lastFrameTime;
 
   // Check if it's time for the next tick
-  if (elapsed > 1000 / gameTicksPerSecond) {
-    lastFrameTime = now - (elapsed % (1000 / gameTicksPerSecond));
+  if (elapsed > 1000 / CONFIG.gameTicksPerSecond) {
+    lastFrameTime = now - (elapsed % (1000 / CONFIG.gameTicksPerSecond));
 
     // console.log(dataList.length);
     if (dataList.length > 0) {
@@ -177,6 +183,8 @@ function parseData(data) {
       elem.querySelector(".team_length").textContent = "Length: ####";
       elem.querySelector(".team_score").textContent = "Score: ####";
 
+      elem.querySelector(".team_last-move").textContent = "Last move: ####";
+
       elem.querySelectorAll(".item").forEach((itemElem) => {
         itemElem.style.filter = "grayscale(100%)";
       });
@@ -186,11 +194,17 @@ function parseData(data) {
       teamInfoContainerElems[index].querySelector(".team_name").textContent =
         player.name;
 
+      teamInfoContainerElems[index].querySelector(".team_score").textContent =
+        "Score: " + player.score;
+
       teamInfoContainerElems[index].querySelector(".team_length").textContent =
         "Length: " + player.body.length;
 
-      teamInfoContainerElems[index].querySelector(".team_score").textContent =
-        "Score: " + player.score;
+      if (player.lastMoveDirection) {
+        teamInfoContainerElems[index].querySelector(
+          ".team_last-move"
+        ).textContent = "Last move: " + player.lastMoveDirection.toUpperCase();
+      }
 
       teamInfoContainerElems[index]
         .querySelectorAll(".item")
