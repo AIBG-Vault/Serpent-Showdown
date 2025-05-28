@@ -49,23 +49,23 @@ function updateGrid(data) {
         if (typeof value === "object" && value !== null) {
           cell.classList.add(value.type || "unknown");
 
-          // Handle object values
-          if (value.type === "snake-head") {
+          if (value.type.includes("snake")) {
             cell.classList.add("snake");
-            cell.classList.add("snake-head");
             cell.classList.add(
-              value.playerName === data.players[0].name
-                ? "snake-player1-head"
-                : "snake-player2-head"
+              value.playerName === data.players[0].name ? "player1" : "player2"
             );
-          } else if (value.type === "snake-body") {
-            cell.classList.add("snake");
-            cell.classList.add("snake-body");
-            cell.classList.add(
-              value.playerName === data.players[0].name
-                ? "snake-player1-body"
-                : "snake-player2-body"
-            );
+
+            if (value.type === "snake-head") {
+              cell.classList.add("snake-head");
+
+              // add img to cell
+              const img = document.createElement("img");
+              img.src = "./img/sprites/snake/AIBG 6.0 Zagreb bear.png";
+              img.alt = "snake head";
+              cell.appendChild(img);
+            } else if (value.type === "snake-body") {
+              cell.classList.add("snake-body");
+            }
           } else {
             cell.classList.add("item");
             // cell.textContent = value.symbol || "?";
@@ -84,59 +84,27 @@ function updateGrid(data) {
     }
   }
 
-  updatePlayersSnakes(data.players);
+  // update snake heads rotation
+  updateSnakesHeadRotations(data.players);
 
+  // grayscale snakes on death
   if (data.winner) {
-    if (data.winner === -1) {
-      // draw - grayscale all snakes
-      const allSnakesCells = document.querySelectorAll(".snake");
-      allSnakesCells.forEach((cell) => {
-        cell.style.filter = "grayscale(100%)";
-      });
-    } else {
-      // grayscale the losing snake
-      const losingPlayer = data.players.find(
-        (player) => player.name !== data.winner
-      );
-
-      // find index of losing player
-      const losingPlayerIndex = data.players.findIndex(
-        (player) => player.name === losingPlayer.name
-      );
-
-      const losingSnakeHeadCell = document.querySelector(
-        `.snake-player${losingPlayerIndex + 1}-head`
-      );
-      losingSnakeHeadCell.style.filter = "grayscale(100%)";
-
-      const losingSnakeBodyCells = document.querySelectorAll(
-        `.snake-player${losingPlayerIndex + 1}-body`
-      );
-      losingSnakeBodyCells.forEach((cell) => {
-        cell.style.filter = "grayscale(100%)";
-      });
-    }
+    grayscaleSnakes(data);
   }
 }
 
-function updatePlayersSnakes(players) {
-  // rotate snake head based on direction
+function updateSnakesHeadRotations(players) {
   players.forEach((player, index) => {
-    let snakeHeadElem = document.querySelector(".snake-head");
-
-    if (index === 0) {
-      snakeHeadElem = document.querySelector(".snake-player1-head");
-    } else {
-      snakeHeadElem = document.querySelector(".snake-player2-head");
-    }
-
     const playerHead = player.body[0];
     const playerNeck = player.body[1];
 
-    if (!playerNeck || !playerHead) {
-      // No neck or head found, reset rotation
-      snakeHeadElem.style.transform = "rotate(0deg)";
+    const snakeHeadElem = document.querySelector(
+      `.snake.snake-head.player${index + 1}`
+    );
 
+    if (!playerHead || !playerNeck) {
+      // No head or neck found, reset rotation
+      snakeHeadElem.style.transform = "rotate(0deg)";
       return;
     }
 
@@ -154,6 +122,33 @@ function updatePlayersSnakes(players) {
       snakeHeadElem.style.transform = "rotate(0deg)";
     }
   });
+}
+
+function grayscaleSnakes(data) {
+  if (data.winner === -1) {
+    // draw - grayscale all snakes
+    const allSnakesCells = document.querySelectorAll(".snake");
+    allSnakesCells.forEach((cell) => {
+      cell.style.filter = "grayscale(100%)";
+    });
+  } else {
+    // grayscale the losing snake
+    const losingPlayer = data.players.find(
+      (player) => player.name !== data.winner
+    );
+
+    // find index of losing player
+    const losingPlayerIndex = data.players.findIndex(
+      (player) => player.name === losingPlayer.name
+    );
+
+    const losingSnakeCells = document.querySelectorAll(
+      `.snake.player${losingPlayerIndex + 1}`
+    );
+    losingSnakeCells.forEach((cell) => {
+      cell.style.filter = "grayscale(100%)";
+    });
+  }
 }
 
 // Export functions for use in other files
