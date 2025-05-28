@@ -58,6 +58,12 @@ function updateGrid(data) {
                 ? "snake-player1-head"
                 : "snake-player2-head"
             );
+
+            // add img to cell
+            const img = document.createElement("img");
+            img.src = "./img/sprites/AIBG 6.0 Zagreb bear.png";
+            img.alt = "snake head";
+            cell.appendChild(img);
           } else if (value.type === "snake-body") {
             cell.classList.add("snake");
             cell.classList.add("snake-body");
@@ -66,6 +72,14 @@ function updateGrid(data) {
                 ? "snake-player1-body"
                 : "snake-player2-body"
             );
+
+            // add img to cell
+            const img = document.createElement("img");
+            img.src = `./img/sprites/snake/tijelo_${
+              value.playerName === data.players[0].name ? "n" : "p"
+            }_25.png`;
+            img.alt = "snake body";
+            cell.appendChild(img);
           } else {
             cell.classList.add("item");
             // cell.textContent = value.symbol || "?";
@@ -84,7 +98,7 @@ function updateGrid(data) {
     }
   }
 
-  updatePlayersSnakes(data.players);
+  updateSnakesRotations(data.players);
 
   if (data.winner) {
     if (data.winner === -1) {
@@ -107,51 +121,164 @@ function updateGrid(data) {
       const losingSnakeHeadCell = document.querySelector(
         `.snake-player${losingPlayerIndex + 1}-head`
       );
-      losingSnakeHeadCell.style.filter = "grayscale(100%)";
+      losingSnakeHeadCell.style.filter = "grayscale(100%)"; // bcs of border
 
       const losingSnakeBodyCells = document.querySelectorAll(
         `.snake-player${losingPlayerIndex + 1}-body`
       );
       losingSnakeBodyCells.forEach((cell) => {
-        cell.style.filter = "grayscale(100%)";
+        // get img from cell
+        const losingSnakeBodyImg = cell.querySelector("img");
+        losingSnakeBodyImg.style.filter = "grayscale(100%)";
       });
     }
   }
 }
 
-function updatePlayersSnakes(players) {
-  // rotate snake head based on direction
+function updateSnakesRotations(players) {
+  // rotate snake head, body and tail based on direction
+
   players.forEach((player, index) => {
-    let snakeHeadElem = document.querySelector(".snake-head");
+    for (
+      let bodySegmentIndex = 0;
+      bodySegmentIndex < player.body.length;
+      bodySegmentIndex++
+    ) {
+      const previousSegment = player.body[bodySegmentIndex - 1];
+      const currentSegment = player.body[bodySegmentIndex];
+      const followingSegment = player.body[bodySegmentIndex + 1];
 
-    if (index === 0) {
-      snakeHeadElem = document.querySelector(".snake-player1-head");
-    } else {
-      snakeHeadElem = document.querySelector(".snake-player2-head");
-    }
+      // console.log(
+      //   `player ${player.name} segment ${bodySegmentIndex} previous`,
+      //   previousSegment
+      // );
+      // console.log(
+      //   `player ${player.name} segment ${bodySegmentIndex}`,
+      //   currentSegment
+      // );
+      // console.log(
+      //   `player ${player.name} segment ${bodySegmentIndex} following`,
+      //   followingSegment
+      // );
 
-    const playerHead = player.body[0];
-    const playerNeck = player.body[1];
+      // const previousSegmentElem = document.getElementById(`cell-${previousSegment.row}-${previousSegment.column}`)
+      const currentSegmentElem = document.getElementById(
+        `cell-${currentSegment.row}-${currentSegment.column}`
+      );
+      // const followingSegmentElem = document.getElementById(`cell-${followingSegment.row}-${followingSegment.column}`)
 
-    if (!playerNeck || !playerHead) {
-      // No neck or head found, reset rotation
-      snakeHeadElem.style.transform = "rotate(0deg)";
+      if (!currentSegmentElem) {
+        continue;
+      }
 
-      return;
-    }
+      // get img from cell
+      const snakeImgElem = currentSegmentElem.querySelector("img");
 
-    if (playerHead.column > playerNeck.column) {
-      // direction = "left";
-      snakeHeadElem.style.transform = "rotate(-90deg)";
-    } else if (playerHead.column < playerNeck.column) {
-      // direction = "right";
-      snakeHeadElem.style.transform = "rotate(90deg)";
-    } else if (playerHead.row < playerNeck.row) {
-      // direction = "down";
-      snakeHeadElem.style.transform = "rotate(180deg)";
-    } else if (playerHead.row > playerNeck.row) {
-      // direction = "up";
-      snakeHeadElem.style.transform = "rotate(0deg)";
+      if (!snakeImgElem) {
+        continue;
+      }
+
+      if (!previousSegment && !followingSegment) {
+        // just head = reset rotation
+        snakeImgElem.style.transform = "rotate(0deg)";
+        continue;
+      }
+
+      // head
+      if (!previousSegment) {
+        if (currentSegment.column > followingSegment.column) {
+          // direction = "left";
+          snakeImgElem.style.transform = "rotate(-90deg)";
+        } else if (currentSegment.column < followingSegment.column) {
+          // direction = "right";
+          snakeImgElem.style.transform = "rotate(90deg)";
+        } else if (currentSegment.row < followingSegment.row) {
+          // direction = "down";
+          snakeImgElem.style.transform = "rotate(180deg)";
+        } else if (currentSegment.row > followingSegment.row) {
+          // direction = "up";
+          snakeImgElem.style.transform = "rotate(0deg)";
+        }
+
+        continue;
+      }
+
+      // tail
+      if (!followingSegment) {
+        snakeImgElem.alt = "snake tail";
+
+        if (index === 0) {
+          snakeImgElem.src = "./img/sprites/snake/rep_n_25.png";
+        } else {
+          snakeImgElem.src = "./img/sprites/snake/rep_p_25.png";
+        }
+        if (previousSegment.column > currentSegment.column) {
+          // direction = "left";
+          snakeImgElem.style.transform = "rotate(90deg)";
+        } else if (previousSegment.column < currentSegment.column) {
+          // direction = "right";
+          snakeImgElem.style.transform = "rotate(-90deg)";
+        } else if (previousSegment.row < currentSegment.row) {
+          // direction = "down";
+          snakeImgElem.style.transform = "rotate(0deg)";
+        } else if (previousSegment.row > currentSegment.row) {
+          // direction = "up";
+          snakeImgElem.style.transform = "rotate(180deg)";
+        }
+
+        continue;
+      }
+
+      // body - rotate diagionally as well
+      if (
+        previousSegment.row < followingSegment.row &&
+        previousSegment.column < followingSegment.column
+      ) {
+        // direction = "up-left";
+        snakeImgElem.style.transform = "rotate(-45deg)";
+      } else if (
+        previousSegment.row < followingSegment.row &&
+        previousSegment.column > followingSegment.column
+      ) {
+        // direction = "up-right";
+        snakeImgElem.style.transform = "rotate(45deg)";
+      } else if (
+        previousSegment.row > followingSegment.row &&
+        previousSegment.column < followingSegment.column
+      ) {
+        // direction = "down-left";
+        snakeImgElem.style.transform = "rotate(-135deg)";
+      } else if (
+        previousSegment.row > followingSegment.row &&
+        previousSegment.column > followingSegment.column
+      ) {
+        // direction = "down-right";
+        snakeImgElem.style.transform = "rotate(135deg)";
+      } else if (
+        previousSegment.row === followingSegment.row &&
+        previousSegment.column < followingSegment.column
+      ) {
+        // direction = "left";
+        snakeImgElem.style.transform = "rotate(-90deg)";
+      } else if (
+        previousSegment.row === followingSegment.row &&
+        previousSegment.column > followingSegment.column
+      ) {
+        // direction = "right";
+        snakeImgElem.style.transform = "rotate(90deg)";
+      } else if (
+        previousSegment.row < followingSegment.row &&
+        previousSegment.column === followingSegment.column
+      ) {
+        // direction = "up";
+        snakeImgElem.style.transform = "rotate(0deg)";
+      } else if (
+        previousSegment.row > followingSegment.row &&
+        previousSegment.column === followingSegment.column
+      ) {
+        // direction = "down";
+        snakeImgElem.style.transform = "rotate(180deg)";
+      }
     }
   });
 }

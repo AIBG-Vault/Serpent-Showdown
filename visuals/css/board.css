@@ -130,18 +130,35 @@
 .snake-head {
   /* background: #4caf50; */
 
-  background-image: url(../img/sprites/AIBG\ 6.0\ Zagreb\ bear.png);
+  /* background-image: url(../img/sprites/AIBG\ 6.0\ Zagreb\ bear.png);
   background-size: contain;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
 
   border-width: 1px;
   border-style: dashed;
 }
 
+.snake-head > img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
 .snake-body {
-  background: #45a049;
-  transform: scale(0.8);
+  /* background: #45a049; */
+  /* transform: scale(0.8); */
+
+  /* background-image: url(../img/sprites/snake/tijelo_c_25.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat; */
+}
+
+.snake-body > img {
+  width: 100%;
+  height: 85%;
+  object-fit: contain;
 }
 
 .cell.snake-player1-head {
@@ -150,7 +167,9 @@
 }
 
 .cell.snake-player1-body {
-  background-color: color-mix(in srgb, var(--snake-player1-color) 80%, black);
+  /* background-color: color-mix(in srgb, var(--snake-player1-color) 80%, black); */
+
+  background-image: url(../img/sprites/snake/tijelo_n_25.png);
 }
 
 .cell.snake-player2-head {
@@ -159,5 +178,7 @@
 }
 
 .cell.snake-player2-body {
-  background-color: color-mix(in srgb, var(--snake-player2-color) 80%, black);
+  /* background-color: color-mix(in srgb, var(--snake-player2-color) 80%, black); */
+
+  background-image: url(../img/sprites/snake/tijelo_p_25.png);
 }
