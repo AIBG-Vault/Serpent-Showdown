@@ -115,7 +115,12 @@ body {
 .middle_container > h1 {
   font-size: clamp(2rem, 5vw, 8rem);
   font-family: inherit;
+  font-weight: lighter;
   text-align: center;
+}
+
+.middle_container > h1 > img {
+  height: clamp(2rem, 3.75vw, 8rem);
 }
 
 .middle_container > h3 {
