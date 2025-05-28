@@ -35,77 +35,77 @@
   color: #fff;
 }
 
-.cell.item {
+.item {
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-.border {
+.item.border {
   /* background: rgba(102, 102, 102, 0.8); */
 
-  background-image: url(../img/sprites/border.png);
+  background-image: url(../img/sprites/items/border.png);
 }
 
-.apple {
+.item.apple {
   /* background: #ff4444; */
 
-  background-image: url(../img/sprites/apple.png);
+  background-image: url(../img/sprites/items/apple.png);
 }
 
-.golden-apple {
+.item.golden-apple {
   /* background: #ffd700; */
 
-  background-image: url(../img/sprites/goldenApple.png);
+  background-image: url(../img/sprites/items/goldenApple.png);
 }
 
-.tron {
+.item.tron {
   /* background: #00ffff; */
 
-  background-image: url(../img/sprites/tron.png);
+  background-image: url(../img/sprites/items/tron.png);
 }
 
-.reset-borders {
+.item.reset-borders {
   /* background: #ccc; */
 
-  background-image: url(../img/sprites/resetBorders.png);
+  background-image: url(../img/sprites/items/resetBorders.png);
 }
 
 /* class starts with the word shorten */
-[class*="shorten"] {
+.item[class*="shorten"] {
   /* background: #55b479; */
 
-  background-image: url(../img/sprites/shorten.png);
+  background-image: url(../img/sprites/items/shorten.png);
 }
 
-.katana {
+.item.katana {
   /* background: #4400ff; */
 
-  background-image: url(../img/sprites/katana.png);
+  background-image: url(../img/sprites/items/katana.png);
 }
 
-.armour {
+.item.armour {
   /* background: #c0c0c0; */
 
-  background-image: url(../img/sprites/armour.png);
+  background-image: url(../img/sprites/items/armour.png);
 }
 
-.leap {
+.item.leap {
   /* background: #b32400; */
 
-  background-image: url(../img/sprites/leap.png);
+  background-image: url(../img/sprites/items/leap.png);
 }
 
-.freeze {
+.item.freeze {
   /* background: #b6edff; */
 
-  background-image: url(../img/sprites/freeze.png);
+  background-image: url(../img/sprites/items/freeze.png);
 }
 
-.nausea {
+.item.nausea {
   /* background: #798e00; */
 
-  background-image: url(../img/sprites/nausea.png);
+  background-image: url(../img/sprites/items/nausea.png);
 }
 
 .unknown {
@@ -128,15 +128,11 @@
 }
 
 .snake-head {
-  /* background: #4caf50; */
-
-  /* background-image: url(../img/sprites/AIBG\ 6.0\ Zagreb\ bear.png);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat; */
+  /* background-color: #4caf50; */
 
   border-width: 1px;
   border-style: dashed;
+  border-color: #4caf50;
 }
 
 .snake-head > img {
@@ -146,39 +142,24 @@
 }
 
 .snake-body {
-  /* background: #45a049; */
-  /* transform: scale(0.8); */
-
-  /* background-image: url(../img/sprites/snake/tijelo_c_25.png);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat; */
+  background: #45a049;
+  transform: scale(0.8);
 }
 
-.snake-body > img {
-  width: 100%;
-  height: 85%;
-  object-fit: contain;
-}
-
-.cell.snake-player1-head {
+.snake-head.player1 {
   /* background-color: var(--snake-player1-color); */
   border-color: var(--snake-player1-color);
 }
 
-.cell.snake-player1-body {
-  /* background-color: color-mix(in srgb, var(--snake-player1-color) 80%, black); */
-
-  background-image: url(../img/sprites/snake/tijelo_n_25.png);
+.snake-body.player1 {
+  background-color: color-mix(in srgb, var(--snake-player1-color) 80%, black);
 }
 
-.cell.snake-player2-head {
+.snake-head.player2 {
   /* background-color: var(--snake-player2-color); */
   border-color: var(--snake-player2-color);
 }
 
-.cell.snake-player2-body {
-  /* background-color: color-mix(in srgb, var(--snake-player2-color) 80%, black); */
-
-  background-image: url(../img/sprites/snake/tijelo_p_25.png);
+.snake-body.player2 {
+  background-color: color-mix(in srgb, var(--snake-player2-color) 80%, black);
 }
