@@ -27,7 +27,7 @@ The arena continuously changes throughout the match. After a set number of moves
 
 [cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
 [cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
-[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-cyan.svg
 
 This work is licensed under a
 [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
@@ -93,7 +93,8 @@ Before you begin, make sure your environment is set up to run the game. The foll
    node server.js [port] [timeout]
    ```
 
-   - The server runs on port defined on start or `3000` by default, with the set custom timeout in mmiliseconds (default: `150`ms, `0` to disable)
+   - The server runs on port defined on start or `3000` by default
+   - The server accepts an optional timeout value in milliseconds (default: `150`ms; use `0` to disable).
    - The server automatically creates the game object (logic) on start
 
 ### Running the visuals
