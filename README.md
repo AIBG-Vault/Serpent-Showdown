@@ -36,7 +36,7 @@ This work is licensed under a
 
 This topic was used in the following events:
 
-- **Zagreb 05/2025** (AIBG 9.0)
+- [**Zagreb 05/2025** _(AIBG 9.0)_](https://best.hr/aibg/povijest/)
 
 ## How to run
 
