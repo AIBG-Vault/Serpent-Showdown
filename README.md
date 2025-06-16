@@ -10,8 +10,8 @@ The arena continuously changes throughout the match. After a set number of moves
 
 ## Docs
 
-- [Topic Manual](docs/AIBG%20-%20Topic%20manual%20-%20Serpent%20Showdown.pdf)
-- [Topic Presentation](docs/AIBG%20-%20Topic%20presentation%20-%20Serpent%20Showdown.pdf)
+- [Topic manual](docs/AIBG%20-%20Topic%20manual%20-%20Serpent%20Showdown.pdf)
+- [Topic presentation](docs/AIBG%20-%20Topic%20presentation%20-%20Serpent%20Showdown.pdf)
 
 ## Attribution
 
