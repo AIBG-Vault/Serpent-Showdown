@@ -9,10 +9,14 @@ The arena continuously changes throughout the match. After a set number of moves
 ## Visuals
 
 <p align="center">
-  <img src="[https://github.com/waldyr/Sublime-Installer/blob/master/sublime_text.png?raw=true](https://github.com/user-attachments/assets/bf1b1a12-bee8-4cf2-a857-21927d31f572)" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="75%" src="https://github.com/user-attachments/assets/bf1b1a12-bee8-4cf2-a857-21927d31f572" alt="AIBG - Topic - Serpent Showdown"/>
+  
+  <img width="75%" src="https://github.com/user-attachments/assets/6ac45fff-72a9-4c4c-a909-8098376cda24" alt="AIBG - Topic - Serpent Showdown"/>
+  
+  <img width="75%" src="https://github.com/user-attachments/assets/06f6a215-d06a-4301-b4c4-b9eb944fe93e" alt="AIBG - Topic - Serpent Showdown"/>
+  
+  <img width="75%" src="https://github.com/user-attachments/assets/f8b6b9a3-b3da-4c8a-a72d-55407ee71b90" alt="AIBG - Topic - Serpent Showdown"/>
 </p>
-
-![AIBG - Topic - Serpent Showdown](https://github.com/user-attachments/assets/bf1b1a12-bee8-4cf2-a857-21927d31f572)
 
 ## Docs
 
