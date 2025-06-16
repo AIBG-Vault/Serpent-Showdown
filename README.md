@@ -114,18 +114,16 @@ Manual gameplay connects to the server using IDs `"k"` and `"l"` so remember to 
 
 ### Running agents
 
-#### JavaScript agent
+#### JavaScript test agent
 
 ```bash
-cd agents
-node testAgent.js [playerID] [mode]
+node agents/testAgent.js [playerID] [mode]
 ```
 
-#### Python agent
+#### Python test agent
 
 ```bash
-cd agents
-python testAgent.py [playerID] [mode]
+python agents/testAgent.py [playerID] [mode]
 ```
 
 ##### Modes
