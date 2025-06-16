@@ -4,7 +4,7 @@
 
 Serpent Showdown is a 1v1 versus snake game where two players battle it out on a dynamic grid. Each player starts with a snake of fixed length and a score of 1000 points. The goal is to outmaneuver your opponent by collecting items, avoiding hazards, and grabbing power-ups that either boost your score or disrupt your enemy.
 
-The arena continuously changes throughout the match. After a set number of moves, the grid begins to shrink, forcing the snakes into closer quarters and raising the risk of collisions. The game ends when a snake crashes or when a player's score reaches zero, with the winner determined by who has the higher score or longer snake if both players lose at the same time.
+The arena continuously changes throughout the match. After a set number of moves, the grid begins to shrink, forcing the snakes into closer quarters and raising the risk of collisions. The game ends when a snake crashes or when a player's score reaches zero. In a simultaneous loss, the winner is determined by the higher score or, if equal, by the longer snake.
 
 ## Visuals
 
@@ -40,6 +40,8 @@ This topic was used in the following events:
 
 ## How to run
 
+Before you begin, make sure your environment is set up to run the game. The following prerequisites will help you configure your system to run the server, clients, and visuals correctly.
+
 ### Prerequisites
 
 1. Install Node.js and npm (for server and JavaScript agents)
@@ -48,27 +50,25 @@ This topic was used in the following events:
 4. Install required dependencies:
 
    - For server:
-   
-      ```bash
-      cd server
-      npm install
-      ```
+
+     ```bash
+     cd server
+     npm install
+     ```
 
    - For JavaScript clients:
-      
-      ```bash
-      cd clients
-      npm install
-      ```
-      
-   - For Python clients:
-      
-      ```bash
-      pip install websockets
-      pip install black  # optional formatter
-      ```
 
-      
+     ```bash
+     cd clients
+     npm install
+     ```
+
+   - For Python clients:
+
+     ```bash
+     pip install websockets
+     ```
+
 ### Game flow
 
 1. Start the server
@@ -84,7 +84,7 @@ This topic was used in the following events:
    cp players.json.example players.json
    ```
 
-   - Edit player IDs and names as needed
+   - Edit player IDs and names in the newly created `players.json` as needed
 
 2. Start the server:
 
@@ -93,7 +93,7 @@ This topic was used in the following events:
    node server.js [port] [timeout]
    ```
 
-   - The server runs on port defined on start or `3000` by default, with the set custom timeout in mmiliseconds (default: 150ms, 0 to disable)
+   - The server runs on port defined on start or `3000` by default, with the set custom timeout in mmiliseconds (default: `150`ms, `0` to disable)
    - The server automatically creates the game object (logic) on start
 
 ### Running the visuals
