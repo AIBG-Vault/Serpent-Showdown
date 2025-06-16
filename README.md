@@ -8,6 +8,12 @@ The arena continuously changes throughout the match. After a set number of moves
 
 ## Visuals
 
+<p align="center">
+  <img src="[https://github.com/waldyr/Sublime-Installer/blob/master/sublime_text.png?raw=true](https://github.com/user-attachments/assets/bf1b1a12-bee8-4cf2-a857-21927d31f572)" alt="AIBG - Topic - Serpent Showdown"/>
+</p>
+
+![AIBG - Topic - Serpent Showdown](https://github.com/user-attachments/assets/bf1b1a12-bee8-4cf2-a857-21927d31f572)
+
 ## Docs
 
 - [Topic manual](docs/AIBG%20-%20Topic%20manual%20-%20Serpent%20Showdown.pdf)
