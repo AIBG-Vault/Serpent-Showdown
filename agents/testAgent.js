@@ -9,7 +9,7 @@ const WebSocket = require("ws");
 
 // Configuration
 const CONFIG = {
-  serverIP: "localhost",
+  serverIP: "topic.aibg.best.hr",
   serverPort: 3000,
   defaultId: "k",
   defaultMode: "up",

@@ -6,7 +6,7 @@ import random
 
 # Configuration
 CONFIG = {
-    "serverIP": "localhost",
+    "serverIP": "topic.aibg.best.hr",
     "serverPort": 3000,
     "defaultId": "k",
     "validDirections": ["up", "down", "left", "right"],
