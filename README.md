@@ -15,7 +15,7 @@ The arena continuously changes throughout the match. After a set number of moves
 
 ## Attribution
 
-Created by:
+**Created by:**
 
 - Jakov Jakovac (Topic responsible)
 - Albert Maršić
@@ -36,7 +36,7 @@ This work is licensed under a
 
 This topic was used in the following events:
 
-- Zagreb 05/2025 (AIBG 9.0)
+- **Zagreb 05/2025** (AIBG 9.0)
 
 ## How to run
 
@@ -44,8 +44,8 @@ Before you begin, make sure your environment is set up to run the game. The foll
 
 ### Prerequisites
 
-1. Install Node.js and npm (for server and JavaScript agents)
-2. Install Python 3.7+ (for Python agents)
+1. Install Node.js and npm (for server and JavaScript agent)
+2. (Optional) Install Python 3.7+ (for Python agent)
 3. Install an IDE with Live Server extension (for visuals)
 4. Install required dependencies:
 
