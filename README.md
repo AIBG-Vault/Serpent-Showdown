@@ -1,6 +1,42 @@
-# AIBG-9.0
+# AIBG-Serpent Showdown
 
-## Prerequisites
+## Description
+
+Serpent Showdown is a 1v1 versus snake game where two players battle it out on a dynamic grid. Each player starts with a snake of fixed length and a score of 1000 points. The goal is to outmaneuver your opponent by collecting items, avoiding hazards, and grabbing power-ups that either boost your score or disrupt your enemy.
+
+The arena continuously changes throughout the match. After a set number of moves, the grid begins to shrink, forcing the snakes into closer quarters and raising the risk of collisions. The game ends when a snake crashes or when a player's score reaches zero, with the winner determined by who has the higher score or longer snake if both players lose at the same time.
+
+## Visuals
+
+## Docs
+
+📘 [Topic Manual](docs/AIBG%20-%20Topic%20manual%20-%20Serpent%20Showdown.pdf)
+🎤 [Topic Presentation](docs/AIBG%20-%20Topic%20presentation%20-%20Serpent%20Showdown.pdf)
+
+## Attribution
+
+Created by:
+
+- Jakov Jakovac (Topic responsible)
+- Albert Maršić
+- Martin Vrbovčan
+- Ivan Androšević
+- Barbara Jozić
+
+## License [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+
+[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
+
+## Usage
+
+- Zagreb 05/2025
+
+## How to run
 
 1. Install Node.js and npm (for server and JavaScript clients)
 2. Install Python 3.7+ (for Python clients)
