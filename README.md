@@ -17,7 +17,7 @@ The arena continuously changes throughout the match. After a set number of moves
 
 **Created by:**
 
-- Jakov Jakovac (Topic responsible)
+- Jakov Jakovac _(Topic responsible)_
 - Albert Maršić
 - Martin Vrbovčan
 - Ivan Androšević
