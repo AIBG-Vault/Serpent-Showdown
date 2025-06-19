@@ -10,6 +10,7 @@ function serializeGameState(game) {
       nextMoveDirection: player.nextMoveDirection,
     })),
     winner: game.winner,
+    deathMessage: game.deathMessage,
     moveCount: game.moveCount,
   };
 }
