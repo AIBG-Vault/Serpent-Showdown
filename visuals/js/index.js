@@ -1,7 +1,7 @@
 const CONFIG = {
   serverIP: "localhost",
   serverPort: 3000,
-  gameTicksPerSecond: 20, // Adjust as needed
+  gameTicksPerSecond: 12, // Adjust as needed
 };
 
 let ws; // WebSocket instance
