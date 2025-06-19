@@ -1,5 +1,5 @@
 const CONFIG = {
-  serverIP: "topic.aibg.best.hr",
+  serverIP: "localhost",
   serverPort: 3000,
   gameTicksPerSecond: 12, // Adjust as needed
 };

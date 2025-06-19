@@ -39,7 +39,7 @@ function connectPlayer(playerNum) {
   else if (playerNum == 2) playerId = ID_MANUAL_2;
 
   // Create a new player websocket connection
-  const ws = new WebSocket(`ws://topic.aibg.best.hr:3000?id=${playerId}`);
+  const ws = new WebSocket(`ws://localhost:3000?id=${playerId}`);
 
   if (playerNum === 1) {
     ws1 = ws;
