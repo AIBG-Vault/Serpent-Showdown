@@ -21,6 +21,7 @@ class SnakeGame {
 
     this.players = [];
     this.winner = null;
+    this.deathMessage = null;
 
     this.items = [];
 
@@ -112,16 +113,26 @@ class SnakeGame {
     if (deadPlayers.length > 0) {
       if (deadPlayers.length === 1) {
         this.winner = this.players.find((p) => p.id !== deadPlayers[0]).name;
+        const loser = this.players.find((p) => p.id === deadPlayers[0]).name;
+
+        // if deathMessage is not set by collisionHandler, it must be by score
+        if (this.deathMessage === null) {
+          this.deathMessage = `Player ${loser} reached a score of 0`;
+        }
+
         console.log(`Game Over! Player ${this.winner} wins!`);
       } else {
+        this.deathMessage = "Both players died - ";
         this.determineWinnerByScoreThenLength();
       }
     }
 
     // Check for move limit only if no players died
     if (this.moveCount >= config.GAME_MAX_MOVES) {
-      console.log("Maximum number of game moves exceeded.");
+      this.deathMessage = "Move count exceeded - ";
       this.determineWinnerByScoreThenLength();
+
+      console.log("Maximum number of game moves exceeded.");
     }
   }
 
@@ -132,16 +143,24 @@ class SnakeGame {
   determineWinnerByScoreThenLength() {
     const [player1, player2] = this.players;
 
+    console.log("Game Over!");
+
     if (player1.score !== player2.score) {
       this.winner = player1.score > player2.score ? player1.name : player2.name;
-      console.log(`Game Over! Player ${this.winner} wins by higher score!`);
+      this.deathMessage += `Player ${this.winner} wins by higher score`;
+
+      console.log(`Player ${this.winner} wins by higher score!`);
     } else if (player1.body.length !== player2.body.length) {
       this.winner =
         player1.body.length > player2.body.length ? player1.name : player2.name;
-      console.log(`Game Over! Player ${this.winner} wins by longer length!`);
+      this.deathMessage += `Player ${this.winner} wins by longer length`;
+
+      console.log(`Player ${this.winner} wins by longer length!`);
     } else {
       this.winner = -1;
-      console.log(`Game Over! Draw! Equal scores and lengths`);
+      this.deathMessage += "Equal scores and lengths";
+
+      console.log("Draw! Equal scores and lengths");
     }
   }
 
