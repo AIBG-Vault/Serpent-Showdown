@@ -74,7 +74,18 @@ body {
 .winner_container h2 {
   text-align: center;
 
+  text-transform: uppercase;
+
   font-size: clamp(1rem, 3vw, 6rem);
+  font-family: inherit;
+}
+
+.winner_container h3 {
+  text-align: center;
+
+  /* text-transform: uppercase; */
+
+  font-size: clamp(0.75rem, 2.5vw, 4.5rem);
   font-family: inherit;
 }
 

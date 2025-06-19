@@ -1,7 +1,7 @@
 const CONFIG = {
   serverIP: "topic.aibg.best.hr",
   serverPort: 3000,
-  gameTicksPerSecond: 20, // Adjust as needed
+  gameTicksPerSecond: 12, // Adjust as needed
 };
 
 let ws; // WebSocket instance
@@ -94,17 +94,26 @@ closeBtn.addEventListener("click", () => {
 
 function toggleEndScreen(data) {
   const winnerContainer = document.querySelector(".winner_container");
-  const winnerNameElem = document.querySelector(".winner_container h1");
-  const winnerTopTextElem = document.querySelector(".winner_container h2");
+  const endScreenCenterTextElem = document.querySelector(
+    ".winner_container h1"
+  );
+  const endScreenTopTextElem = document.querySelector(
+    ".winner_container .top_text"
+  );
+  const endScreenBottomTextElem = document.querySelector(
+    ".winner_container .death_message"
+  );
 
   if (data !== null) {
     if (data.winner === -1) {
-      winnerTopTextElem.style.display = "none";
-      winnerNameElem.textContent = "GAME DRAW";
+      endScreenTopTextElem.style.display = "none";
+      endScreenCenterTextElem.textContent = "GAME DRAW";
     } else {
-      winnerTopTextElem.style.display = "block";
-      winnerNameElem.textContent = data.winner;
+      endScreenTopTextElem.style.display = "block";
+      endScreenCenterTextElem.textContent = data.winner;
     }
+
+    endScreenBottomTextElem.textContent = data.deathMessage;
 
     winnerContainer.style.opacity = "0";
     winnerContainer.style.display = "grid";
@@ -117,7 +126,7 @@ function toggleEndScreen(data) {
     winnerContainer.style.transition = "opacity 0.5s";
     setTimeout(() => {
       winnerContainer.style.display = "none";
-      winnerNameElem.textContent = "";
+      endScreenCenterTextElem.textContent = "";
     }, 500);
   }
 }

@@ -72,6 +72,7 @@ class CollisionHandler {
     const head = player.body[0];
 
     if (!this.game.board.isWithinBorders(head)) {
+      this.game.deathMessage = `Player ${player.name} died by hitting a wall`;
       console.log(`Player ${player.name} died by hitting a wall`);
       return true;
     }
@@ -122,7 +123,8 @@ class CollisionHandler {
           bodySegment.row === head.row && bodySegment.column === head.column
       );
     if (playerCollidedWithSelf) {
-      console.log(`Player ${player.name} died by colliding with self`);
+      this.game.deathMessage = `Player ${player.name} died by colliding with itself`;
+      console.log(`Player ${player.name} died by colliding with itself`);
       return true;
     }
 
@@ -133,7 +135,10 @@ class CollisionHandler {
       (segment) => segment.row === head.row && segment.column === head.column
     );
     if (playerCollidedWithOtherPlayer) {
-      console.log(`Player ${player.name} died by colliding with other player`);
+      this.game.deathMessage = `Player ${player.name} died by colliding with another player`;
+      console.log(
+        `Player ${player.name} died by colliding with another player`
+      );
       return true;
     }
 
