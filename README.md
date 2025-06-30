@@ -146,3 +146,7 @@ python agents/testAgent.py [playerID] [mode]
 - `"timeout"`: Delayed actions
 - `"survive"`: Avoids death and collisions
 - `"apple"`: Seeks the closest apple (most advanced)
+
+## Deploy
+
+_TODO_
