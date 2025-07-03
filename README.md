@@ -149,4 +149,71 @@ python agents/testAgent.py [playerID] [mode]
 
 ## Deploy
 
-_TODO_
+To deploy the game server on a VPS:
+
+1. **Install prerequisites**  
+   Make sure `git`, `node`, and `npm` are installed:
+
+   ```bash
+   sudo apt update
+   sudo apt install git nodejs npm
+   ```
+
+2. **Get the project files on your VPS**  
+   You can either **clone the public repository** (recommended), or use `rsync`/`scp` to copy files manually.
+
+   - **Clone the repository (recommended):**
+
+     ```bash
+     git clone https://github.com/your-username/AIBG.git
+     cd AIBG
+     ```
+
+   - **Or copy files using `rsync` or `scp`:**
+     ```bash
+     # Using rsync
+     rsync -av /path/to/AIBG user@your-vps-ip:/home/user/
+     # Or using scp
+     scp -r /path/to/AIBG user@your-vps-ip:/home/user/
+     ```
+
+3. **Install dependencies**
+
+   ```bash
+   cd server
+   npm install
+   ```
+
+4. **Create and edit `players.json`**
+
+   ```bash
+   cp players.json.example players.json
+   nano players.json
+   ```
+
+   Add your teams' IDs and names.
+
+5. **Start the server**
+
+   ```bash
+   node server.js [port] [timeout]
+   ```
+
+6. **Open firewall ports**  
+   Make sure port 3000 (or your chosen port) is open:
+   ```bash
+   sudo ufw allow 3000
+   ```
+
+**Players can now connect to the server using your VPS IP and the chosen port (e.g., `ws://your-vps-ip:3000`).**
+
+### (Optional) Set up a custom domain
+
+For easier access, consider setting up a DNS record (e.g., `topic.aibg.best.hr`) that points to your VPS IP. This makes it simpler for players to connect and remember the server address.
+
+**Example WebSocket connection URLs:**
+
+- `ws://topic.aibg.best.hr:3000`
+- `ws://your-vps-ip:3000`
+
+To set up a DNS record, use your domain provider’s dashboard to create an A record pointing to your VPS
