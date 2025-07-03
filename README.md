@@ -9,15 +9,15 @@ The arena continuously changes throughout the match. After a set number of moves
 ## Visuals
 
 <p align="center">
-  <img width="90%" src="https://github.com/user-attachments/assets/bf1b1a12-bee8-4cf2-a857-21927d31f572" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="90%" src="https://github.com/user-attachments/assets/5888ad37-fd59-4b39-8426-606fd22ec202" alt="AIBG - Topic - Serpent Showdown"/>
   
-  <img width="45%" src="https://github.com/user-attachments/assets/6ac45fff-72a9-4c4c-a909-8098376cda24" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="45%" src="https://github.com/user-attachments/assets/6213005f-fbd0-458d-a0ff-4dbddbe5e1e8" alt="AIBG - Topic - Serpent Showdown"/>
   
-  <img width="45%" src="https://github.com/user-attachments/assets/06f6a215-d06a-4301-b4c4-b9eb944fe93e" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="45%" src="https://github.com/user-attachments/assets/95755a47-c582-4a5b-ab78-becf292a67bf" alt="AIBG - Topic - Serpent Showdown"/>
   
-  <img width="45%" src="https://github.com/user-attachments/assets/6eaea50e-cf90-4458-a478-74308e3c4606" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="45%" src="https://github.com/user-attachments/assets/6d014fb3-ce14-4be2-bcc0-b6f6dde5dac9" alt="AIBG - Topic - Serpent Showdown"/>
   
-  <img width="45%" src="https://github.com/user-attachments/assets/f8b6b9a3-b3da-4c8a-a72d-55407ee71b90" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="45%" src="https://github.com/user-attachments/assets/496b15b5-216e-49af-9d17-da3d2ff39307" alt="AIBG - Topic - Serpent Showdown"/>
 </p>
 
 ## Docs
@@ -146,3 +146,74 @@ python agents/testAgent.py [playerID] [mode]
 - `"timeout"`: Delayed actions
 - `"survive"`: Avoids death and collisions
 - `"apple"`: Seeks the closest apple (most advanced)
+
+## Deploy
+
+To deploy the game server on a VPS:
+
+1. **Install prerequisites**  
+   Make sure `git`, `node`, and `npm` are installed:
+
+   ```bash
+   sudo apt update
+   sudo apt install git nodejs npm
+   ```
+
+2. **Get the project files on your VPS**  
+   You can either **clone the public repository** (recommended), or use `rsync`/`scp` to copy files manually.
+
+   - **Clone the repository (recommended):**
+
+     ```bash
+     git clone https://github.com/your-username/AIBG.git
+     cd AIBG
+     ```
+
+   - **Or copy files using `rsync` or `scp`:**
+     ```bash
+     # Using rsync
+     rsync -av /path/to/AIBG user@your-vps-ip:/home/user/
+     # Or using scp
+     scp -r /path/to/AIBG user@your-vps-ip:/home/user/
+     ```
+
+3. **Install dependencies**
+
+   ```bash
+   cd server
+   npm install
+   ```
+
+4. **Create and edit `players.json`**
+
+   ```bash
+   cp players.json.example players.json
+   nano players.json
+   ```
+
+   Add your teams' IDs and names.
+
+5. **Start the server**
+
+   ```bash
+   node server.js [port] [timeout]
+   ```
+
+6. **Open firewall ports**  
+   Make sure port 3000 (or your chosen port) is open:
+   ```bash
+   sudo ufw allow 3000
+   ```
+
+**Players can now connect to the server using your VPS IP and the chosen port (e.g., `ws://your-vps-ip:3000`).**
+
+### (Optional) Set up a custom domain
+
+For easier access, consider setting up a DNS record (e.g., `topic.aibg.best.hr`) that points to your VPS IP. This makes it simpler for players to connect and remember the server address.
+
+**Example WebSocket connection URLs:**
+
+- `ws://topic.aibg.best.hr:3000`
+- `ws://your-vps-ip:3000`
+
+To set up a DNS record, use your domain provider’s dashboard to create an A record pointing to your VPS
