@@ -9,15 +9,15 @@ The arena continuously changes throughout the match. After a set number of moves
 ## Visuals
 
 <p align="center">
-  <img width="90%" src="https://github.com/user-attachments/assets/bf1b1a12-bee8-4cf2-a857-21927d31f572" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="90%" src="https://github.com/user-attachments/assets/5888ad37-fd59-4b39-8426-606fd22ec202" alt="AIBG - Topic - Serpent Showdown"/>
   
-  <img width="45%" src="https://github.com/user-attachments/assets/6ac45fff-72a9-4c4c-a909-8098376cda24" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="45%" src="https://github.com/user-attachments/assets/c70388a4-5da9-44db-8d67-5b97e19a4019" alt="AIBG - Topic - Serpent Showdown"/>
   
-  <img width="45%" src="https://github.com/user-attachments/assets/06f6a215-d06a-4301-b4c4-b9eb944fe93e" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="45%" src="https://github.com/user-attachments/assets/a424041a-5777-4279-b455-c5aec5bc7bf3" alt="AIBG - Topic - Serpent Showdown"/>
   
-  <img width="45%" src="https://github.com/user-attachments/assets/6eaea50e-cf90-4458-a478-74308e3c4606" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="45%" src="https://github.com/user-attachments/assets/a9f7534f-b2b3-425f-9f67-627d74a9fa4e" alt="AIBG - Topic - Serpent Showdown"/>
   
-  <img width="45%" src="https://github.com/user-attachments/assets/f8b6b9a3-b3da-4c8a-a72d-55407ee71b90" alt="AIBG - Topic - Serpent Showdown"/>
+  <img width="45%" src="https://github.com/user-attachments/assets/d54ee8a8-4eaf-4d6f-940b-63b7ab42306e" alt="AIBG - Topic - Serpent Showdown"/>
 </p>
 
 ## Docs
