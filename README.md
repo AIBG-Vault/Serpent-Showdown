@@ -1,4 +1,4 @@
-# AIBG-Serpent Showdown
+# AIBG - Serpent Showdown
 
 ## Description
 
