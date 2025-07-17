@@ -216,4 +216,4 @@ For easier access, consider setting up a DNS record (e.g., `topic.aibg.best.hr`)
 - `ws://topic.aibg.best.hr:3000`
 - `ws://your-vps-ip:3000`
 
-To set up a DNS record, use your domain provider’s dashboard to create an A record pointing to your VPS
+To set up a DNS record, use your domain provider’s dashboard to create an A record pointing to your VPS.
