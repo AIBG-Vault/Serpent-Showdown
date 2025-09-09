@@ -1,4 +1,4 @@
-# AIBG-Serpent Showdown
+# AIBG - Serpent Showdown
 
 ## Description
 
@@ -29,11 +29,11 @@ The arena continuously changes throughout the match. After a set number of moves
 
 **Created by:**
 
-- Jakov Jakovac _(Topic responsible)_
-- Albert Maršić
-- Martin Vrbovčan
-- Ivan Androšević
-- Barbara Jozić
+- [Jakov Jakovac](https://github.com/OffCrazyFreak) _(Topic responsible)_
+- [Albert Maršić](https://github.com/abi-azan)
+- [Martin Vrbovčan](https://github.com/MartinVrbovcan)
+- [Ivan Androšević](https://github.com/iandrosev)
+- [Barbara Jozić](https://github.com/Kein-Roboter)
 
 ## License [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
@@ -216,4 +216,4 @@ For easier access, consider setting up a DNS record (e.g., `topic.aibg.best.hr`)
 - `ws://topic.aibg.best.hr:3000`
 - `ws://your-vps-ip:3000`
 
-To set up a DNS record, use your domain provider’s dashboard to create an A record pointing to your VPS
+To set up a DNS record, use your domain provider’s dashboard to create an A record pointing to your VPS.
