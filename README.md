@@ -52,7 +52,7 @@ This topic was used in the following events:
 
 ## How to run
 
-Before you begin, make sure your environment is set up to run the game. The following prerequisites will help you configure your system to run the server, clients, and visuals correctly.
+Before you begin, make sure your environment is set up to run the game. The following prerequisites will help you configure your system to run the server, agents, and visuals correctly.
 
 ### Prerequisites
 
@@ -75,7 +75,7 @@ Before you begin, make sure your environment is set up to run the game. The foll
      npm install
      ```
 
-   - For Python clients:
+   - For Python agents:
 
      ```bash
      cd agents
@@ -86,7 +86,7 @@ Before you begin, make sure your environment is set up to run the game. The foll
 
 1. Start the server
 2. Start the visuals (they connect automatically to the server on port 3000)
-3. Connect two clients using valid IDs from `players.json` (game starts automatically when both agents connect)
+3. Connect two agents using valid IDs from `players.json` (game starts automatically when both agents connect)
 4. Server shuts down automatically after the game ends
 
 ### Running the server
