@@ -166,7 +166,7 @@ To deploy the game server on a VPS:
    - **Clone the repository (recommended):**
 
      ```bash
-     git clone https://github.com/your-username/AIBG.git
+     git clone https://github.com/AIBG-vault/topic-name.git
      cd AIBG
      ```
 
