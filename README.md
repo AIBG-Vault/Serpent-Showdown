@@ -68,16 +68,17 @@ Before you begin, make sure your environment is set up to run the game. The foll
      npm install
      ```
 
-   - For JavaScript clients:
+   - For JavaScript agents:
 
      ```bash
-     cd clients
+     cd agents
      npm install
      ```
 
    - For Python clients:
 
      ```bash
+     cd agents
      pip install websockets
      ```
 
